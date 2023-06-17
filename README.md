@@ -53,7 +53,7 @@ Otherwise the following are instructions on how we can access Taiga.
     * From this we can leave notes and access the tasks. Tasks are the smallest unit of organization, we cannot subdivide further and only one user can be assigned (in Taiga) to a task.
 
 ### Access Sprint 
-1. Click on the Sprint tab on the *left* it is highlighted below.
+1. Click on the Scrum tab on the *left* it is highlighted below.
     <img src="Images/Taiga-Project-Home-Sprint.png" width=800>
 2. From this we will get a drop down and can select a Sprint or access *Backlog* from which we can create a sprint and add user stories (By dragging and dropping to the right)
     <img src="Images/Taiga-Sprint-Drop.png" width=200>
