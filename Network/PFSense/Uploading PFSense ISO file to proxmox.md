@@ -34,11 +34,11 @@ Date::6.17.2023
 	4. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617195827.png))
 5. **System Tab**
 	1. Leave as default
-	2. ![alt_text]([Pasted image 20230617195912.png](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617195912.png))
+	2. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617195912.png)
 6. **Disks**
 	1. 8gb minimum 
 	2. I set the Disk size to 12gb 
-	4. ![alt_text]([Pasted image 20230617200009.png](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617200009.png))
+	4. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617200009.png)
 7. **CPU**
 	1. Leave as Default or as you prefer
 	2. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617200056.png)
