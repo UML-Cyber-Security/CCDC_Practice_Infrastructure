@@ -107,6 +107,8 @@ These are for the questions immediately after the boot process finished.
 2. WAN interface should be 
 	* Internet Network in the case of the DMZ Router
 	* Internal Router Network in the case of all others
+	**You can find the interface names and corresponding name in the PFsense machine by looking at the hardware page**
+	<img src="Images/Hardware-Net-Add-Name.png" width=200>
 3. LAN interface should be 
 	* Linux/Windows network in the case of their respective router
 	* DMZ/Internal Router Network in the case of the DMZ router
