@@ -26,7 +26,7 @@ Date::6.17.2023
 2. Click create VM
 3. **General tab**
 	1. Name your VM
-	2. ![alt text]([Pasted image 20230617195722.png](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617195722.png))
+	2. ![alt text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617195722.png)
 4. **OS Tab**
 	1. Click **use iso file**
 	2. Press **Storage: Local**
