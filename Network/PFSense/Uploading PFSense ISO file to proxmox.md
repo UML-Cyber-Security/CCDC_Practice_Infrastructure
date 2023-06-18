@@ -9,7 +9,7 @@ Date::6.17.2023
 2. Navigate to the directory where ISO files are stored in linux
 	1. cd /var/lib/vz/template/iso
 3. Go to PF Sense download page on your regular browser & fill out download specifications
-	1. ![[Pasted image 20230617194515.png]]
+	1. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617194515.png)
 	2. You may have to click Download once, so the actual download link with the correct details are linked to the download button
 		1. This may be needed b/c I am unsure how often the webpage updates
 	3. **Right click the Download Button** & save the link
