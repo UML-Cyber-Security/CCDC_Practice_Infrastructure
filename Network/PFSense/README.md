@@ -88,6 +88,34 @@ But you have not configured the fire wall software yet.
 	<img src="Images/Hardware-Network-Option.png" width=200> 
 	* We are able to select any created network at this time. We should refer to the [Network Diagram Summery](#network-diagram-summery-pfsense) section to determine which networks they will be attached to
 6. Click **Add** and then repeat for all other PFSense Instances 
+### Machine Configuration on Startup
+1. Open console to PFsense machine on Proxmox. Start initial setup.
+2. Select Install
+3. Select Default KeyMap
+4. Select Auto (ZFS)
+5. Select Install
+6. Select Stripe (does not matter much)
+7. ZFS Configuration - Hit space to select a disk, and hit OK.
+8. Say yes, we are sure and would like to reformat the disk and everything.
+9. We do not need to open the shell, select Reboot.
+10. Say yes we would like to Reboot
+11. DO NOT HIT ANY KEY DURING THE BOOT PROCESS
+
+### Boot Setup
+These are for the questions immediately after the boot process finished.
+1. Say NO to VLANS
+2. WAN interface should be 
+	* Internet Network in the case of the DMZ Router
+	* Internal Router Network in the case of all others
+	**You can find the interface names and corresponding name in the PFsense machine by looking at the hardware page**
+	<img src="Images/Hardware-Net-Add-Name.png" width=200>
+3. LAN interface should be 
+	* Linux/Windows network in the case of their respective router
+	* DMZ/Internal Router Network in the case of the DMZ router
+4. We will receive a yes/no prompt as shown below, select yes if you think it is correct.
+	<img src="Images/PF-Prompt.png" width=200>
+	**Note**: This may take some time.
+5. If you get re-prompted for any of the above questions. Answer them the same.
 
 
 ### References  
