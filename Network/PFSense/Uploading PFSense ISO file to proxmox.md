@@ -31,28 +31,28 @@ Date::6.17.2023
 	1. Click **use iso file**
 	2. Press **Storage: Local**
 	3. Attach Iso img
-	4. ![[Pasted image 20230617195827.png]]
+	4. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617195827.png))
 5. **System Tab**
 	1. Leave as default
-	2. ![[Pasted image 20230617195912.png]]
+	2. ![alt_text]([Pasted image 20230617195912.png](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617195912.png))
 6. **Disks**
 	1. 8gb minimum 
 	2. I set the Disk size to 12gb 
-	4. ![[Pasted image 20230617200009.png]]
+	4. ![alt_text]([Pasted image 20230617200009.png](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617200009.png))
 7. **CPU**
 	1. Leave as Default or as you prefer
-	2. ![[Pasted image 20230617200056.png]]
+	2. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617200056.png)
 8. **Memory Tab**
 	1. 1gb required
 	2. I gave 3gb
-	3. ![[Pasted image 20230617200606.png]]
+	3. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617200606.png)
 9. **Network Tab**
 	1. ***The bridge changes dependent on the network the PFsense firewall is supposed to communicate with
 	2. vmbr2 is our linux bridge
 		1. If we were connected to a windows bridge it would not be vmbr2 but vmbr1, b/c we named them like that
 	3. **Multiqueue** = 8
 		1. Allows the BSD kernel to negotiate the optimal value with Proxmox VE in the Network configuration
-	4. ![[Pasted image 20230617200629.png]]
+	4. ![alt_text](https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/PFSense-documentation/Images/Pasted%20image%2020230617200629.png)
 	5. I am unsure if the Firewall box is supposed to be checked or not
 		1. I left it in it default state
 
