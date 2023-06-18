@@ -1,6 +1,17 @@
 # PFSense 
 This file describes the setup and configuration of the PFSense Instance
 
+## Network Diagram Summery PFsense
+1. DMZRouter
+   * This will be connected to the Internet Network (WAN Port)
+   * This will be connected to the DMZ Network
+   * This will be connected to the Internal Router Network
+2. Linux Router
+	* This will be connected to the Linux Network
+    * This will be connected to the Internal Router Network
+3. Windows Router 
+	* This will be connected to the Windows Network
+    * This will be connected to the Internal Router Network
 ## Initial Machine Setup
 ### Downloading ISO
 1. Ssh into proxmox
@@ -8,60 +19,75 @@ This file describes the setup and configuration of the PFSense Instance
 	Type in password
 2. Navigate to the directory where ISO files are stored in linux
 	1. cd /var/lib/vz/template/iso
-3. Go to PF Sense download page on your regular browser & fill out download specifications
-	1. <img src="Images/Image1.png" width=400>
-	2. You may have to click Download once, so the actual download link with the correct details are linked to the download button
-		1. This may be needed b/c I am unsure how often the webpage updates
-	3. **Right click the Download Button** & save the link
+3. Go to PF Sense download page on your regular browser & fill out download specifications as shown below.
+	<img src="Images/Image1.png" width=400>
+    *  You may have to click Download once, so the actual download link with the correct details are linked to the download button
+		* This may be needed because I am unsure as to how often the webpage updates
+	* **Right click the Download Button** & save the link
 4. Navigate back to the ssh console and pull the iso file from the web
-	1. use wget "web page link"
-	2. Full cmd - wget https://atxfiles.netgate.com/mirror/downloads/pfSense-CE-2.6.0-RELEASE-amd64.iso.gz](https://atxfiles.netgate.com/mirror/downloads/pfSense-CE-2.6.0-RELEASE-amd64.iso.gz)
-	3. <img src="Images/Image2.png" width=400>
+	1. use the wget command as follows to download the image to the Proxmox machine
+		```
+		wget -O pfSense.iso.gz https://atxfiles.netgate.com/mirror/downloads/pfSense-CE-2.6.0-RELEASE-amd64.iso.gz
+		```
+	<img src="Images/Image2.png" width=400>
 5. Unzip the file inside the same Linux ISO directory
-	1. Using cmd -  gunzip pfSense-CE-2.6.0-RELEASE-amd64.iso.gz
-
+	1. Using the following command to unzip the downloaded file
+	```sh
+	gunzip pfSense.iso.gz
+	```
 
 ### Creating the PFSense VM
 1. Navigate to Proxmox 
 2. Click create VM
 3. **General tab**
-	1. Name your VM
+	1. Name your VM as shown below (Name may vary).
 	<img src="Images/Step1.png" width=400>
 4. **OS Tab**
 	1. Click **use iso file**
 	2. Press **Storage: Local**
-	3. Attach Iso img
+	3. Attach Iso img, we should end up with something like the image shown below
 	<img src="Images/IsoLocal.png" width=400>
 5. **System Tab**
-	1. Leave as default
+	1. Leave as default, we can see this in the image below
    	<img src="Images/Step3.png" width=400>
 6. **Disks**
 	1. 8gb minimum 
-	2. I set the Disk size to 12gb 
+	2. I set the Disk size to 12gb as shown below
 	<img src="Images/Step4.png" width=400>
 7. **CPU**
-	1. Leave as Default or as you prefer
+	1. Leave as Default or change this setting as you prefer. The result is shown below.
 	<img src="Images/Step5.png" width=400>
 8. **Memory Tab**
 	1. 1gb is required
-	2. I gave 3gb
+	2. I gave 3gb, this is shown below.
 	<img src="Images/Step6.png" width=400>
 9.  **Network Tab**
 	1. ***The bridge changes dependent on the network the PFsense firewall is supposed to communicate with
 	2. vmbr2 is our linux bridge
-		1. If we were connected to a windows bridge it would not be vmbr2 but vmbr1, b/c we named them like that
+		1. If we were connected to a windows bridge it would be vmbr1 not vmbr2, this is due to the naming scheme we used
 	3. **Multiqueue** = 8
 		1. Allows the BSD kernel to negotiate the optimal value with Proxmox VE in the Network configuration
 	<img src="Images/Step7+.png" width=400>
-	4. I am unsure if the Firewall box is supposed to be checked or not
-		1. I left it in it default state
+	4. **Firewall** This should be disabled, or set to allow all traffic.
 
 The next tab is a confirmation tab, aka overview of out settings. Just hit next & don't forget to start the machine.
 
 You have successfully added the PFSense ISO to is appropriate machine.
 
 But you have not configured the fire wall software yet.
-
+### Adding additional Network Interfaces 
+1. Open the VM management interface by clicking on the VM name in the left column as highlighted in the image below.
+	<img src="Images/Select-VM.png" width=400>
+2. Open the **Hardware** tab of the management interface as shown below.
+	<img src="Images/Hardware-Tab.png" width=400>
+3. Click on the **add** tab that is highlighted in the image below.
+	<img src="Images/Hardware-Add.png" width=400>
+4. Now a drop down menu will appear. From this we can select **Network Device** option as shown below
+	<img src="Images/Hardware-Add-Network.png" width=200>
+5. From this we can select a Bridged network to attach the PFsense machine to
+	<img src="Images/Hardware-Network-Option.png" width=200> 
+	* We are able to select any created network at this time. We should refer to the [Network Diagram Summery](#network-diagram-summery-pfsense) section to determine which networks they will be attached to
+6. Click **Add** and then repeat for all other PFSense Instances 
 
 
 ### References  

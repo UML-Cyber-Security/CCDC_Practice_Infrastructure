@@ -13,7 +13,7 @@ Based on what I have read:
    * One for the Linux Network
    * One for the Windows Network
    * One for the Network used to connect the PFSense Routers.
-4. The Ingress router (DMZ One) will be connected to the bridged network, so that will still need to exist.
+4. The Ingress router (DMZ One) will be connected to the bridged network, so that will still needs to exist.
 ### Steps to Implement
 1. Navigate to Proxmox, and login, you should see something like the image below. In this case we are seeing the *Datacenter View*.
     <img src="Images/Proxmox-DataCenter-View.png" width=800>
