@@ -169,6 +169,7 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	Destination Port: HTTPS (443)
 	```	
 12. Remove "Block Private Networks" we are routing using private networks externally. This is located in the "Block Private Networks" default rule.
+	
 	<img src="Images/Private.png" width=400>
 ### Interface Configuration 
 1. Navigate to the **Interfaces Tab** as shown below
