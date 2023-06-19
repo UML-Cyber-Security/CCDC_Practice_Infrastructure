@@ -153,7 +153,9 @@ These are for the questions immediately after the boot process finished.
 ### Web Interface Access
 This will cover the basics of accessing a Web-Interface. How we access the internal PFSense instances will need to be discussed later. 
 
-**NOTE**: We can access the Web interface from the internal Network, However for ease, we can **TEMPORARILY** modify the firewall to allow access from the WAN port (external network). This is what this covers, otherwise skip to point **6. Follow initial setup guide** and end after that.
+**NOTE**: We can access the Web interface from the internal Network, However for ease, we can **TEMPORARILY** modify the firewall to allow access from the WAN port (external network). This is what this covers, otherwise skip to point **6. Follow initial setup guide** and **11.** then end after that. 
+
+***DISABLE THE OPTION TO BLOCK PRIVATE ADDRESSES WHEN SETTING UP ALL PFSENSE INSTANCES OR REMOVE IT FROM THE FIREWALL SETTING***
 
 1. Determine the IP of the WAN interface. We can see this on a successful boot as shown below.
 	
