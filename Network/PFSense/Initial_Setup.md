@@ -340,6 +340,8 @@ We do the same as what we did in the Linux Router except rather than routing to 
 	<img src="Images/DNS-4.png" width=800>
 2. Enable DNS Forwarder, we need to configure this so it forwards to our DMZ Router. Services -> DNS Forwarder.
 	<img src="Images/DNS-5.png" width=800>
+3. Enable *Register DHCP Leases* and *Register DHCP Static Mappings*
+	<img src="Images/DNS-6.png" width=800>
 
 ### Other
 1. Ensure Hardware Checksums and TCP Segmentation *Hardware Offloading* is disabled (IN the past this has caused issues)
