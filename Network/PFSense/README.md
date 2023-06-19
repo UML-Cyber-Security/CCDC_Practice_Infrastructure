@@ -234,7 +234,17 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 		<img src="Images/Reconfigure-Step-3.png" width=600>
    4. Press enter to continue and you are done 
 10. Now the LAN Devices will get a DHCP address, if necessary restart them or have them release previous leases.
-
+    1.  Install dhcpcd 
+		``` 
+		# Or we can just use DHClient without installing things
+		sudo apt install dhcpcd5
+		```
+    2. Renew leases 
+		```
+		sudo dhcpcd -n
+		# Or use DHClient
+		sudo dhclient -v <INTERFACE> # Find the interface name in ```ip a```
+		```
 ### Routes
 1. Open the *Routes* tab in the *Diagnostics* Drop down as shown below
 	<img src="Images/Routes-Nav.png" width=800>
@@ -246,8 +256,16 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	<img src="Images/Routes-Static-Add-Button.png" width=800>
 5. On DMZ add route to internet as shown below. This means all non-matched routes will be sent to the DHCP configured gateway.
 	<img src="Images/Routes-Add-Route.png" width=800>
-6. On all other Routers add the 
-7. **NOTICE**: You will be unable to ping the gateway or external systems unless you enable ICMP packets through the firewall.
+6. On all other Routers add the necessary static routes. The steps are shown below.
+   1. Add Gateways for each PFSense Instance we want to route to. Click Add.
+		<img src="Images/Add-Gateway-1.png" width=800>
+   2. Create new Gateway. Add it to the *Router Internal Network* Interface, and set the Gateway IP to the IP of a PFSense router ***ONLY DO THIS FOR THE DMZ ROUTER***
+		<img src="Images/Add-Gateway-2.png" width=800>
+   3. Create a new Source Route, select the Gateway we created and the Destination Network should be the internal Network associated with the Gateway 
+		<img src="Images/Src-Rt-1.png" width=800>
+	
+	<img src="Images/Routes-DMZ-Example.png" width=800>
+7. **NOTICE**: You will be unable to ping the gateway or external systems unless you allow ICMP packets through the firewall.
    1. Navigate to Firewall *Rules* as follows
 		<img src="Images/ICMP-1.png" width=800>
    2. Click Add for the *LAN* and *OPTX* interfaces
@@ -256,8 +274,46 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 		<img src="Images/ICMP-3.png" width=800>
    4. We need to make no other changes (This is until we start hardening the system)
 
-### DNS Configuration
 
+### DMZ Router Routes
+1. Make a gateway for the Router Internal Net interface routing to the Linux Network 
+	<img src="Images/DMZ-Route-2.png" width=800>
+2. Make a gateway for the Router Internal Net Interface routing to the windows network
+	<img src="Images/DMZ-Route-3.png" width=800>
+This Results in the following Gateway Page.
+<img src="Images/DMZ-Gateway.png" width=800>
+
+3. Create Default route to the internet
+4. Create Route to Linux
+5. Create Route to Windows 
+This Results in the following.
+<img src="Images/DMZ-Routes.png" width=800>
+
+### Linux Router Routes 
+1. No New Gateways are needed 
+2. Make Static Route to Internet 
+3. Make Static Route to DMZ
+4. Make Static Route to Windows
+
+Results are shown below:
+<img src="Images/Lin-Route.png" width=800>
+
+### Windows Router Routes 
+We do the same as what we did in the Linux Router except rather than routing to the Windows Subnet, we route to the Linux Subnet. 
+
+### DNS Configuration
+#### On the DMZ Router
+1. Ensure that we have the DNS Configured on the DMZ router (We may want to add a local DNS system to this). System -> General
+	<img src="Images/DNS-2.png" width=800>
+2. Open DNS Resolver. Services -> DNS Resolver as shown below
+	<img src="Images/DNS-1.png" width=800>
+3. Enable DNS forwarding 
+	<img src="Images/DNS-3.png" width=800>
+#### On Linux and Windows Routers
+1. Disable DNS Resolver. Services -> DNS Resolver
+	<img src="Images/DNS-4.png" width=800>
+2. Enable DNS Forwarder, we need to configure this so it forwards to our DMZ Router. Services -> DNS Forwarder.
+	<img src="Images/DNS-5.png" width=800>
 ### Other
 1. Ensure Hardware Checksums and TCP Segmentation *Hardware Offloading* is disabled (IN the past this has caused issues)
    1. Navigate to *System* and the sub-tab *Advanced* as shown below
