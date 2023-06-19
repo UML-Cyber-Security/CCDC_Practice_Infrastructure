@@ -47,10 +47,12 @@ Ref on Internal Network:
 * https://forum.proxmox.com/threads/how-to-create-private-network.110734/
 ## VM Creation 
 First we need to make sure the PFSense, Linux and Windows ISOs are available. We can do that with the following steps in each Documentation, However we provide general guidance in this document below.
-1. Refer to [PFSense Documentation](./../PFSense/README.md)
+1. Refer to [PFSense Documentation](./../PFSense/Initial_Setup.md)
 2. Refer to [Linux Documentation](./../../Linux/README.md)
 3. Refer to [Windows Documentation](./../../Windows/README.md)
 
-**INSERT GENERAL INSTRUCTIONS**
+## Network Creation
+Refer to the [PFSense Documentation](./../PFSense/Initial_Setup.md) document for more details.
+
 ## VM Attachment
-This is utilized in the PFSense documentation, as they are the only set of devices that need multiple network interface connections. However, we may make use of it during development to ease access to the internal Routers. 
+This is utilized in the [PFSense Documentation](./../PFSense/Initial_Setup.md), as they are the only set of devices that need multiple network interface connections. However, we may make use of it during development to ease access to the internal Routers. 
