@@ -250,32 +250,32 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	<img src="Images/Routes-Nav.png" width=800>
 2. From this we can see the current routes on the system. An example is shown below.
 	<img src="Images/Routes-Ex.png" width=800>
-3. Navigate to routes as shown below
+3. Navigate to *Routes* tab in *System* as shown below
 	<img src="Images/Routes-System-Nav.png" width=800>
 4. Navigate to Static routes and click *add*
 	<img src="Images/Routes-Static-Add-Button.png" width=800>
 5. On DMZ add route to internet as shown below. This means all non-matched routes will be sent to the DHCP configured gateway.
 	<img src="Images/Routes-Add-Route.png" width=800>
-6. On all other Routers add the necessary static routes. The steps are shown below.
+6. On all other Routers add the necessary static routes in addition to the Internet Route. The steps are shown below.
    1. Add Gateways for each PFSense Instance we want to route to. Click Add.
 		<img src="Images/Add-Gateway-1.png" width=800>
    2. Create new Gateway. Add it to the *Router Internal Network* Interface, and set the Gateway IP to the IP of a PFSense router ***ONLY DO THIS FOR THE DMZ ROUTER***
 		<img src="Images/Add-Gateway-2.png" width=800>
    3. Create a new Source Route, select the Gateway we created and the Destination Network should be the internal Network associated with the Gateway 
 		<img src="Images/Src-Rt-1.png" width=800>
+	4. More details are shown at [DMZ Router Routes](#dmz-router-routes), and [Linux Router Routes](#linux-router-routes). The Windows routs are a slight modification of the Linux Routes and located at [Windows Router Routes](#windows-router-routes).
 	
-	<img src="Images/Routes-DMZ-Example.png" width=800>
-7. **NOTICE**: You will be unable to ping the gateway or external systems unless you allow ICMP packets through the firewall.
-   1. Navigate to Firewall *Rules* as follows
+**NOTICE**: You will be unable to ping the gateway or external systems unless you allow ICMP packets through the firewall.
+   4. Navigate to Firewall *Rules* as follows
 		<img src="Images/ICMP-1.png" width=800>
-   2. Click Add for the *LAN* and *OPTX* interfaces
+   5. Click Add for the *LAN* and *OPTX* interfaces
 		<img src="Images/ICMP-2.png" width=800>
-   3. Configure the rule to *allow* or in their words *pass* the ICMP packets
+   6. Configure the rule to *allow* or in their words *pass* the ICMP packets
 		<img src="Images/ICMP-3.png" width=800>
-   4. We need to make no other changes (This is until we start hardening the system)
+   7. We need to make no other changes (This is until we start hardening the system)
 
 
-### DMZ Router Routes
+#### DMZ Router Routes
 1. Make a gateway for the Router Internal Net interface routing to the Linux Network 
 	<img src="Images/DMZ-Route-2.png" width=800>
 2. Make a gateway for the Router Internal Net Interface routing to the windows network
@@ -289,7 +289,7 @@ This Results in the following Gateway Page.
 This Results in the following.
 <img src="Images/DMZ-Routes.png" width=800>
 
-### Linux Router Routes 
+#### Linux Router Routes 
 1. No New Gateways are needed 
 2. Make Static Route to Internet 
 3. Make Static Route to DMZ
