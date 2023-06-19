@@ -2,9 +2,8 @@
 This file describes the setup and configuration of the PFSense Instance on Proxmox, and the setup of the initial routes. Exposing Services and additional security are described in their own documents. (The FIREWALLS ARE SET TO ALLOW ALL IN MOST CASES HERE)
 
 
-## Table of Contents 
+## Table of Contents <!-- omit from toc -->
 
-- [Table of Contents](#table-of-contents)
 - [Initial Machine Setup Proxmox](#initial-machine-setup-proxmox)
 	- [Downloading ISO](#downloading-iso)
 	- [Adding additional Network Interfaces](#adding-additional-network-interfaces)
