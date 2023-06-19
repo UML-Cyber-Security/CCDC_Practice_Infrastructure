@@ -83,14 +83,14 @@ But you have not configured the fire wall software yet.
 3. Click on the **add** tab that is highlighted in the image below.
 	<img src="Images/Hardware-Add.png" width=800>
 4. Now a drop down menu will appear. From this we can select **Network Device** option as shown below
-	<img src="Images/Hardware-Add-Network.png" width=200>
+	<img src="Images/Hardware-Add-Network.png" width=400>
 5. From this we can select a Bridged network to attach the PFsense machine to
-	<img src="Images/Hardware-Network-Option.png" width=200> 
+	<img src="Images/Hardware-Network-Option.png" width=400> 
 	* We are able to select any created network at this time. We should refer to the [Network Diagram Summery](#network-diagram-summery-pfsense) section to determine which networks they will be attached to
 6. Click **Add** and then repeat for all other PFSense Instances 
 ### Machine Configuration on Startup
 1. Open console to PFsense machine on Proxmox. Start initial setup. This is shown below.
-	<img src="Console.png" width=200>
+	<img src="Console.png" width=400>
 2. Select Install
 3. Select Default KeyMap
 4. Select Auto (ZFS)
@@ -109,12 +109,12 @@ These are for the questions immediately after the boot process finished.
 	* Internet Network in the case of the DMZ Router
 	* Internal Router Network in the case of all others
 	**You can find the interface names and corresponding name in the PFsense machine by looking at the hardware page**
-	<img src="Images/Hardware-Net-Add-Name.png" width=200>
+	<img src="Images/Hardware-Net-Add-Name.png" width=400>
 3. LAN interface should be 
 	* Linux/Windows network in the case of their respective router
 	* DMZ/Internal Router Network in the case of the DMZ router
 4. We will receive a yes/no prompt as shown below, select yes if you think it is correct.
-	<img src="Images/PF-Prompt.png" width=200>
+	<img src="Images/PF-Prompt.png" width=400>
 	**Note**: This may take some time.
 5. If you get re-prompted for any of the above questions. Answer them the same.
 
@@ -169,7 +169,7 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	Destination Port: HTTPS (443)
 	```	
 12. Remove "Block Private Networks" we are routing using private networks externally. This is located in the "Block Private Networks" default rule.
-	<img src="Images/Private.png" width=200>
+	<img src="Images/Private.png" width=400>
 ### Interface Configuration 
 1. Navigate to the **Interfaces Tab** as shown below
 	<img src="Images/Web-Interfaces.png" width=800>
