@@ -82,8 +82,8 @@ But you have not configured the fire wall software yet.
 	<img src="Images/Hardware-Tab.png" width=400>
 3. Click on the **add** tab that is highlighted in the image below.
 	<img src="Images/Hardware-Add.png" width=400>
-4. Now a drop down menu will appear. From this we can select **Network Device** option as shown below
-	<img src="Images/Hardware-Add-Network.png" width=200>
+4. Now a drop down menu will appear. From this we can select **Network Device** option as shown below.
+   <img src="Images/Hardware-Add-Network.png" width=200>
 5. From this we can select a Bridged network to attach the PFsense machine to
 	<img src="Images/Hardware-Network-Option.png" width=200> 
 	* We are able to select any created network at this time. We should refer to the [Network Diagram Summery](#network-diagram-summery-pfsense) section to determine which networks they will be attached to
@@ -137,7 +137,8 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	Password: pfsense
 	```
 6. Follow inital setup guide
-	<img src="Images/Web-Setup.png" width=400>
+   <img src="Images/Web-Setup.png" width=400>
+
 	1. Click Next
 	2. Click Next
 	3. Fill in the General information as follows for the DMZ, for the others DNS should be overridden by DHCP, but we should set it to the DMZ router's IP
