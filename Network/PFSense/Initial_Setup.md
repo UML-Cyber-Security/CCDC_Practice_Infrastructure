@@ -333,6 +333,8 @@ We do the same as what we did in the Linux Router except rather than routing to 
 	<img src="Images/DNS-1.png" width=800>
 3. Enable DNS forwarding 
 	<img src="Images/DNS-3.png" width=800>
+4. Enable *DHCP Registration*, This is for when we **EXPOSE A PROXY OR DEVICE** to the external network. So we can direct to the **Hostname** rather than an IP that may change
+	<img src="Images/DNS-3a.png" width=800>
 #### On Linux and Windows Routers
 1. Disable DNS Resolver. Services -> DNS Resolver
 	<img src="Images/DNS-4.png" width=800>
