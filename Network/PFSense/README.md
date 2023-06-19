@@ -20,7 +20,6 @@ This file describes the setup and configuration of the PFSense Instance
 2. Navigate to the directory where ISO files are stored in linux
 	1. cd /var/lib/vz/template/iso
 3. Go to PF Sense download page on your regular browser & fill out download specifications as shown below.
-	
 	<img src="Images/Image1.png" width=800>
     *  You may have to click Download once, so the actual download link with the correct details are linked to the download button
 		* This may be needed because I am unsure as to how often the webpage updates
@@ -74,7 +73,6 @@ This file describes the setup and configuration of the PFSense Instance
 		1. If we were connected to a windows bridge it would be vmbr1 not vmbr2, this is due to the naming scheme we used
 	3. **Multiqueue** = 8
 		1. Allows the BSD kernel to negotiate the optimal value with Proxmox VE in the Network configuration
-	
 	<img src="Images/Step7+.png" width=800>
 	4. **Firewall** This should be disabled, or set to allow all traffic.
 
@@ -95,16 +93,14 @@ But you have not configured the fire wall software yet.
 	<img src="Images/Hardware-Add.png" width=800>
 4. Now a drop down menu will appear. From this we can select **Network Device** option as shown below
 	
-	<img src="Images/Hardware-Add-Network.png" width=400>
+	<img src="Images/Hardware-Add-Network.png" width=800>
 5. From this we can select a Bridged network to attach the PFsense machine to
-	
 	<img src="Images/Hardware-Network-Option.png" width=400> 
 	* We are able to select any created network at this time. We should refer to the [Network Diagram Summery](#network-diagram-summery-pfsense) section to determine which networks they will be attached to
 6. Click **Add** and then repeat for all other PFSense Instances 
 ### Machine Configuration on Startup
 1. Open console to PFsense machine on Proxmox. Start initial setup. This is shown below.
-	
-	<img src="Console.png" width=400>
+	<img src="Images/Console.png" width=400>
 2. Select Install
 3. Select Default KeyMap
 4. Select Auto (ZFS)
@@ -129,7 +125,6 @@ These are for the questions immediately after the boot process finished.
 	* Linux/Windows network in the case of their respective router
 	* DMZ/Internal Router Network in the case of the DMZ router
 4. We will receive a yes/no prompt as shown below, select yes if you think it is correct.
-	
 	<img src="Images/PF-Prompt.png" width=400>
 	**Note**: This may take some time.
 5. If you get re-prompted for any of the above questions. Answer them the same.
@@ -156,17 +151,14 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	Password: pfsense
 	```
 6. Follow inital setup guide
-	
 	<img src="Images/Web-Setup.png" width=400>
 	1. Click Next
 	2. Click Next
 	3. Fill in the General information as follows for the DMZ, for the others DNS should be overridden by DHCP, but we should set it to the DMZ router's IP
-		
 		<img src="Images/Web-General.png" width=800>
 	4. Leave defaults for timeserver stuff
 	5. For the WAN interface it should be configured through DHCP.
 	6. Set the LAN interface, change the IP to be the desierd IP and Range 
-		
 		<img src="Images/Web-LAN-1.png" width=300>
 	7. Set the admin WebGUI Password as desired.
 	8. Click Reload 
@@ -196,7 +188,7 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	```	
 12. Remove "Block Private Networks" we are routing using private networks externally. This is located in the "Block Private Networks" default rule.
 	
-	<img src="Images/Private.png" width=400>
+	<img src="Images/Private.png" width=600>
 ### Interface Configuration 
 1. Navigate to the **Interfaces Tab** as shown below
 	
