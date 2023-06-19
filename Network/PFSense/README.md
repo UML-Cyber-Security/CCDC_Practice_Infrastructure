@@ -15,8 +15,9 @@ This directory contains the instructions to set up a PFSense Network containing 
     * This will be connected to the Internal Router Network
 
 ## Initial Setup
-The initial setup of the PFSense instances are described in the [Initial_Setup](./Initial_Setup.md) document. This document covers the following topics.
+The initial setup of the PFSense instances are described in the [Initial_Setup](./Initial_Setup.md) document. 
 
+The [Initial_Setup](./Initial_Setup.md) document covers the following topics.
 1. Downloading the PFSense ISO to Proxmox
 2. Creating a new Isolated Network (We need four of them)
 3. Creating a PFSense Instance
@@ -28,3 +29,9 @@ The initial setup of the PFSense instances are described in the [Initial_Setup](
 9. Configure Routes
 10. Configure DNS 
 11. Configure Other
+
+## Exposing Services Setup
+The configuration of PFSense Routers to expose internal serveces to the internet is described in the [Expose_Services](./Expose_Services.md) document.
+
+The [Expose_Services](./Expose_Services.md) document covers the following topics.
+1. 
