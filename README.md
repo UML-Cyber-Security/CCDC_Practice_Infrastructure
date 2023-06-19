@@ -75,7 +75,7 @@ Otherwise the following are instructions on how we can access Taiga.
 2. From here we can click "New Issue" button on the top right
     <img src="Images/Taiga-Issues.png" width=800>
 3. Once we have done so, we can fill out the issue with the topic and necessary information. You can assign it to a user or ask someone else to do so.
-    <img src="Images/Taiga-Issue-Internal.png" width=400>
+    <img src="Images/Taiga-Issue-Internal.png" width=800>
 ## PFSense Access 
 
 
