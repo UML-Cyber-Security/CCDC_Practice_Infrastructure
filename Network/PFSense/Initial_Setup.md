@@ -9,6 +9,7 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 	- [Downloading ISO](#downloading-iso)
 	- [Adding additional Network Interfaces](#adding-additional-network-interfaces)
 	- [Creating the PFSense VM](#creating-the-pfsense-vm)
+	- [References](#references)
 - [Initial Machine Setup](#initial-machine-setup)
 	- [Machine Configuration on Install](#machine-configuration-on-install)
 	- [On First Boot Setup](#on-first-boot-setup)
@@ -23,7 +24,6 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 		- [On the DMZ Router](#on-the-dmz-router)
 		- [On Linux and Windows Routers](#on-linux-and-windows-routers)
 	- [Other](#other)
-	- [References](#references)
 
 
 ## Initial Machine Setup Proxmox
@@ -115,6 +115,8 @@ You have successfully added the PFSense ISO to is appropriate machine.
 
 But you have not configured the fire wall software yet.
 
+### References  
+* https://www.zenarmor.com/docs/network-security-tutorials/how-to-install-pfsense-software-on-proxmox
 
 ## Initial Machine Setup
 ### Machine Configuration on Install
@@ -344,5 +346,3 @@ We do the same as what we did in the Linux Router except rather than routing to 
    3. Uncheck the options as shown below
 		<img src="Images/Adv-Hardware-3.png" width=800>
 
-### References  
-* https://www.zenarmor.com/docs/network-security-tutorials/how-to-install-pfsense-software-on-proxmox
