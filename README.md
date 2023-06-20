@@ -74,7 +74,7 @@ Otherwise the following are instructions on how we can access Taiga.
 3. The Backlog allows us to add User Stories to the sprints displayed on the *right* side of the screen. We can also access the sprints from the list on the *right*
     
     <img src="Images/Taiga-Sprint.png" width=800>
-4. The internal page once we have selected Taiga-Issue-Internal.pnga sprint is shown below. We can see the User Stories and their related tasks. We see a Kanban board that we can move tasks around, and add tasks to the user stories.
+4. The internal page once we have selected sprint is shown below. We can see the User Stories and their related tasks. We see a Kanban board that we can move tasks around, and add tasks to the user stories.
     
     <img src="Images/Taiga-Sprint-Internal.png" width=800>
 
@@ -83,6 +83,7 @@ Otherwise the following are instructions on how we can access Taiga.
    
    <img src="Images/Taiga-Project-Home-Wiki.png" width=800>
 2. Once we have done that we can see the Main Wiki Page for the Project
+
     <img src="Images/Taiga-Wiki.png" width=800>
     * On the left we can see Bookmarks (Pages) and once we have selected them we can leave notes, attachments, and see the previous edit history
 
