@@ -42,7 +42,7 @@ Otherwise the following are instructions on how we can access Taiga.
 ### Access Project
 1. We assume at this point you have both created a Taiga account and logged in. You should see something like the following.
     
-    <img src="Images/Taiga-Home-Logged.png>" width=800> 
+    <img src="Images/Taiga-Home-Logged.png" width=800> 
 2. Additionally you should be added to a Project by one of the other users (admins). Once you are added to the project go to the top left and click projects. You will see something like the following.
     
     <img src="Images/Taiga-Projects.png" width=800>
