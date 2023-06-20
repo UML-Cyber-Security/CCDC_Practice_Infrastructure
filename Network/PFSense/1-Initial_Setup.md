@@ -63,8 +63,8 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 	
 	<img src="Images/Hardware-Add-Network.png" width=800>
 5. From this we can select a Bridged network to attach the PFsense machine to
+
 	<img src="Images/Hardware-Network-Option.png" width=400> 
-	
 	* We are able to select any created network at this time. We should refer to the [Network Diagram Summery](#network-diagram-summery-pfsense) section to determine which networks they will be attached to
 6. Click **Add** and then repeat for all other PFSense Instances 
 
@@ -120,7 +120,9 @@ But you have not configured the fire wall software yet.
 ## Initial Machine Setup
 ### Machine Configuration on Install
 1. Open console to PFsense machine on Proxmox. Start initial setup. This is shown below.
+
 	<img src="Images/Console.png" width=200>
+
 2. Select Install
 3. Select Default KeyMap
 4. Select Auto (ZFS)
@@ -145,6 +147,7 @@ These are for the questions immediately after the boot process finished.
 	* Linux/Windows network in the case of their respective router
 	* DMZ/Internal Router Network in the case of the DMZ router
 4. We will receive a yes/no prompt as shown below, select yes if you think it is correct.
+
 	<img src="Images/PF-Prompt.png" width=400>
 	**Note**: This may take some time.
 5. If you get re-prompted for any of the above questions. Answer them the same.
@@ -176,34 +179,45 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 	```
 6. Follow initial setup guide
 
-	<img src="Images/Web-Setup.png" width=800>
-	
+	<img src="Images/Web-Setup.png" width=800>	
 	1. Click Next
+
 		<img src="Images/Next-1.png" width=800>
 	2. Click Next
+
 		<img src="Images/Next-2.png" width=800>
 	3. Fill in the General information as follows for the DMZ, for the others DNS should be overridden by DHCP, but we should set it to the DMZ router's IP
+
 		<img src="Images/Web-General.png" width=800>
 	4. Leave defaults for timeserver stuff
+
 		<img src="Images/Web-Time.png" width=800>
 	5. For the WAN interface it should be configured through DHCP. However, you should **DESELECT BLOCK PRIVATE IPs** at the bottom of this page.
+
 		<img src="Images/Private-Block-Diss.png"
 	6. Configure the LAN interface, change the IP to be the desired IP and Range, 
+
 		<img src="Images/Web-LAN-1.png" width=800>
 	7. Set the admin WebGUI Password as desired.
+
 		<img src="Images/Web-Pass.png" width=800>
-	8. Click Reload 
+	8. Click Reload
+
 		<img src="Images/Web-Reload.png" width=800>
 	9.  Click Finish
 		* The web interface will go down as the firewall will go back up.
 7. Re-disable the firewall from the console (Step 2 and 3)
 8. Refresh the Web-Page, we will see the following.
+
 	<img src="Images/Default-Welcome.png" width=800>
 9.  Access the Firewall Tab, and the **Rules** sub-tab as shown below
+
 	<img src="Images/Firewall-Home-Acc.png" width=800>
 10. Click Add as highlighted below
+
 	<img src="Images/Add-Rule.png" width=800>
 11. Set the following options
+
 	<img src="Images/Rule-Internal.png" width=800>
 	
 	```
@@ -231,76 +245,101 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 
 ### DHCP Configuration
 1. Ensure all interfaces have an IP. Navigate to LAN and if it exists OTPX interfaces as shown below.
+
 	<img src="Images/Interface-Enable-Tab.png" width=800>
 2. Select *Static IPV4* under the **IPv4 Configuration Option** as shown below 
+
    <img src="Images/Enable-STATIC-Interface.png" width=800>
 3. Assign an IP as shown below (Vary values depending on the device configured).
+
 	<img src="Images/IPv4-OTP-Assign.png" width=800>
 4. Save and apply, this may take some time depending on the VM configuration.
 5. Navigate to DHCP Server as shown below
-	<img src="Images/DHCP-Nav.png)" width=800>
+
+	<img src="Images/DHCP-Nav.png" width=800>
 6. This will result in the following, if more than one interface is configured (with an IP) we will have multiple tabs to select from.
+
 	<img src="Images/DHCP-Home.png" width=800>
 7. Ensure DHCP is Enabled
+
 	<img src="Images/Enable-DHCP.png" width=800>
 8. Define the range of available addresses, we can use the available address range to inform this.
+
 	<img src="Images/Define-Range.png" width=800>
 9. If the IP on the inner PFSense routers have yet to be set, use the following steps to do so
    1. Reconfigure Interface *Option 2*
+
 		<img src="Images/Reconfigure-Step-1.png" width=600>
    2. Select WAN
+
 		<img src="Images/Reconfigure-Step-2.png" width=600>
    3. Select *Yes* for IPv4 DHCP, *No* for IPv6, and provide *NO INPUT* for the IPv6 address
+
 		<img src="Images/Reconfigure-Step-3.png" width=600>
    4. Press enter to continue and you are done 
 10. Now the LAN Devices will get a DHCP address, if necessary restart them or have them release previous leases.
-    1.  Install dhcpcd 
+    1.  (Optional) Install dhcpcd - or use dhclient
 		``` 
-		# Or we can just use DHClient without installing things
 		sudo apt install dhcpcd5
 		```
     2. Renew leases 
 		```
+		# Using dhcpcd if installed
 		sudo dhcpcd -n
-		# Or use DHClient
+		
+		# Or use dhclient
 		sudo dhclient -v <INTERFACE> # Find the interface name in ```ip a```
 		```
 ### Routes
 1. Open the *Routes* tab in the *Diagnostics* Drop down as shown below
+
 	<img src="Images/Routes-Nav.png" width=800>
 2. From this we can see the current routes on the system. An example is shown below.
+
 	<img src="Images/Routes-Ex.png" width=800>
 3. Navigate to *Routes* tab in *System* as shown below
+
 	<img src="Images/Routes-System-Nav.png" width=800>
 4. Navigate to Static routes and click *add*
+
 	<img src="Images/Routes-Static-Add-Button.png" width=800>
 5. On the DMZ router add a route to external networks as shown below. This means all non-matched routes will be sent to the DHCP configured gateway.
+
 	<img src="Images/Routes-Add-Route.png" width=800>
 6. On all other Routers add the necessary static routes in addition to the Internet Route. The steps are shown below.
    1. Add Gateways for each PFSense Instance we want to route to. Click Add.
+
 		<img src="Images/Add-Gateway-1.png" width=800>
    2. Create new Gateway. Add it to the *Router Internal Network* Interface, and set the Gateway IP to the IP of a PFSense router in the case of the DMZ router.
+
 		<img src="Images/Add-Gateway-2.png" width=800>
    3. Create a new Source Route, select the Gateway we created and the Destination Network should be the internal Network associated with the Gateway 
+
 		<img src="Images/Src-Rt-1.png" width=800>
    4. More details are shown at [DMZ Router Routes](#dmz-router-routes), and [Linux Router Routes](#linux-router-routes). The Windows routs are a slight modification of the Linux Routes and located at [Windows Router Routes](#windows-router-routes).
 
 
 **NOTICE**: You will be unable to ping the gateway or external systems unless you allow ICMP packets through the firewall.
    1. Navigate to Firewall *Rules* as follows
+
 		<img src="Images/ICMP-1.png" width=800>
    2. Click Add for the *LAN* and *OPTX* interfaces
+
 		<img src="Images/ICMP-2.png" width=800>
    3. Configure the rule to *allow* or in their words *pass* the ICMP packets
+
 		<img src="Images/ICMP-3.png" width=800>
    4. We need to make no other changes (This is until we start hardening the system)
 
 
 #### DMZ Router Routes
 1. Make a gateway for the Router Internal Net interface routing to the Linux Network 
+
 	<img src="Images/DMZ-Route-2.png" width=800>
 2. Make a gateway for the Router Internal Net Interface routing to the windows network
+
 	<img src="Images/DMZ-Route-3.png" width=800>
+
 This Results in the following Gateway Page.
 <img src="Images/DMZ-Gateway.png" width=800>
 
@@ -310,6 +349,7 @@ This Results in the following Gateway Page.
 	* Use the Linux Gateway created earlier
 5. Create Route to Windows 
 	* Use the Linux Gateway created earlier
+
 This Results in the following.
 <img src="Images/DMZ-Routes.png" width=800>
 
@@ -332,26 +372,36 @@ We do the same as what we did in the Linux Router except rather than routing to 
 ### DNS Configuration
 #### On the DMZ Router
 1. Ensure that we have the DNS Configured on the DMZ router (We may want to add a local DNS system to this). System -> General
+
 	<img src="Images/DNS-2.png" width=800>
 2. Open DNS Resolver. Services -> DNS Resolver as shown below
+
 	<img src="Images/DNS-1.png" width=800>
 3. Enable DNS forwarding 
+
 	<img src="Images/DNS-3.png" width=800>
 4. Enable *DHCP Registration*, This is for when we **EXPOSE A PROXY OR DEVICE** to the external network. So we can direct to the **Hostname** rather than an IP that may change
+
 	<img src="Images/DNS-3a.png" width=800>
 #### On Linux and Windows Routers
 1. Disable DNS Resolver. Services -> DNS Resolver
+
 	<img src="Images/DNS-4.png" width=800>
 2. Enable DNS Forwarder, we need to configure this so it forwards to our DMZ Router. Services -> DNS Forwarder.
+
 	<img src="Images/DNS-5.png" width=800>
 3. Enable *Register DHCP Leases* and *Register DHCP Static Mappings*
+
 	<img src="Images/DNS-6.png" width=800>
 
 ### Other
 1. Ensure Hardware Checksums and TCP Segmentation *Hardware Offloading* is disabled (IN the past this has caused issues)
    1. Navigate to *System* and the sub-tab *Advanced* as shown below
+
 		<img src="Images/Adv-Hardware-1.png" width=800>
    2. Navigate to the Networking Tab
+
 		<img src="Images/Adv-Hardware-2.png" width=800>
    3. Uncheck the options as shown below
+
 		<img src="Images/Adv-Hardware-3.png" width=800>
