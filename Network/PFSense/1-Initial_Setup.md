@@ -194,7 +194,7 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 		<img src="Images/Web-Time.png" width=800>
 	5. For the WAN interface it should be configured through DHCP. However, you should **DESELECT BLOCK PRIVATE IPs** at the bottom of this page.
 
-		<img src="Images/Private-Block-Diss.png"
+		<img src="Images/Private-Block-Diss.png">
 	6. Configure the LAN interface, change the IP to be the desired IP and Range, 
 
 		<img src="Images/Web-LAN-1.png" width=800>
