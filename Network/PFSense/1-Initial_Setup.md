@@ -256,7 +256,7 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
 4. Save and apply, this may take some time depending on the VM configuration.
 5. Navigate to DHCP Server as shown below
 
-	<img src="Images/DHCP-Nav.png)" width=800>
+	<img src="Images/DHCP-Nav.png" width=800>
 6. This will result in the following, if more than one interface is configured (with an IP) we will have multiple tabs to select from.
 
 	<img src="Images/DHCP-Home.png" width=800>
