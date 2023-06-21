@@ -1,4 +1,4 @@
-# Preliminary Markdown Style Guide
+# Preliminary Markdown Style Guide <!-- omit from toc -->
 *Initially Written by Matt Harper...*
 
 This is a document giving a basic rundown of Markdown, and a loose "Style" that we can use in this repository. 
@@ -14,6 +14,17 @@ A: No
 Q: Will the person writing this (Matt) follow this strictly 
 
 A: No I may forget
+
+## Table of Contents <!-- omit from toc -->
+- [Title of a paper](#title-of-a-paper)
+  - [Section](#section)
+    - [Sub-Section](#sub-section)
+      - [Sub-Sub Section](#sub-sub-section)
+        - [Sub-Sub-Sub Section](#sub-sub-sub-section)
+          - [Sub-Sub-Sub-Sub Section](#sub-sub-sub-sub-section)
+    - [Table of Contents](#table-of-contents)
+    - [Link to Documents or Headers](#link-to-documents-or-headers)
+
 
 ## Intro to Markdown
 
