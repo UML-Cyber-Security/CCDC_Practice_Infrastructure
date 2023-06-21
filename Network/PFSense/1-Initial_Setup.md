@@ -374,20 +374,19 @@ We do the same as what we did in the Linux Router except rather than routing to 
 
 ### DNS Configuration
 #### On the DMZ Router
+1. 1. Set Domain name, this will need to be included in the hostname of the internal machines. Use something like DMZ instead of "windows"
 
-1. Ensure that we have the DNS Configured on the DMZ router (We may want to add a local DNS system to this). System -> General
+	<img src="Images/DNS-4a.png" width=800>
+2. Ensure that we have the DNS Configured on the DMZ router (We may want to add a local DNS system to this). System -> General
 
 	<img src="Images/DNS-2.png" width=800>
-2. (Optional) Add DHCP of internal Routers (In this case the DHCP was Changed, so Linux is .10 and windows is .11)
-   * This may or may not be necessary, it is here for **TESTING**!
-	<img src="Images/DNS-2a.png" width=800>
 3. Open DNS Resolver. Services -> DNS Resolver as shown below
 
 	<img src="Images/DNS-1.png" width=800>
 4. Enable DNS forwarding 
 
 	<img src="Images/DNS-3.png" width=800>
-5. Enable *DHCP Registration*, This is for when we **EXPOSE A PROXY OR DEVICE** to the external network. So we can direct to the **Hostname** rather than an IP that may change
+5. Enable *DHCP Registration*, This is for when we **EXPOSE A PROXY OR DEVICE** to an external network. So we can direct to the **Hostname** rather than an IP that may change, this requires the domain of the PFSense to match the VM Instance.
 
 	<img src="Images/DNS-3a.png" width=800>
 #### On Linux and Windows Routers
