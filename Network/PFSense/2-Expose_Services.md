@@ -8,13 +8,15 @@ If we have set the Domain name (System -> General) to be the same used in all th
 
 Probably going us a combination of local DNS resolution and Port Forwarding or Virtual IPs to forward the traffic correctly.
 
-Likely the best bet is to use port forwarding, and the Hostname DNS Resolution. Assign all devices that need to get traffic the same hostname, and utilize DNS to provide a primitive round robin. 
+Likely the best bet is to use port forwarding, and the Hostname DNS Resolution. Assign all devices that need to get traffic the same hostname, and utilize DNS to provide a primitive round robin. **Does not appear to work as expected** 
 ## Exposing Services
 
 ### NAT - Port Forwarding 
 This is the primary way we will expose services in the DMZ. This bypass the Router Firewall rules, and we need to be careful about this. We need to make sure we can identify the internal machine we are routing to regardless of their IP, as we use DHCP this may change depending on the number of machines, their boot order and other factors. 
 
-To do this we will make use of the DHCP lease DNS registration that was enabled during out initial setup. This way we can opaquely forward to the correct device. An additional measure we should look into, is if we register multiple devices with the same hostname - will the DNS register all of them and round robin  between them. If so this should be done.
+To do this we will make use of the DHCP lease DNS registration that was enabled during out initial setup. This way we can opaquely forward to the correct device. 
+
+(DEPRECATED) An additional measure we should look into, is if we register multiple devices with the same hostname - will the DNS register all of them and round robin  between them. If so this should be done.
 
 #### DMZ 
 1. Set Domain Name of DMZ: System -> General Setup, this can be something like below
