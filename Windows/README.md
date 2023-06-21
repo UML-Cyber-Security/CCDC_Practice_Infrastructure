@@ -1,1 +1,13 @@
-This can be a file containing an overview of the subfolder on specific topics
+# Windows Infrastructure
+These files detail various aspects of windows
+
+## TODO
+-Proxmox Setup
+-AD Setup
+-DNS
+-CA 👻
+-Samba
+-DFS
+
+
+
