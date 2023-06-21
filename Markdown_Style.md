@@ -3,13 +3,16 @@
 
 This is a document giving a basic rundown of Markdown, and a loose "Style" that we can use in this repository. 
 
-Q: Will this be all encompassing>
+Q: Will this be all encompassing
+
 A: No
 
 Q: Will this be a strict guideline 
+
 A: No
 
 Q: Will the person writing this (Matt) follow this strictly 
+
 A: No I may forget
 
 ## Intro to Markdown
@@ -52,8 +55,10 @@ Please look into the *details* page of each extension for more details.
     * (Option 1): [Install git](https://git-scm.com/download)
     * (Option 2): [Install Github Desktop](https://desktop.github.com/)
 2. If you chose to install git or GitHub Desktop, you can operate from the *terminal*, or the **Source Control** tab on the left of VS Code highlighted below
+
     ![Source Control](Images/VS-S.png)
 3. If you chose to install Github Desktop you also have the option to operate from the GitHub Desktop GUI as shown below
+
     <img src="Images/Git-Desktop.png" width=800>
 
 ## Repository Style Guide
@@ -61,18 +66,21 @@ This is a short (hopefully) section describing the preferred structure of our Gi
 
 ### Directories (Folders)
 Distinct sections should be contained in their *own* directory. The "root" directory of each topic should contain a ```README.md``` file, this will describe the topic, give brief overviews of the subtopics, and link to the ```README.md``` file of the subtopics. An in-progress example is shown below from the [PFSense](./Network/PFSense/README.md) directory. The ```README.md``` of the subtopics should contain information, or links to additional documents.
+
 <img src="Images/S-Dir-Read.png" width=800>
 
 
 The naming convention of ```README.md``` is important as this is the file that will be displayed in a repository directory *no other* file will be displayed.
 
 An Example of Directory Structures:
+
 <img src="Images/S-Dir-Struct.png" width=800>
 
 ### Images
 Images should be contained in a ```Images``` folder located in the same *directory* as the document they are *used in*. This is to prevent a confused mix of unused images.
 
 An example is shown below:
+
 ![Alt text](Images/S-Images.png)
 
 ## Markdown Basics
@@ -125,7 +133,7 @@ This has some personal motivations
 
 We can use *\** for bullet points and *1.* for numbered lists. The examples will all use *bullet points* for simplicity.
 
-If images or code blocks are associated with a bullet point they should be indented to one level more than the bullet point. Additionally to prevent issues with formatting, add an extra line with **NO CHARACTERS** on it between the image insertion and bullet point and any following text. An example is shown below.
+If images or code blocks are associated with a bullet point they should be indented to one or two levels more than the bullet point. Additionally to prevent issues with formatting, add an extra line with **NO CHARACTERS** on it between the image insertion and bullet point and any following text. An example is shown below.
 
 The character "_" is equivalent to a SPACE 
 The character "\n" is equivalent to a newline
@@ -137,7 +145,7 @@ ____\<img src="somePath" width=100>
 \n
 __\* Some sub bullet point 
 \n
-________\<img src="somePath" width=100>
+____\<img src="somePath" width=100>
 
 **This is the result**
 * Some Text... refer to the image below 
@@ -145,8 +153,8 @@ ________\<img src="somePath" width=100>
     <img src="Images/Taiga-Home-Logged.png" width=100>
 
   * Some sub bullet point 
-        <img src="Images/Taiga-Home-Logged.png" width=100>
 
+    <img src="Images/Taiga-Home-Logged.png" width=100>
 
 **This is what It looks like in the \`\`\`.md\`\`\` file**
 \* Some Text... refer to the image below 
