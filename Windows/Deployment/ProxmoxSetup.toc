@@ -1,0 +1,4 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {section}{\numberline {2}Getting the correct ISOs to Proxmox}{1}{section.2}%
+\contentsline {section}{\numberline {3}Getting the VM}{1}{section.3}%
+\contentsline {section}{\numberline {4}Modifying the VM}{1}{section.4}%
