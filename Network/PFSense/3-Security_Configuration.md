@@ -13,6 +13,7 @@ This document will contain further details on the Security configuration done to
 - [Initial Firewall Config Windows](#initial-firewall-config-windows)
   - [WAN (Router-Internal)](#wan-router-internal-1)
   - [LAN (Windows-Net)](#lan-windows-net)
+- [Packages](#packages)
 
 ## Exposing Services
 Please Refer to the [Exposing_Services](./2-Expose_Services.md) document for more details on how this was done for the DMZ Router, and other possible options. 
@@ -30,4 +31,8 @@ Please Refer to the [Exposing_Services](./2-Expose_Services.md) document for mor
 ### WAN (Router-Internal)
 ### LAN (Windows-Net)
 
+
+## Packages 
+1. There is a Suricata extension
+    <img src="Images/Suricata-Ex.png" width=800>
 

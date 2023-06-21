@@ -354,43 +354,53 @@ This Results in the following.
 <img src="Images/DMZ-Routes.png" width=800>
 
 #### Linux Router Routes 
-1. (Optional) Create a Gateway to the Windows Router
-   * If not all routes will use the DMZ router Gateway
-2. Make Static Route to Internet 
+1. (Optional) Create a Gateway to the Windows Router (IP of Windows Router and Subnet are used)
+   * If not then all static routes will use the DMZ router Gateway (That should already be there)
+2. Make Static Route to Internet (0.0.0.0/1)
 	* Use the DMZ Router Gateway
-3. Make Static Route to DMZ
+3. Make Static Route to DMZ (10.0.1.0/24)
 	* Use the DMZ Router Gateway
-4. Make Static Route to Windows
+4. Make Static Route to Windows (10.0.3.0/24)
 	* Use the DMZ Router Gateway or if you created it the Windows Router Gateway
 
-Results are shown below:
+Results are shown below for the **No Gateway Created** method:
 <img src="Images/Lin-Route.png" width=800>
 
+Results are shown below for the **Additional Gateway Created** method:
+<img src="Images/Lin-Route-Gateway.png" width=800>
+
 ### Windows Router Routes 
-We do the same as what we did in the Linux Router except rather than routing to the Windows Subnet, we route to the Linux Subnet. 
+We do the same as what we did in the Linux Router except rather than routing to the Windows Subnet, we route to the Linux Subnet. If we were to make a gateway we would **instead** make one with the IP of the  
 
 ### DNS Configuration
 #### On the DMZ Router
+
 1. Ensure that we have the DNS Configured on the DMZ router (We may want to add a local DNS system to this). System -> General
 
 	<img src="Images/DNS-2.png" width=800>
-2. Open DNS Resolver. Services -> DNS Resolver as shown below
+2. (Optional) Add DHCP of internal Routers (In this case the DHCP was Changed, so Linux is .10 and windows is .11)
+   * This may or may not be necessary, it is here for **TESTING**!
+	<img src="Images/DNS-2a.png" width=800>
+3. Open DNS Resolver. Services -> DNS Resolver as shown below
 
 	<img src="Images/DNS-1.png" width=800>
-3. Enable DNS forwarding 
+4. Enable DNS forwarding 
 
 	<img src="Images/DNS-3.png" width=800>
-4. Enable *DHCP Registration*, This is for when we **EXPOSE A PROXY OR DEVICE** to the external network. So we can direct to the **Hostname** rather than an IP that may change
+5. Enable *DHCP Registration*, This is for when we **EXPOSE A PROXY OR DEVICE** to the external network. So we can direct to the **Hostname** rather than an IP that may change
 
 	<img src="Images/DNS-3a.png" width=800>
 #### On Linux and Windows Routers
-1. Disable DNS Resolver. Services -> DNS Resolver
+1. Set Domain name, this will need to be included in the hostname of the internal machines
+
+	<img src="Images/DNS-4a.png" width=800>
+2. Disable DNS Resolver. Services -> DNS Resolver
 
 	<img src="Images/DNS-4.png" width=800>
-2. Enable DNS Forwarder, we need to configure this so it forwards to our DMZ Router. Services -> DNS Forwarder.
+3. Enable DNS Forwarder, we need to configure this so it forwards to our DMZ Router. Services -> DNS Forwarder.
 
 	<img src="Images/DNS-5.png" width=800>
-3. Enable *Register DHCP Leases* and *Register DHCP Static Mappings*
+4. Enable *Register DHCP Leases* and *Register DHCP Static Mappings*
 
 	<img src="Images/DNS-6.png" width=800>
 
