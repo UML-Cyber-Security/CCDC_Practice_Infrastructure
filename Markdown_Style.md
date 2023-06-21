@@ -56,13 +56,10 @@ Please look into the *details* page of each extension for more details.
 3. If you chose to install Github Desktop you also have the option to operate from the GitHub Desktop GUI as shown below
     <img src="Images/Git-Desktop.png" width=800>
 
-## Basic Style Guide
-This is not exhaustive, and not strict but please try to keep things organized.
-
-### Repository Style Guide
+## Repository Style Guide
 This is a short (hopefully) section describing the preferred structure of our GitHub repository. 
 
-#### Directories (Folders)
+### Directories (Folders)
 Distinct sections should be contained in their *own* directory. The "root" directory of each topic should contain a ```README.md``` file, this will describe the topic, give brief overviews of the subtopics, and link to the ```README.md``` file of the subtopics. An in-progress example is shown below from the [PFSense](./Network/PFSense/README.md) directory. The ```README.md``` of the subtopics should contain information, or links to additional documents.
 <img src="Images/S-Dir-Read.png" width=800>
 
@@ -72,16 +69,16 @@ The naming convention of ```README.md``` is important as this is the file that w
 An Example of Directory Structures:
 <img src="Images/S-Dir-Struct.png" width=800>
 
-#### Images
+### Images
 Images should be contained in a ```Images``` folder located in the same *directory* as the document they are *used in*. This is to prevent a confused mix of unused images.
 
 An example is shown below:
 ![Alt text](Images/S-Images.png)
 
-#### Markdown Basics
+## Markdown Basics
 This section will contain the basic knowledged necessary to write a Markdown file for this repository.
 
-##### Text Modification
+### Text Modification
 * Italicize: Surround the text in one set of "*" as shown below with *no space* between them and the text
     \*This is what It looks like in the .md file\*
     *This is what is produced*
@@ -92,7 +89,7 @@ This section will contain the basic knowledged necessary to write a Markdown fil
     \*\*\*This is what It looks like in the .md file\*\*\*
     ***This is what is produced***
 
-##### Code blocks
+### Code blocks
 * Inline Block: On the same line surround text with one set of \`\`\` as shown below with *no space* between them and the text. This is useful for file locations.
 text
     This is what It looks like in the \`\`\`.md\`\`\` file
@@ -117,13 +114,13 @@ text
         return 1;
     }
     ```
-##### Images 
+### Images 
 * HTML
     \<img src="somePath"\> 
 * Markdown
     \[Alt Text](somePath)
 
-##### Bullet Points
+### Bullet Points
 This has some personal motivations
 
 We can use *\** for bullet points and *1.* for numbered lists. The examples will all use *bullet points* for simplicity.
@@ -176,7 +173,7 @@ ________\`\`\`
         ```
         This is some Code
         ```
-##### Headings 
+### Headings 
 The \# character preceding a sentence on an empty line signifies a header. Notice the space between the Hash and word.
 
 
@@ -201,7 +198,7 @@ The \# character preceding a sentence on an empty line signifies a header. Notic
 \#\#\#\#\#\# Sub-Sub-Sub-Sub Section
 ###### Sub-Sub-Sub-Sub Section
 
-##### Table of Contents 
+### Table of Contents 
 If the section is long enough, it should contain a table of contents (That is, if you need to scroll).
 
 This can easily be done with Markdown All In One. We should not have an entry for the *Title* or *Table of Contents Section*.
@@ -215,7 +212,7 @@ This can easily be done with Markdown All In One. We should not have an entry fo
 
 If you do not have Markdown All In One, ask someone who does to make the Table of contents.
 
-##### Link to Documents or Headers
+### Link to Documents or Headers
 We give the relative path in a Hyperlink HTML or Markdown link structure.
 
 **Document**
