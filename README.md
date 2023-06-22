@@ -7,6 +7,8 @@ This file will contain basic information on
 
 Any information regarding the setup and use of the infrastructure, or any related scripts will be located in their related subdirectories.
 
+A style guide for this repository is provided in the [Markdown_Style](./Markdown_Style.md) file.
+
 ## Table of Contents (Subdirectories)
 * [Linux](Linux/README.md)
   * [Something](Linux/README.md) 
