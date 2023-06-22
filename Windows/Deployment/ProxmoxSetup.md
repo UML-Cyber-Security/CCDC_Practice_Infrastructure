@@ -1,5 +1,7 @@
 # Proxmox Setup
 
+Read the Latex PDF instead! This one is not as good as that one
+
 Note: You can not use many of proxmox's features (i.e. shut it down without going through the console) without the guest agent installed. Just to save you from mashing the "shutdown" button and wondering why it doesn't work. 
 
 ## Step 1: Getting the correct ISOs to Proxmox
