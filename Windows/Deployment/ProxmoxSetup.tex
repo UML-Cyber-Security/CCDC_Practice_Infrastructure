@@ -4,6 +4,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{tikzsymbols}
+\usepackage{float}
 
 \lstset{
     basicstyle=\ttfamily,
@@ -79,6 +80,24 @@ Now you wait for it to install. Don't worry, you'll get used to waiting for wind
 \section{Basic Configurations to Prepare for a Template}
 The goal is to never do that time consuming process again. We would like to create a template so we can clone it. Before you make a template you can add useful things like RDP, Firefox, setting DNS, etc. The world is your oyster.
 
+\subsection{Enabling RDP}
+
+Bing can handle this one.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{bingDirectionsForEnableRDP.png}
+    \caption{Bing explaining how to enable RDP}
+    \label{fig:bingDirectionsForEnableRDP}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{enableRDP.png}
+    \caption{Enabling RDP}
+    \label{fig:enableRDP}
+\end{figure}
+
 \subsection{Installing Firefox}
 By default, Internet Explorer is the only browser installed on the computer. What a terrible browser! You can avoid ever opening IE by installing Firefox from powershell. 
 \begin{lstlisting}
@@ -89,6 +108,37 @@ By default, Internet Explorer is the only browser installed on the computer. Wha
     -OutFile "$HOME\Desktop\firefox.msi"
 \end{lstlisting}
 
-\noindent This command saves firefox.msi to your desktop. YRemember that you can download stuff from powershell. (But pls no proprietary browsers \Vomey{})
+\noindent This command saves firefox.msi to your desktop. Remember that you can download stuff from powershell. (But pls no proprietary browsers \Vomey{})
+
+\subsection{Setting up the QEMU Agent}
+There are two steps. First, run the QEMU Agent installer. Second, add the VirtIO driver in the Device Manager.
+
+Once you finish, the IP Address is visible from the “Summary” tab in proxmox. Very nice.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{successfulAgentIPThingie.png}
+    \caption{IP Address in Proxmox}
+    \label{fig:successfulAgentIPThingie}
+\end{figure}
+
+\subsubsection{Running the QEMU Agent Installer}
+“In the Windows VM, open the File Explorer and navigate to the VirtIO driver ISO. Open the “guest-agent” folder and double-click on the “qemu-ga-x86\_64.msi” file to run the installer” -Bing
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{runningGuestAgent.png}
+    \caption{The MSI file to run}
+    \label{fig:runningGuestAgent}
+\end{figure}
+
+\subsubsection{Adding VirtIO in Device Manager}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Adding-VIRTIO-Driver.png}
+    \caption{Selecting the 2k19 driver in the vioserial folder in the virtio CD drive.}
+    \label{fig:Adding-VIRTIO-Driver}
+\end{figure}
 
 \end{document}
