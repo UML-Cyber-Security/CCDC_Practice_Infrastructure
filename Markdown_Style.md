@@ -96,6 +96,7 @@ An example is shown below:
 
 ## Markdown Basics
 This section will contain the basic knowledged necessary to write a Markdown file for this repository.
+Please refer to the [writing guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) on github for more details  
 
 ### Text Modification
 * Italicize: Surround the text in one set of "*" as shown below with *no space* between them and the text

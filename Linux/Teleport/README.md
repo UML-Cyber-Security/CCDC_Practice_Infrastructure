@@ -191,6 +191,8 @@ https://goteleport.com/docs/desktop-access/active-directory-manual/#allow-remote
 ### Add Windows RDP Web
 [Reference!](https://goteleport.com/docs/desktop-access/active-directory/#compare-desktop-access-to-other-rdp-clients)
 
+https://goteleport.com/docs/desktop-access/getting-started/
+
 1. Login to the Teleport web-interface 
 2. Click Add Server as shown below
 
