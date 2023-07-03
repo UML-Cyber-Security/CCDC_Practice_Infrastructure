@@ -46,6 +46,11 @@ We can also modify the DNS through the Web Interface
 3. Select OK
 
 ## Setup Gluster
+1. Install Gluster-Server and Gluster-Client
+    ```
+    apt-get install glusterfs-server glusterfs-client
+    ```
+
 ### DataCenter Version
 1. Open Data-center View
 
@@ -69,7 +74,7 @@ In doing this we can create a point to create a brick from, *without* partitioni
 
 
 ```
-# Make file to fill with zero (Be the "device"
+# Make file to fill with zeros later with the /dev/zero "device"
 sudo touch /tempffs
 # Make mountpoint
 sudo mkdir/gluster_brick

@@ -2,8 +2,8 @@
 
 
 
-## Enterprise Eddition
-We need to update the source list that apt utilizes when searching for packages. This is particularly important if we have the Enterprise Eddition for Proxmox installed.
+## Enterprise Edition
+We need to update the source list that apt utilizes when searching for packages. This is particularly important if we have the Enterprise Edition for Proxmox installed.
 
 We need to edit the */etc/apt/sources* anf add the following line.
 ```
@@ -12,6 +12,11 @@ We need to edit the */etc/apt/sources* anf add the following line.
 deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
 ```
 
-I did not remove the enterprise entry WE can do that later if desired - Matt
+Remove the Enterprise Edition Repository 
+```
+# Both are enterprise Repositories  
+rm -f /etc/apt/sources.list.d/pve-enterprise.list && \
+rm -f  /etc/apt/sources.list.d/ceph.list
+```
 
 ## SDN setup
