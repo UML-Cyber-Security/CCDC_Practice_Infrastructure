@@ -31,7 +31,7 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
     <img src="Images/SD3.png" width=800>
 
 4. Create a VLAN Zone 
-   *  <a href="https://pve.proxmox.com/pve-docs/chapter-pvesdn.html">Per Proxmox's SND documentation</a>: "A zone defines a virtually separated network", we need this in order to virtually connect the Proxmox hosts, allowing for the "Seamless" communication between nodes on the various networks. We can likely use the **Simple** or **VLan** Zones. If we wish to utilize VLan Tags the VLAN network is required.
+   *  <a href="https://pve.proxmox.com/pve-docs/chapter-pvesdn.html">Per Proxmox's SND documentation</a>: "A zone defines a virtually separated network", we need this in order to virtually connect the Proxmox hosts, allowing for the "Seamless" communication between nodes on the various networks. If we wish to utilize this properly VXLans are required, as they create an overlay network between the systems.
 
     <img src="Images/SD4.png" width=800>
 
@@ -40,19 +40,15 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
 
     <img src="Images/SD5.png" width=400>
 
-   *  For the DMZ we may want to create a VLAN network and specify a bridge as the default **vmb0** which is on each device. This is probably not necessary and can be skipped.  
-
-            <img src="Images/SD5-b.png" width=600>
-
 6. Navigate to the VNet menu, create an VNet as shown below. As we are using a simple network, no VNet TAG is needed.
 
     <img src="Images/SD6.png" width=400>
 
-   *  For the DMZ we may want to create a VLAN network and specify a bridge as the default **vmb0** on each     
-        <img src="Images/SD6-b.png" width=400>
-
 7. Repeat 6 for all desired networks (In our case 4)
-8. Navigate to the SDN main page again, hit the **Apply** button
+8. Click on the VNet, and create a subnet for each. Example shown below
+    <img src="Images/SD6-c.png" width=800>
+9.  Navigate to the SDN main page again, hit the **Apply** button
     <img src="Images/SD7.png" width=800>
-9. Now we have networks that devices can be attached to
+10. Now we have networks that devices can be attached to
+
 
