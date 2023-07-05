@@ -40,8 +40,19 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
 
     <img src="Images/SD5.png" width=400>
 
-6. Navigate to the VNet menu
+   *  For the DMZ we may want to create a VLAN network and specify a bridge as the default **vmb0** which is on each device. This is probably not necessary and can be skipped.  
 
-7. s
+            <img src="Images/SD5-b.png" width=600>
 
-![Alt text](image.png)
+6. Navigate to the VNet menu, create an VNet as shown below. As we are using a simple network, no VNet TAG is needed.
+
+    <img src="Images/SD6.png" width=400>
+
+   *  For the DMZ we may want to create a VLAN network and specify a bridge as the default **vmb0** on each     
+        <img src="Images/SD6-b.png" width=400>
+
+7. Repeat 6 for all desired networks (In our case 4)
+8. Navigate to the SDN main page again, hit the **Apply** button
+    <img src="Images/SD7.png" width=800>
+9. Now we have networks that devices can be attached to
+

@@ -31,20 +31,20 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 	ssh [root@192.168.0.60](mailto:root@192.168.0.60)
 	Type in password
 2. Navigate to the directory where ISO files are stored in linux
-	1. cd /var/lib/vz/template/iso
+	* cd /var/lib/vz/template/iso
 3. Go to PF Sense download page on your regular browser & fill out download specifications as shown below.
 	<img src="Images/Image1.png" width=800>
     *  You may have to click Download once, so the actual download link with the correct details are linked to the download button
 		* This may be needed because I am unsure as to how often the webpage updates
 	* **Right click the Download Button** & save the link
 4. Navigate back to the ssh console and pull the iso file from the web
-	1. use the wget command as follows to download the image to the Proxmox machine
+	* use the wget command as follows to download the image to the Proxmox machine
 		```
 		wget -O pfSense.iso.gz https://atxfiles.netgate.com/mirror/downloads/pfSense-CE-2.6.0-RELEASE-amd64.iso.gz
 		```
 	<img src="Images/Image2.png" width=800>
 5. Unzip the file inside the same Linux ISO directory
-	1. Using the following command to unzip the downloaded file
+	* Using the following command to unzip the downloaded file
 	```sh
 	gunzip pfSense.iso.gz
 	```
