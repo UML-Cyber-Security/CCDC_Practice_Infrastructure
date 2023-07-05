@@ -65,4 +65,3 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
       * We can also (preferably) setup the PFSense machines!
 
 12. **NOTICE**: We are going to use the vmbr0 (Default bridge) for the WAN on the DMZ router. This is so we get a cyber range IP. All devices have the interface so it will be fine!
-
