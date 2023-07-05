@@ -50,6 +50,9 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 	```
 
 ### Adding additional Network Interfaces 
+Please refer to the [SDN](./../Proxmox/SDN.md) Documentation if this is meant to be highly available
+
+Otherwise please follow the instructions below.
 1. Open the VM management interface by clicking on the VM name in the left column as highlighted in the image below.
 	
 	<img src="Images/Select-VM.png" width=800>
