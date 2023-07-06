@@ -14,14 +14,9 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
   * [Something](Linux/README.md) 
 * [Network](Network/README.md)
   * [PFSense](Network/PFSense/README.md)
-    * [SDN](./Network/Proxmox/SDN.md)
   * [Proxmox Networking](Network/Proxmox/README.md)
-    * [Initial-Setup](./Network/PFSense/1-Initial_Setup.md)
-    * [Expose-Service](./Network/PFSense/2-Expose_Services.md)
-    * [Security-Config](./Network/PFSense/3-Security_Configuration.md)
 * [Windows](Windows/README.md)
   * [Something](Windows/README.md) 
-
 ## Taiga Access 
 If you are looking at this in the far future (or even the near future), then its likely the Taiga will not exist or be useful. Hopefully, we are able to preserve the Wiki entries somewhere here!
 
