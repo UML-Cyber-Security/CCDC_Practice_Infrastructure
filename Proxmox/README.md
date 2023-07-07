@@ -1,4 +1,15 @@
-# Proxmox
+# Proxmox <!-- omit from toc -->
+This directory contains documentation relating to the installation and setup of the Proxmox machines for our practice infrastructure. Infromation regarding the Gluster setup for the Proxmox systems will be contained in the [Gluster Directory](./../Gluster/README.md).
+
+## Repository Table of Contents <!-- omit from toc -->
+* [Initial Install & Setup](./1-InstallingProxmox%2BInfrastructure%20Specific%20Details.md)
+* [Changing Hostnames](./2-ChangingHostNames.md)
+
+## Table of Contents <!-- omit from toc -->
+- [Install Ubuntu](#install-ubuntu)
+- [Enterprise Edition](#enterprise-edition)
+- [SDN setup](#sdn-setup)
+
 
 ## Install Ubuntu
 1. Navigate to:
