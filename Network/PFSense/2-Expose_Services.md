@@ -1,6 +1,13 @@
 # PFSense <!-- omit from toc -->
 
 # Table of Contents <!-- omit from toc -->
+- [DNS Notes](#dns-notes)
+- [Exposing Services](#exposing-services)
+  - [NAT - Port Forwarding](#nat---port-forwarding)
+    - [DMZ](#dmz)
+    - [Linux](#linux)
+    - [Windows](#windows)
+  - [Virtual Addresses](#virtual-addresses)
 
 
 ## DNS Notes
@@ -111,3 +118,4 @@ This is because each address only has one set or ports, we cannot forward port 4
 6. Follow Port Forwarding steps, However in place of ```WAN Address```  in **Step** *9.* we use the ```Virtual IP option``` as shown below to select one, or ```WAN net``` to use all Virtual IPs. 
 
     <img src="Images/VIP5.png" width=800>
+

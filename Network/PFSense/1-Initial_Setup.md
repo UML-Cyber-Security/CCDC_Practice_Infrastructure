@@ -3,7 +3,6 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 
 
 ## Table of Contents <!-- omit from toc -->
-
 - [Initial Machine Setup Proxmox](#initial-machine-setup-proxmox)
 	- [Downloading ISO](#downloading-iso)
 	- [Adding additional Network Interfaces](#adding-additional-network-interfaces)

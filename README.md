@@ -8,7 +8,7 @@ This file will contain basic information on
 
 Any information regarding the setup and use of the infrastructure, or any related scripts will be located in their related subdirectories.
 
-A style guide for this repository is provided in the [Markdown_Style](./Markdown_Style.md) file.
+A style guide for this repository is provided in the [Markdown_Style](./Markdown_Style.md) file. It is likely not followed but it also contains some useful programs, and software when interacting with GitHub and Markdown.
 
 ## Table of Contents (README)<!-- omit from toc -->
 - [Table of Contents (TOPICS)](#table-of-contents-topics)
@@ -133,9 +133,10 @@ Proxmox Infrastructure Reference
 Please refer to the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-team/wiki/practice-infrastructure) for the login information. Although you can likely guess this information.
 
 ### Steps to Access
-1. Access one of the Instances using their IP. 
+1. Connect to the OpenVPN server using your certificate. This requires the [OpenVPN Client](https://openvpn.net/client/)
+2. Access one of the Instances using their IP. 
     * The Proxmox web interface is hosted on the port **8006**
     * **Note**: The IP's in the table above provide hyperlinks
-2. Login using the information on the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-team/wiki/practice-infrastructure)
+3. Login using the information on the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-team/wiki/practice-infrastructure)
     * This is the usename and password
-3. Now you have access, it is quite simple I would think
+4. Now you have access, it is quite simple I would think

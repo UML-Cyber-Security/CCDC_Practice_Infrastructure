@@ -1,6 +1,9 @@
 # Proxmox <!-- omit from toc -->
 This directory contains documentation relating to the installation and setup of the Proxmox machines for our practice infrastructure. Infromation regarding the Gluster setup for the Proxmox systems will be contained in the [Gluster Directory](./../Gluster/README.md).
 
+
+If you need information regarding the methods used to access Proxmox, please refer to the [root readme](./../README.md)
+
 ## Repository Table of Contents <!-- omit from toc -->
 * [Initial Install & Setup](./1-InstallingProxmox%2BInfrastructure%20Specific%20Details.md)
 * [Changing Hostnames](./2-ChangingHostNames.md)

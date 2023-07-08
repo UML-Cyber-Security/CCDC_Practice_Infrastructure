@@ -5,13 +5,9 @@ Author(s):
     Luke
 
 ## Preliminary Note: 
-It's recommended to change the host names before manipulating the machines, such as adding vms or adding/creating a cluster with the machine.
-If machines are already in use see "Extra" at the bottom of the document.
-	
-## Table Of Contents
-- Edit /etc/hosts
-- Edit /etc/hostname
-- Reboot Machine
+It's recommended to change the *host names* of the Proxmox machines before manipulating them, such as adding VMs or adding/creating a Proxmox cluster.
+
+If machines are already in use see [Extra](#extra) at the bottom of the document.
 
 ## Steps - Each step must be done to every individual machine that you wish to alter the host name for
 1. Access the Promox instance's Console
@@ -28,7 +24,7 @@ If machines are already in use see "Extra" at the bottom of the document.
 	reboot
 	``` 
 
-Extra:
+## Extra:
 This may work. https://forum.proxmox.com/threads/proxmox-node-name-change.14327/#post-156444
 
 
