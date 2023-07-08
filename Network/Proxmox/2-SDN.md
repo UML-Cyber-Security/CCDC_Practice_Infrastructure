@@ -1,5 +1,5 @@
 # Setup of the Software Defined Network <!-- omit from toc -->
-This document described the setup and configuration of Software Defined Networks in Proxmox for this project.
+This document described the setup and configuration of Software Defined Networks in Proxmox for this project. It also contains a walkthrough for the Network Creation.
 
 ## Table of Contents <!-- omit from toc -->
 

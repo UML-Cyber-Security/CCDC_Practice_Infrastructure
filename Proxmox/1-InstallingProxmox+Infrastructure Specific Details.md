@@ -40,14 +40,3 @@ Author:
 1. https://etcher.balena.io/ - Site to download Etcher
 2. https://etcher.download/ - How To Make A Bootable USB Drive With Etcher
 
-Proxmox Infrastructure Reference
-| PC Number | Hostname | IP |
-| --------- | -------- | -- |
-| WAN-35    | Proxmox5 | 192.168.0.114 |
-| WAN-36    | Proxmox4 | 192.168.0.87 |
-| WAN-37    | Proxmox3 | 192.168.0.118 |
-| WAN-38    | Proxmox2 | 192.168.0.159 |
-| WAN-40 | Proxmox1 | 192.168.0.223 |
-
-(Currently has the Cluster started)
-

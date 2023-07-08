@@ -1,22 +1,39 @@
-# CCDC Practice Infrastructure
+# CCDC Practice Infrastructure <!-- omit from toc -->
 This file will contain basic information on 
 
-1. Directory to topics
-2. PFSense Access
-3. Taiga Access 
+1. Hyperlink to Topic Directories
+2. Taiga Access 
+3. PFSense Access
+
 
 Any information regarding the setup and use of the infrastructure, or any related scripts will be located in their related subdirectories.
 
 A style guide for this repository is provided in the [Markdown_Style](./Markdown_Style.md) file.
 
-## Table of Contents (Subdirectories)
-* [Linux](Linux/README.md)
-  * [Something](Linux/README.md) 
+## Table of Contents (README)<!-- omit from toc -->
+- [Table of Contents (TOPICS)](#table-of-contents-topics)
+- [Taiga Access](#taiga-access)
+  - [Login/Register](#loginregister)
+  - [Access Project](#access-project)
+  - [Access Epic](#access-epic)
+  - [Access Sprint](#access-sprint)
+  - [Access Wiki](#access-wiki)
+  - [Access Issues](#access-issues)
+- [PFSense Access](#pfsense-access)
+  - [System Info](#system-info)
+  - [Steps to Access](#steps-to-access)
+
+## Table of Contents (TOPICS) 
+* [Proxmox Setup](./Proxmox/README.md)
+* [Gluster](./Gluster/README.md)
 * [Network](Network/README.md)
   * [PFSense](Network/PFSense/README.md)
   * [Proxmox Networking](Network/Proxmox/README.md)
+* [Linux](Linux/README.md)
+  * [Something](Linux/README.md) 
 * [Windows](Windows/README.md)
   * [Something](Windows/README.md) 
+
 ## Taiga Access 
 If you are looking at this in the far future (or even the near future), then its likely the Taiga will not exist or be useful. Hopefully, we are able to preserve the Wiki entries somewhere here!
 
@@ -99,7 +116,26 @@ Otherwise the following are instructions on how we can access Taiga.
 3. Once we have done so, we can fill out the issue with the topic and necessary information. You can assign it to a user or ask someone else to do so.
     
     <img src="Images/Taiga-Issue-Internal.png" width=800>
+
 ## PFSense Access 
+### System Info
+Proxmox Infrastructure Reference
+| PC Number | Hostname | IP |
+| --------- | -------- | -- |
+| WAN-35    | Proxmox5 | [192.168.0.114](https://192.168.0.114:8006/#v1:0:18:4:5:=contentIso:::::5) |
+| WAN-36    | Proxmox4 | [192.168.0.87](https://192.168.0.87:8006/#v1:0:18:4:5:=contentIso:::::5) |
+| WAN-37    | Proxmox3 | [192.168.0.118](https://192.168.0.118:8006/#v1:0:18:4:5:=contentIso:::::5) |
+| WAN-38    | Proxmox2 | [192.168.0.159](https://192.168.0.159:8006/#v1:0:18:4:5:=contentIso:::::5) |
+| WAN-40    | Proxmox1 | [192.168.0.223](https://192.168.0.223:8006/#v1:0:18:4:5:=contentIso:::::5) |
 
+(Currently has the Cluster has been started with the above information)
 
-## Overview
+Please refer to the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-team/wiki/practice-infrastructure) for the login information. Although you can likely guess this information.
+
+### Steps to Access
+1. Access one of the Instances using their IP. 
+    * The Proxmox web interface is hosted on the port **8006**
+    * **Note**: The IP's in the table above provide hyperlinks
+2. Login using the information on the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-team/wiki/practice-infrastructure)
+    * This is the usename and password
+3. Now you have access, it is quite simple I would think

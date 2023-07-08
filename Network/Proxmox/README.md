@@ -17,7 +17,7 @@ Based on what I have read:
 4. The Ingress router (DMZ One) will be connected to the bridged network, so that will still needs to exist.
 
 ## Network Creation
-Refer to the [PFSense Documentation](./../PFSense/1-Initial_Setup.md) document for more details.
+Refer to the [PFSense Documentation](./../PFSense/1-Initial_Setup.md) document for more details on a single machine setup.
 Refer to the [SDN Documentation](./SDN.md) when implementing a **Highly Available** or Multi-System setup.
 
 ## VM Creation 
