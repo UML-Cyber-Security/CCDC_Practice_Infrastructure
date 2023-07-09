@@ -11,6 +11,8 @@ If you need information regarding the methods used to access Proxmox, please ref
 ## Table of Contents <!-- omit from toc -->
 - [Install Ubuntu](#install-ubuntu)
 - [Enterprise Edition](#enterprise-edition)
+  - [CLI Method](#cli-method)
+  - [Web Interface](#web-interface)
 - [SDN setup](#sdn-setup)
 
 
@@ -35,6 +37,8 @@ If you need information regarding the methods used to access Proxmox, please ref
 ## Enterprise Edition
 We need to update the source list that apt utilizes when searching for packages. This is particularly important if we have the Enterprise Edition for Proxmox installed.
 
+
+### CLI Method
 We need to edit the */etc/apt/sources* anf add the following line.
 ```
 # Proxmox VE pve-no-subscription repository provided by proxmox.com,
@@ -48,6 +52,31 @@ Remove the Enterprise Edition Repository
 rm -f /etc/apt/sources.list.d/pve-enterprise.list && \
 rm -f  /etc/apt/sources.list.d/ceph.list
 ```
+### Web Interface 
+1. Open the Web GUI and navigate to Proxmox instance 
+
+    <img src="Images/S1.png" width=800>
+
+2. Open the Updates drop down, and acess the Repositories menu
+
+    <img src="Images/S2.png" width=800>
+
+3. Click Add, and click OK to the prompt shown below
+
+    <img src="Images/S3.png" width=800>
+
+4. Select *No Subscription* from the dropdown menu as shown below, and click add
+
+    <img src="Images/S4.png" width=800>
+
+5. Click on the Enterprise Repositories
+
+    <img src="Images/S5.png" width=800>
+
+6. Click Disable, you should see the repository is unchecked and greyed out
+   
+    <img src="Images/S6.png" width=800>
+
 
 ## SDN setup
 Please refer to [SDN](./../Network/Proxmox/SDN.md)
