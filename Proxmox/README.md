@@ -13,6 +13,7 @@ If you need information regarding the methods used to access Proxmox, please ref
 - [Enterprise Edition](#enterprise-edition)
   - [CLI Method](#cli-method)
   - [Web Interface](#web-interface)
+- [Set Correct Time Zone](#set-correct-time-zone)
 - [SDN setup](#sdn-setup)
 
 
@@ -53,7 +54,7 @@ rm -f /etc/apt/sources.list.d/pve-enterprise.list && \
 rm -f  /etc/apt/sources.list.d/ceph.list
 ```
 ### Web Interface 
-1. Open the Web GUI and navigate to Proxmox instance 
+1. Open the Web GUI and navigate to a Proxmox instance 
 
     <img src="Images/S1.png" width=800>
 
@@ -77,6 +78,24 @@ rm -f  /etc/apt/sources.list.d/ceph.list
    
     <img src="Images/S6.png" width=800>
 
+## Set Correct Time Zone 
+1. Open the Web GUI and navigate to a Proxmox instance 
+
+    <img src="Images/S1.png" width=800>
+
+2. Navigate to the Time menu under **System**
+
+    <img src="Images/T2.png" width=800>
+
+3. Click on the Time Zone and hit Edit
+
+    <img src="Images/T3.png" width=800>
+
+4. Change to New_York, or whatever time zone is needed
+
+    <img src="Images/T4.png" width=800>
+
+5. Hit OK, Now repeat for all other machines in the cluster.
 
 ## SDN setup
 Please refer to [SDN](./../Network/Proxmox/SDN.md)
