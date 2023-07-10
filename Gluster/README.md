@@ -63,9 +63,21 @@ We can also modify the DNS through the Web Interface
 3. Click Add, and select GlusterFS
 
     <img src="Images/G3.png" width=800>
+    <img src="Images/G4.png" width=800>
 
-4. It cant find anything after this.
-    [ref](https://www.jamescoyle.net/how-to/533-glusterfs-storage-mount-in-proxmox#:~:text=Add%20using%20Proxmox%20web%20GUI&text=Click%20Add%20and%20then%20GlusterFS,for%20the%20storage%20mount%20point.) 
+4. Fill in the information as follow 
+    * ID - Some Identifier, name does not matter: Ex. ```Gluster```
+    * Server - IP or DNS of Gluster server: Ex. ```gluster.cyber.uml.edu```
+    * Second Server - Can be blank
+    * Volume Name - Name of volume: Ex. ```/gluster-volume/ccdc2024```
+    * Content: ALL (Drop Down Menu) 
+    * Nodes: ALL (Drop Down Menu)
+    * Enable: Ensure it is checked (This is the default)
+    
+    <img src="Images/G5.png" width=800>
+
+5. Click Add, It may or may not work see [Error Fixing](#error-fixing)
+
 
 ## Gluster brick created from Files
 The following entry is not utilized with the Proxmox Instance. This is based on the article [here](https://www.jamescoyle.net/how-to/2096-use-a-file-as-a-linux-block-device), excluding the loop device steps. 
@@ -94,3 +106,6 @@ sudo mount -a
 lsblk
 ```
 ## MORE
+
+## Error Fixing
+
