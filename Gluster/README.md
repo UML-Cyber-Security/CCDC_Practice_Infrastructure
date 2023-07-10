@@ -1,5 +1,14 @@
-# Gluster
+# Gluster <!-- omit from toc -->
 Information on Gluster as utilized in the practice setup.
+
+## Table of Contents <!-- omit from toc -->
+- [DNS Setup](#dns-setup)
+- [Setup Gluster](#setup-gluster)
+  - [DataCenter Version](#datacenter-version)
+- [Gluster brick created from Files](#gluster-brick-created-from-files)
+- [MORE](#more)
+- [Error Fixing](#error-fixing)
+
 
 ## DNS Setup
 We are utilizing a Gluster volume located in the cyber range. In order to use this, we need to configure the DNS for the host Proxmox machine. To do this we need to edit the */etc/resolv.conf* file, and create additional *nameserver* entries. The **order** of the entries matters.
@@ -77,6 +86,7 @@ We can also modify the DNS through the Web Interface
     <img src="Images/G5.png" width=800>
 
 5. Click Add, It may or may not work see [Error Fixing](#error-fixing)
+   * You will be done at this point
 
 
 ## Gluster brick created from Files
