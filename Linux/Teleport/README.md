@@ -72,11 +72,11 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
 
     * Place a valid private key in ```/var/lib/teleport-info/privkey.pem``` (Done by openssl command)
     * Place a valid certificate chain ```/var/lib/teleport-info/fullchain.pem``` (Done by openssl command)
-4. Configure the Teleport Server
+4. Configure the Teleport Server, replace \<IP\> with the machine's IP!
     ``` sh
     sudo teleport configure -o file \
-    --cluster-name=192.168.0.173 \
-    --public-addr=192.168.0.173:443 \
+    --cluster-name=<IP> \
+    --public-addr=<IP>:443 \
     --cert-file=/var/lib/teleport-info/fullchain.pem \
     --key-file=/var/lib/teleport-info/privkey.pem
     ```
