@@ -31,6 +31,7 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 	Type in password
 2. Navigate to the directory where ISO files are stored in linux
 	* cd /var/lib/vz/template/iso
+	* **\[Note\]** If using a shared storage system it may be at ```/mnt/pve/<StorageName>/template/iso/```
 3. Go to PF Sense download page on your regular browser & fill out download specifications as shown below.
 	<img src="Images/Image1.png" width=800>
     *  You may have to click Download once, so the actual download link with the correct details are linked to the download button
