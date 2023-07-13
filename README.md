@@ -30,9 +30,9 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
   * [PFSense](Network/PFSense/README.md)
   * [Proxmox Networking](Network/Proxmox/README.md)
 * [Linux](Linux/README.md)
-  * [Something](Linux/README.md) 
+  * [Teleport](Linux/Teleport/README.md) 
 * [Windows](Windows/README.md)
-  * [Something](Windows/README.md) 
+  * [Deployment](Windows/Deployment/ProxmoxSetup.pdf) 
 
 ## Taiga Access 
 If you are looking at this in the far future (or even the near future), then its likely the Taiga will not exist or be useful. Hopefully, we are able to preserve the Wiki entries somewhere here!
