@@ -52,9 +52,10 @@ The goal is to take your .iso file and turn it into a VM. If it is helpful, here
     System & SCSI Controller: VirtIO SCSI Single \\
     System & QEMU Agent checked \\
     Disks & Bus/Device: SCSI \\
+    Network & Bridge: (the Cyber Range Bridge, for me it is vmbr0)
   \end{tabular}
 
-After creating this VM, click it and go to the “Hardware” menu in Proxmox. Click “add CD/DVD” and click the virtIO.iso file you uploaded. This will enable the QEMU Agent.
+IMPORTANT: After creating this VM, click it and go to the “Hardware” menu in Proxmox. Click “add CD/DVD” and click the virtIO.iso file you uploaded. This will enable the QEMU Agent.
 
 \section{Installing / Logging Into the VM}
 Note: You can not use many of proxmox's features (i.e. shut it down without going through the console) without the guest agent installed. Just to save you from mashing the "shutdown" button and wondering why it doesn't work. 
@@ -100,15 +101,17 @@ Bing can handle this one.
 
 \subsection{Installing Firefox}
 By default, Internet Explorer is the only browser installed on the computer. What a terrible browser! You can avoid ever opening IE by installing Firefox from powershell. 
-\begin{lstlisting}
-    Invoke-WebRequest -Uri 
-    "https://download.mozilla.org/
-    ?product=firefox-msi-latest-ssl
-    &os=win64&lang=en-US" 
-    -OutFile "$HOME\Desktop\firefox.msi"
+\begin{lstlisting}[breaklines=true, columns=fullflexible]
+Invoke-WebRequest -Uri `
+"https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US" `
+-OutFile "$HOME\Desktop\firefox.msi"
+    
 \end{lstlisting}
+        
 
 \noindent This command saves firefox.msi to your desktop. Remember that you can download stuff from powershell. (But pls no proprietary browsers \Vomey{})
+
+\noindent If the pdf messes up some part of the command, you can copy it from the latex file
 
 \subsection{Setting up the QEMU Agent}
 There are two steps. First, run the QEMU Agent installer. Second, add the VirtIO driver in the Device Manager.
@@ -142,3 +145,48 @@ Once you finish, the IP Address is visible from the “Summary” tab in proxmox
 \end{figure}
 
 \end{document}
+
+\subsection{Adding DNS Servers}
+
+\subsection{Sysinternals}
+
+\subsection{SIDCHG}
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=1\textwidth]{SIDError.png}
+        \caption{Two machines have the same SID}
+        \label{fig:SIDError}
+\end{figure}
+
+Cloning a template has issues because the SID (Security Identifier) of the cloned and original machines are the same.
+There are probably smarter ways to get around a non-unique SID (e.g. using )
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=1\textwidth]{dangersOfSysprep.png}
+        \caption{You cannot cancel Sysprep once you start it}
+        \label{fig:dangersOfSysprep}
+    \end{figure}
+
+Don’t be like me. Don’t run utilities you don’t understand because bing told you to!
+If you run Sysprep, it will wipe your computer and you cannot get back into it. (or I probably just did it wrong...)
+
+\noindent The program "SIDCHG" has worked for me. (SIDCHGL is easier as you don't have to disable your antivirus)
+It should be installed on the template machine as all of the cloned machines will need to change their SID.
+
+Go to: \href{https://www.stratesave.com/html/downloads.html}{stratesave.com/downloads}
+and download the latest version of SIDCHG
+In addition, you will also need the guy's free trial key, found at \href{https://www.stratesave.com/html/downloads.html}{stratesave.com/stupid_key}
+
+For more information, watch this \href{https://www.youtube.com/watch?v=4fImvgWayI0}{tutorial}
+
+\subsection{An Anti-Virus}
+
+I think the rules say to use only free/publicly available programs.
+Windows Defender is good, but we can probably use a better antivirus.
+I have heard good things about Kaspersky Free (even though the feds say otherwise)
+
+I think I will use either BitDefender or Kaspersky. BitDefender seems much faster.
+Can also give Kaspersky a password? Seems useful "you can set up a password to access kaspersky application settings making it harder someone else to change settings or disable the protection. I like its' customizable options,also like its password manager."
+- youtube comment
