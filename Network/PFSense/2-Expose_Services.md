@@ -15,7 +15,7 @@ If we have set the Domain name (System -> General) to be the same used in all th
 
 Probably going us a combination of local DNS resolution and Port Forwarding or Virtual IPs to forward the traffic correctly.
 
-Likely the best bet is to use port forwarding, and the Hostname DNS Resolution. Assign all devices that need to get traffic the same hostname, and utilize DNS to provide a primitive round robin. **Does not appear to work as expected** 
+Likely the best bet is to use port forwarding, and the Hostname DNS Resolution. Assign all devices that need to get traffic the same hostname, and utilize DNS to provide a primitive round robin. **The round robin does not appear to work as expected** 
 ## Exposing Services
 
 ### NAT - Port Forwarding 
