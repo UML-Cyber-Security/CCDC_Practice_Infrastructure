@@ -1,11 +1,24 @@
 # HAProxy
+This is a repository detailing the setup and configuration of the HAProxy system used in the Practice infrastructure. 
 
-WIP
+## Table of Contents <!-- omit from toc -->
+- [HAProxy](#haproxy)
+  - [Setup VM](#setup-vm)
+  - [Setup HAProxy](#setup-haproxy)
+  - [PFSense Modifcations](#pfsense-modifcations)
+  - [Example Final Config](#example-final-config)
+    - [Reference](#reference)
 
 ## Setup VM
-
-## Install HAProy
-
+The Setup of the VM is as follows 
+1. Create a Linux Server VM. This should have 1 CP and 2 - 4 GB of RAM.
+2. Attach the VM to the DMZ Interface.
+3. Start the VM, configure as any other normal device
+4. Install HAProxy
+    ```
+    sudo apt install haproxy
+    ```
+**Note** Modifications to PFSense will be in the section [PFSense Modifcations](#pfsense-modifcations), and refer to the [Expose Services](./../../Network/PFSense/2-Expose_Services.md) Document.
 
 ## Setup HAProxy
 1. Generate a X509 Cert and key using Open SSL (We are using a self signed certificate). Store this in a well known location 
@@ -111,9 +124,23 @@ WIP
                 mode http
                 server <IP/DNS>
         ```
-9. Create Forwards for each frontend in the DMZ Firewall as described in the [Expose_Services](./../../Network/PFSense/2-Expose_Services.md) Doc.
 
-        <img src="Images/F1.png" width=800>
+## PFSense Modifcations
+1. Create Forwards for each frontend in the DMZ Firewall as described in the [Expose_Services](./../../Network/PFSense/2-Expose_Services.md) Doc.
+        
+    <img src="Images/F1.png" width=800>
+
+2. We will (From the **INTERNAL ROUTERS**) Modify the allowed HTTP_REFER values, this is because of the error you will see below. We need to do this from a SSH tunnel as we cannot use the proxy access until this has been done.
+
+    <img src="Images/F2.png" width=800>
+
+3. Access Advanced options for Admin Access
+
+    <img src="Images/F3.png" width=800>
+
+4. Disable HTTP_REFER
+    
+    <img src="Images/F4.png" width=800>
 
 ## Example Final Config
 Of course this is not a complete configuration as servers or services may be added as time progresses. Additionally if we are using a server in the backend, it is likely we will need to modify the HTTP(S) request such that the pages in the server work correctly.
@@ -229,4 +256,5 @@ backend be_Windows
 ### Reference  
 * Path Based Routing https://www.haproxy.com/blog/path-based-routing-with-haproxy
   * I used this for Path stripping, so this can be simplified using the if { path /a } || { path_beg /a/ } over the ACLs
-  * Some troubles with this. Changed it to be a simpler method as the Path on PFSense would chnage on each request
+  * Some troubles with this. Changed it to be a simpler method as the Path on PFSense and other sites would change on each request
+    * Also made PFSense a horrible site
