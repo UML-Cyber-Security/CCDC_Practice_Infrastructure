@@ -22,6 +22,7 @@ Please follow the instructions located at the official <a href="https://gotelepo
 
 We have the option of installing Teleport on the System, or as a Container.
 
+**Notice**: The Host should have > 1 CPU and 4 - 6 GB of memory to function properly.
 ### System Install
 This is taken from the <a href="https://goteleport.com/docs/installation/">Teleport documentation</a>.
 
@@ -177,6 +178,7 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
     <img src="Images/node-web3.png" width=800>
     
     * Add a ```--insecure``` flag to curl if using self signed certs with teleport.  
+    * May need to modify the URL to match the INTERNAL IP and to use port 443
 5. Modify the ```/lib/systemd/system/teleport.service```, look at the output of ```systemctl status teleport``` if this is not the location to find it. It should look like the following. **See** [The Alt Section](#look-into-alternate-way-to-make-it-trusted) if using an actual CA.
     ```
     [Unit]

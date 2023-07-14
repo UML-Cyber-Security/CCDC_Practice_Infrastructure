@@ -113,6 +113,7 @@ WIP
         ```
 9. Create Forwards for each frontend in the DMZ Firewall as described in the [Expose_Services](./../../Network/PFSense/2-Expose_Services.md) Doc.
 
+        <img src="Images/F1.png" width=800>
 
 ## Example Final Config
 Of course this is not a complete configuration as servers or services may be added as time progresses. Additionally if we are using a server in the backend, it is likely we will need to modify the HTTP(S) request such that the pages in the server work correctly.
