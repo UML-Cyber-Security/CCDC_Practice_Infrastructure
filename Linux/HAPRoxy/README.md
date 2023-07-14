@@ -63,46 +63,27 @@ WIP
 4. We will want to create a frontend for both HTTP and HTTPS. At the bottom of the file add 
         ```
         # Define a Frontend 
-        frontend fe
+        frontend fe_<name>
                 # Explicit HTTP (app) layer proxy
                 mode http
-                # Listen on port 80
-                bind *:80
-                # Listen on port 443, associate ssl/tls connections with the cert specified
-                bind *:443 ssl crt /path/to/cert
+                # Listen on port 808X, associate ssl/tls connections with the cert specified
+                bind *:808X ssl crt /path/to/cert
         ```
    * Replace **/path/to/cert** with the path the to the cert + pem file created in step 2!
-5. No that there is a frotend, it will accept connections on those ports, but we need to define **acl** variables, and backend to control access to our systems. These will be added within the frontend.
-6. First we will want to redirect **all** HTTP traffic to be SSL/TLS traffic we can add the following line to acheve this
+   * Replace name with the service this is for
+   * Replace X in 8080 with an increasing number to distinguish services
+5. Next we will want to redirect **all** HTTP traffic to be SSL/TLS traffic we can add the following line to achieve this
         ```
         # Unless already HTTPS (ssl) redirect to HTTPS
         http-request redirect scheme https unless { ssl_fc }
         ```
-7. Now we can parse the URL, it is easiest to parse based on the path so for **each** of the differnt hosts we would like to forward to, we will **create a unique** ACL variable. Below are examples for each of the routers.
+6. Now we can define the backend that will be used
         ```
-        # Teleport
-        acl teleport path_beg, url_dec -i /Teleport
-        # DMZ Router
-        acl DMZ path_beg, url_dec -i /DMZ
-        # Linux Router
-        acl Linux path_beg, url_dec -i /Linux
-        # Windows Router
-        acl Windows path_beg, url_dec -i /Windows
-
-        # More can be added in a similar manner
-        # acl <name> path_beg, url_dec -i /<path>
+        use_backend be_<name>
         ```
-8. Now we can use the ACL variables to control which *backend* will be used when forwarding data
-        ```
-        # Use specific backends
-        use_backend be_teleport if teleport
-        use_backend be_DMZ if DMZ
-        use_backend be_Linux if Linux
-        use_backend be_Windows if Windows
-        # More can be created in the manner
-        # use_backend <backend_name> if ACL_VAR
-        ```
-9.  Now that we know every backend we will need, we can create a backend **for each** of the servers we are forwarding to
+   * Replace \<name\> with the name of the service
+7.  Repeat steps 4 - 6 until all services have a frontend
+8.  Now that we know every backend we will need, we can create a backend **for each** of the servers we are forwarding to
         ```
         backend be_teleport
                 # Layer 7 application
@@ -130,6 +111,9 @@ WIP
                 mode http
                 server <IP/DNS>
         ```
+9. Create Forwards for each frontend in the DMZ Firewall as described in the [Expose_Services](./../../Network/PFSense/2-Expose_Services.md) Doc.
+
+
 ## Example Final Config
 Of course this is not a complete configuration as servers or services may be added as time progresses. Additionally if we are using a server in the backend, it is likely we will need to modify the HTTP(S) request such that the pages in the server work correctly.
 
@@ -173,66 +157,70 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-frontend fe
+frontend DMZ
         # Explicit HTTP (app) layer proxy
         mode http
-        # Listen on port 80
-        bind *:80
         # Listen on port 443, associate ssl/tls connections with the cert specified
-        bind *:443 ssl crt /path/to/cert
+        bind *:8080 ssl crt /path/to/cert
 
         # Unless already HTTPS (ssl) redirect to HTTPS
         http-request redirect scheme https unless { ssl_fc }
 
+        use_backend be_DMZ
 
-        # Set Variable based on path specified
+frontend Linux
+        # Explicit HTTP (app) layer proxy
+        mode http
+        # Listen on port 443, associate ssl/tls connections with the cert specified
+        bind *:8081 ssl crt /path/to/cert
 
-        # Teleport
-        acl teleport path_beg, url_dec -i /Teleport
-        # DMZ Router
-        acl DMZ path_beg, url_dec -i /DMZ
-        # Linux Router
-        acl Linux path_beg, url_dec -i /Linux
-        # Windows Router
-        acl Windows path_beg, url_dec -i /Windows
+        # Unless already HTTPS (ssl) redirect to HTTPS
+        http-request redirect scheme https unless { ssl_fc }
+
+        use_backend be_Linux
+
+frontend Windows
+        # Explicit HTTP (app) layer proxy
+        mode http
+        # Listen on port 443, associate ssl/tls connections with the cert specified
+        bind *:8082 ssl crt /path/to/cert
+
+        # Unless already HTTPS (ssl) redirect to HTTPS
+        http-request redirect scheme https unless { ssl_fc }
+
+        use_backend be_Windows 
+
+frontend Teleport
+        # Explicit HTTP (app) layer proxy
+        mode http
+        # Listen on port 443, associate ssl/tls connections with the cert specified
+        bind *:8083 ssl crt /path/to/cert
+
+        # Unless already HTTPS (ssl) redirect to HTTPS
+        http-request redirect scheme https unless { ssl_fc }
 
         # More can be added in a similar manner
         # acl <name> path_beg, url_dec -i /<path>
-
-        # Use specific backends
-        use_backend be_teleport if teleport
-        use_backend be_DMZ if DMZ
-        use_backend be_Linux if Linux
-        use_backend be_Windows if Windows
-        # More can be created in the manner
-        # use_backend <backend_name> if ACL_VAR
+        use_backend be_teleport
 
 backend be_teleport
         # Layer 7 application
         mode http
-        # Strip URL Path
-        http-request replace-path /Teleport(/)?(.*) /\2
         # Forward to teleport without authenticating ssl cert - add to trusted and remove verify none
         server Teleport-S ccdcteleport.DMZ-UML:443 ssl verify none
 
 backend be_DMZ
         mode http
-        # Strip URL Path
-        http-request replace-path /DMZ(/)?(.*) /\2
         # Ip Hard coded, change if you change the DMZ Rotuer Interface IP
         server DMZ-R 10.0.1.1:443 ssl verify none
 
 backend be_Linux
         mode http
-        # Strip URL Path
-        http-request replace-path /Linux(/)?(.*) /\2
         # Ip Hard coded, change if you change the DMZ Rotuer Interface IP
         server Linux-R <DNS>:443 ssl verify none
 
 backend be_Windows
         mode http 
-        # Strip URL Path
-        http-request replace-path /Windows(/)?(.*) /\2
         # Ip Hard coded, change if you change the DMZ Rotuer Interface IP
         server Windows-R <DNS>:443 ssl verify none
 
@@ -240,3 +228,4 @@ backend be_Windows
 ### Reference  
 * Path Based Routing https://www.haproxy.com/blog/path-based-routing-with-haproxy
   * I used this for Path stripping, so this can be simplified using the if { path /a } || { path_beg /a/ } over the ACLs
+  * Some troubles with this. Changed it to be a simpler method as the Path on PFSense would chnage on each request
