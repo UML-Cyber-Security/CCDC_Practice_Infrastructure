@@ -61,12 +61,12 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
     * [Generate a certificate](https://goteleport.com/docs/management/admin/self-signed-certs/) (We can use self signed) For this we will use *openssl* to generate a self signed certificate and key pair.
         ```
             # make a directory to store this info (Configure permissions correctly)
-            mkdir mkdir /var/lib/teleport-info
+            sudo mkdir -p /var/lib/teleport-info
 
             sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /var/lib/teleport-info/privkey.pem -out /var/lib/teleport-info/fullchain.pem 
         ```
         * The *sudo* is needed as the teleport private key file is protected, now that we are using our own directory, we will not need it. But I have kept it, to prevent future issues.
-        * Fill out the information as desired the **ONLY** field that matters is the common name  which should be the URL that resolves to the ip hosting teleport, or the IP address directly. An **example** is shown below.
+        * Fill out the information as desired the **ONLY** field that matters is the common name  which should be the URL that resolves to the ip hosting teleport, or the IP address directly. An **example** is shown below. As we are using HAProxy to provide SSL to the client, the IP or DNS name used should be the **INTERNAL ONE**.
 
             <img src="Images/TLS-Gen.png" width=800>
 
@@ -75,7 +75,7 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
 4. Configure the Teleport Server, replace \<IP\> with the machine's IP!
     ``` sh
     sudo teleport configure -o file \
-    --cluster-name=<IP> \
+    --cluster-name=Practice_Infra \
     --public-addr=<IP>:443 \
     --cert-file=/var/lib/teleport-info/fullchain.pem \
     --key-file=/var/lib/teleport-info/privkey.pem
@@ -85,11 +85,18 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
         ```
         rm -f /etc/teleport.yaml
         ```
-5. Enable and Start Teleport
-    ```
-    sudo systemctl enable teleport && \
-    sudo systemctl start teleport
-    ```
+5. Start Teleport
+    * Command Provided 
+        ```
+        sudo teleport start --config="/etc/teleport.yaml"
+        # Then Enable 
+        sudo systemctl enable teleport
+        ```
+    * Enable and Start Teleport
+        ```
+        sudo systemctl enable teleport && \
+        sudo systemctl start teleport
+        ```
 6. Run ```sudo tctl status``` we should see output like the following 
     <img src="Images/tctl-status1.png" width=800>
 7. Create an administrator, use the following command.
@@ -98,11 +105,11 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
     # --logins provides a list of allowed logins from this account
     sudo tctl users add teleport-admin --roles=editor,access --logins=root,ubuntu,ec2-user,student
     ```
-8. Use the URL outputted by the command to finalize the creation of the account. And example is shown below.
+8.  Use the URL outputted by the command to finalize the creation of the account. And example is shown below.
 
     <img src="Images/user-add.png" width=800>
 
-9. Click Get Started
+9.  Click Get Started
 
     <img src="Images/get-started.png" width=800>
 
@@ -124,7 +131,7 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
 
 ### Adding Nodes CLI
 1. Enter into **Teleport Server**
-2. Install Teleport 
+2. Install Teleport (**This should already be done if the previous steps have been done**)
     ```
     # Download run script
     curl https://goteleport.com/static/install.sh | bash -s 13.1.1
@@ -134,15 +141,21 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
     # Generate a join token, and save it to a file (with redirection!)
     tctl tokens add --type=node --format=text > token.file
     ```
-4. Generate a configuration file 
+4. Transfer the generated *token.file* to the target machine 
+5. Install Teleport on the **TARGET MACHINE**
+    ```
+    # Download run script
+    curl https://goteleport.com/static/install.sh | bash -s 13.1.1
+6. Generate a configuration file on the target machine using the *token file*
     ```
     sudo teleport node configure \
    --output=file:///etc/teleport.yaml \
    --token=/path/to/token.file \
    --proxy=tele.example.com:443
     ```
-    * **Replace** tele.example.com with the IP or URL
-5. Start and enable teleport
+    * **Replace** /path/to/token.file with the path
+    * **Replace** tele.example.com with the IP or DNS
+7. Start and enable teleport
     ```
     sudo systemctl enable teleport && \
     sudo systemctl start teleport
