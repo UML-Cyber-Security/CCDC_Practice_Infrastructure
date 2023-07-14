@@ -6,6 +6,7 @@ This document described the setup and configuration of Software Defined Networks
 - [Installation](#installation)
   - [Modify Apt Source List](#modify-apt-source-list)
   - [SDN](#sdn)
+  - [If HTTP fails Internally and externally](#if-http-fails-internally-and-externally)
 
 ## Installation
 
@@ -45,7 +46,6 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
     * The DNS information appears to be a drop down. I was unable to configure this as we did not configure a Proxmox DNS server.
     * The Peer Addresses are the IP addresses of the Nodes in the Proxmox Cluster. This is a comma separated list!
     * The Nodes should all be selected (Dropdown)
-
     <img src="Images/SD5.png" width=400>
 
 6. Navigate to the VNet menu, create an VNet as shown below. As we are using a simple network. Ensure each VNet TAG is unique!
@@ -71,3 +71,16 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
       * We can also (preferably) setup the PFSense machines!
 
 12. **NOTICE**: We are going to use the vmbr0 (Default bridge) for the WAN on the DMZ router. This is so we get a cyber range IP. All devices have the interface so it will be fine!
+
+
+
+### If HTTP fails Internally and externally
+1. Set Zone MTU to 1500 or the MTU supported by the physical medium
+
+    <img src="Images/SD10.png" width=800>
+
+2. **NOTICE!!!!**: The MTU of the interface when attaching should be set to 1450 or 50 less then the MTU of the Zone/Physical Interface 
+
+    <img src="Images/SD9.png" width=800>
+
+    

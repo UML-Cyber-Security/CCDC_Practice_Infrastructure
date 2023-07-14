@@ -51,6 +51,7 @@ This file describes the setup and configuration of the PFSense Instance on Proxm
 
 ### Adding additional Network Interfaces 
 Please refer to the [SDN](./../Proxmox/SDN.md) Documentation if this is meant to be highly available
+**NOTICE!!!!**: The MTU of the interface when attaching should be set to 1450 See SDN DOCS
 
 Otherwise please follow the instructions below.
 1. Open the VM management interface by clicking on the VM name in the left column as highlighted in the image below.
@@ -110,6 +111,7 @@ Otherwise please follow the instructions below.
 		1. Allows the BSD kernel to negotiate the optimal value with Proxmox VE in the Network configuration
 	<img src="Images/Step7+.png" width=800>
 	4. **Firewall** This should be disabled, or set to allow all traffic.
+	5.  **NOTICE!!!!**: When using SDN The MTU of the interface when attaching should be set to 1450
 
 The next tab is a confirmation tab, aka overview of out settings. Just hit next & don't forget to start the machine.
 
