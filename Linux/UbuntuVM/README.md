@@ -2,6 +2,7 @@
 
 - [Setting Up Ubuntu minimal desktop vms in Proxmox](#setting-up-ubuntu-minimal-desktop-vms-in-proxmox)
   - [Setting Up Vm in Proxmox](#setting-up-vm-in-proxmox)
+  - [Using Using Preconfigured template](#using-using-preconfigured-template)
   - [Configuring Ubuntu Installation inside VM](#configuring-ubuntu-installation-inside-vm)
   - [Extra + Questions](#extra--questions)
 
@@ -9,10 +10,11 @@
 
 ## Setting Up Vm in Proxmox
 + This is similar to setting up any vm in proxmox
-+ Note: There is an Ubuntu Template you can pull from if you want to create additional vms. If you are pulling from this template you can avoid [Configuring Ubuntu Install inside Vm] step and skip straight to the [Using Preconfigured template] step.
++ Note: There is an Ubuntu Template you can pull from if you want to create additional vms. If you are pulling from this template you can avoid [Configuring Ubuntu Install inside Vm](#configuring-ubuntu-installation-inside-vm) step and skip straight to the [Using Preconfigured template](#using-using-preconfigured-template) step.
 
 1. Hit Create VM - blue button in top right
 2. Ensure the node is PVE4(this is a design choice specific to our system, our linuxVms are under PVE4) & hit next
+   1. Keep all Linux machines on the same instance to improve network preformance
 ![Alt text](Images/Step1-2.png)
 
 
@@ -28,7 +30,7 @@
     ![Alt text](Images/SystemVmTab.png)
 5. Disk - 
     Storage : "ccdc2024Storage"
-    Disk Size: "32"
+    Disk Size: "32" - minimal installation requires 8.6gb - You may want to reduce disk size to save space
     Format : "QEMU image format"
     Keep the rest default
 6. CPU - Your choice
@@ -45,6 +47,19 @@
 
 8. Confirm settings
     Self-explantory
+
+## Using Using Preconfigured template
++ These steps are to be completed using the proxmox web interface
+1. Right click on (Ubuntu-Desk-Template) & hit clone
+   ![Alt text](Images\cloneVm.png)
+   
+2. Name the clone,
+   1. Mode: "Full Clone"
+   2. Name: Your-choice
+   3. Target Storage: Make sure it is ccdc2024Storage
+      1. It is preset to "Same as source", which is fine for our case
+    ![Alt text](Images/cloneDetails.png)
+    4. Resouce Pool: N/A
 
 ## Configuring Ubuntu Installation inside VM
 + We are installing Ubuntu mininal desktop
