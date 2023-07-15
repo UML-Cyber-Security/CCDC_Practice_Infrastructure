@@ -12,7 +12,7 @@
 + Note: There is an Ubuntu Template you can pull from if you want to create additional VMs. If you are pulling from this template you can avoid [Configuring Ubuntu Install inside Vm](#configuring-ubuntu-installation-inside-vm) step and skip straight to the [Using Preconfigured template] step.
 
 1. Hit Create VM - blue button in top right
-2. Ensure the node is PVE4(this is a design choice specific to our system, our linuxVms are under PVE4) & hit next
+2. Ensure the machines are created on the same node. Once SDNs are implemented this will not matter. In this case all VMs are created on the PVE4 node
 ![Alt text](Images/Step1-2.png)
 
 
@@ -41,7 +41,7 @@
 
 8. Network
    * Bridge :"Vmbr0"
-     * This is subject to change as we segement our infrastructure. Vmbr0 is the only one with external internet access currently
+     * This is subject to change as we segment our infrastructure. Vmbr0 is the only one with external internet access currently
     * We will use the SND network defined in the [Networking Documentation](./../../Network/README.md) later, these have their own requrements defined in [SDN](./../../Network/Proxmox/2-SDN.md).
 
 9. Confirm settings
@@ -95,5 +95,5 @@ We are now going to install Ubuntu minimal desktop
 
 ## Extra + Questions
 
-Check Taiaga & Important links doc
+Check Taiga & Important links doc
 or Ask Chisom
