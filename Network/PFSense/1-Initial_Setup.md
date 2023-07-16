@@ -321,6 +321,7 @@ This will cover the basics of accessing a Web-Interface. How we access the inter
    3. Create a new Source Route, select the Gateway we created and the Destination Network should be the internal Network associated with the Gateway 
 
 		<img src="Images/Src-Rt-1.png" width=800>
+		* Note: Subnet mask should match the one defined for your network
    4. More details are shown at [DMZ Router Routes](#dmz-router-routes), and [Linux Router Routes](#linux-router-routes). The Windows routs are a slight modification of the Linux Routes and located at [Windows Router Routes](#windows-router-routes).
 
 
