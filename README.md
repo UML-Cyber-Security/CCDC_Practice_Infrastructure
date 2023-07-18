@@ -25,7 +25,8 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
 
 ## Table of Contents (TOPICS) 
 * [Proxmox Setup](./Proxmox/README.md)
-* [Gluster](./Gluster/README.md)
+* [Gluster](./Shared_Filesystem/Gluster/README.md)
+* [NFS](./Shared_Filesystem/NFSserver/README.md)
 * [Network](Network/README.md)
   * [PFSense](Network/PFSense/README.md)
   * [Proxmox Networking](Network/Proxmox/README.md)
