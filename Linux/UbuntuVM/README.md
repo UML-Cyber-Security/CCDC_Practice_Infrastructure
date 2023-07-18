@@ -10,17 +10,17 @@
 
 ## Setting Up Vm in Proxmox
 + This is similar to setting up any vm in proxmox
-+ Note: There is an Ubuntu Template you can pull from if you want to create additional vms. If you are pulling from this template you can avoid [Configuring Ubuntu Install inside Vm](#configuring-ubuntu-installation-inside-vm) step and skip straight to the [Using Preconfigured template](#using-using-preconfigured-template) step.
++ Note: There is an Ubuntu Template you can pull from if you want to create additional VMs. If you are pulling from this template you can avoid [Configuring Ubuntu Install inside Vm](#configuring-ubuntu-installation-inside-vm) step and skip straight to the [Using Preconfigured template](#using-using-preconfigured-template) step.
 
 1. Hit Create VM - blue button in top right
-2. Ensure the node is PVE4(this is a design choice specific to our system, our linuxVms are under PVE4) & hit next
-   1. Keep all Linux machines on the same instance to improve network preformance
+2. Ensure the node is PVE4(this is a design choice specific to our system, our linux VMs are under PVE4) & hit next
+   1. Keep all Linux machines on the same instance to improve network performance
 ![Alt text](Images/Step1-2.png)
 
 
 3. OS - Choose "Use CD/DVD disc image..
     Storage: "ccdc2024Storage" - This is where our iso files are stored
-    Iso Image: "ubunut-22.04.2-desktop-amd64.iso" - Iso file name
+    Iso Image: "ubuntu-22.04.2-desktop-amd64.iso" - Iso file name
     Type: "Linux"
     Version: "6.x - 2.6 Kernel"
     Hit "Next" - bottom left blue button
@@ -34,7 +34,7 @@
     Format : "QEMU image format"
     Keep the rest default
 6. CPU - Your choice
-    Our System : Kept as deafault
+    Our System : Kept as default
     Every value  = 1
     Type : "x86-64-v2-AES"
 
@@ -43,30 +43,30 @@
 
 8. Network
     Bridge :"Vmbr0"
-    This is subject to change as we segement our infrastructure. Vmbr0 is the only one with external internet access currently
+    This is subject to change as we segment our infrastructure. Vmbr0 is the only one with external internet access currently
 
 8. Confirm settings
-    Self-explantory
+    Self-explanatory
 
 ## Using Using Preconfigured template
 + These steps are to be completed using the proxmox web interface
 1. Right click on (Ubuntu-Desk-Template) & hit clone
-   ![Alt text](Images\cloneVm.png)
+   ![CLone](Images\cloneVm.png)
    
 2. Name the clone,
    1. Mode: "Full Clone"
    2. Name: Your-choice
    3. Target Storage: Make sure it is ccdc2024Storage
       1. It is preset to "Same as source", which is fine for our case
-    ![Alt text](Images/cloneDetails.png)
-    4. Resouce Pool: N/A
+    ![Clone Details](Images/cloneDetails.png)
+    4. Resource Pool: N/A
 
 ## Configuring Ubuntu Installation inside VM
 + We are installing Ubuntu mininal desktop
 
     1. Boot into from Grub Menu
         Select Ubuntu
-        ![Alt text](Images/CLVp2s1.webp)
+        ![Select Ubuntu](Images/CLVp2s1.webp)
 
     2. Select "Install Ubuntu" 
         There should be an interface with a white ground and 2 prominent images for selection
@@ -74,7 +74,7 @@
     3. Select Language & hit continue
         - English
 
-    4. Select Keyboard Lanague & hit continue
+    4. Select Keyboard Language & hit continue
         - English(US) 
         - on both sides select "English(US)"
 
@@ -87,8 +87,8 @@
         ![Erase disk](Images\CLVp2s6.webp)
     
     7. Select drive & hit "Install now"
-        The drive number should indicate the amount of space you had allocated for the vm ie. ....32 gb ATA ...
-        Currently can't recall exactly what drive, hopefully there is only 1 drive available, since it's a vm
+        The drive number should indicate the amount of space you had allocated for the VM ie. ....32 gb ATA ...
+        Currently can't recall exactly what drive, hopefully there is only 1 drive available, since it's a VM
     
     8. Write Changes to disk
         Confirming what drive to write to. Just hit next after confirming the correct drive
@@ -100,15 +100,15 @@
             Ours: "user"
             pass : Our usual password "1..." -Check Taiga
 
-    11. Tip. Remeber to remove iso file after installation, so the vm will not continuely boot after try to reinstall every time.
+    11. Tip. Remember to remove iso file after installation, so the VM will not continually boot after try to reinstall every time.
         *IMPORTANT*
 
-    12. A restat option will appear 
+    12. A restart option will appear 
         Hit "Restart Now"
 
    
 
 ## Extra + Questions
 
-Check Taiaga & Important links doc
+Check Taiga & Important links doc
 or Ask Chisom
