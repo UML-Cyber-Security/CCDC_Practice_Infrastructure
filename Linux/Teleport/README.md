@@ -247,11 +247,12 @@ The following is based on the official [teleport documentation](https://gotelepo
     <img src="Images/node-web6.png" width=800>
 
 ### Add Windows RDP  Console 
-https://goteleport.com/docs/desktop-access/active-directory-manual/#allow-remote-rdp-connections
+https://goteleport.com/docs/desktop-access/active-directory-manual/#allow-remote-rdp-connections -- Manual
+https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 ### Add Windows RDP Web
 [Reference!](https://goteleport.com/docs/desktop-access/active-directory/#compare-desktop-access-to-other-rdp-clients)
 
-https://goteleport.com/docs/desktop-access/getting-started/
+https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 
 1. Login to the Teleport web-interface 
 2. Click Add Server as shown below
