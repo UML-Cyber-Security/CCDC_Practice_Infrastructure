@@ -23,36 +23,36 @@
 # NFS server Machine Steps
 
 ## Setting up NFS server with an NFS share(directory)
-This directory will be our shared storage where every file, exe, etc is stored/
+This directory will be our shared storage where every file, exe, etc is stored.
 
-1. Install NFS Kernel
-```sh 
+1. Install NFS Kernel 
+  ```sh 
    sudo apt install nfs-kernel-server
-```
+  ```
 2. Create Root Directory
-```sh
+  ```sh
     sudo mkdir /mnt/ccdc2024Storage
-```
+  ```
 3. Set Permissions -
-- Allows any user on the client machines to access and edit the shared directoy.
-- Applies to VM stored on the directoy
-```sh
-sudo chown nobody:nogroup /mnt/ccdc2024Storage #no-one is owner
+  - Allows any user on the client machines to access and edit the shared directory.
+  - Applies to VM stored on the directory
+  ```sh
+  sudo chown nobody:nogroup /mnt/ccdc2024Storage #no-one is owner
 
-sudo chmod 777 /mnt/ccdc2024Storage #everyone can modify files
-```
+  sudo chmod 777 /mnt/ccdc2024Storage #everyone can modify files
+  ```
 4. Edit the Export File - Once again modifying permission
-- Add this line to the "/etc/exports" file
-```
-mnt/myshareddir 192.168.0.0/24 (rw,sync,no_subtree_check)
-```
-This allows access to the entire subnet for our infrastructure
+  - Add the following line to the "/etc/exports" file
+  ```
+  mnt/myshareddir 192.168.0.0/24 (rw,sync,no_subtree_check)
+  ```
+    - This allows access to the entire subnet for our infrastructure
 
-5. Run these commands to "export" our shared directory to potential machines & to restart NFS(requried)
-```sh
-    sudo exportfs
-    sudo systemctl restart nfs-kernel-server #restarting the NFS kernel
-```
+1. Run the following commands to "export" our shared directory to potential machines & restart NFS(required)
+  ```sh
+  sudo exportfs
+  sudo systemctl restart nfs-kernel-server #restarting the NFS kernel
+  ```
 
 
 # Client Machine Steps 
@@ -60,23 +60,23 @@ This allows access to the entire subnet for our infrastructure
 
 ## Creating and Linking directories
 1. Create shared directory that we will mount our NFS  storage to
-```sh
-    sudo mkdir /mnt/ccdc2024Storage
-```
+  ```sh
+  sudo mkdir /mnt/ccdc2024Storage
+  ```
 2. Edit the FStab file
-- Place tabs inbetween each segment, those are not spaces
-- For some reason with our proxmox, you if you use a text editor it will not work, so the cat command is need to input the the text
-```sh
-   cat 192.186.0.86/mnt/ccdc2024Storage /mnt/ccdc2024Storage    nfs defaults    0   0 >> /etc/fstab
-```
-- ex. {IP of NFS server}:{folder path on server} /var/local-PVEnode-mount
+  - Place tabs inbetween each segment, **not spaces**
+  - For some reason with our proxmox, you if you use a text editor it will not work, so the **cat command is need** to input the the text
+  ```sh
+  cat 192.186.0.86/mnt/ccdc2024Storage /mnt/ccdc2024Storage    nfs defaults    0   0 >> /etc/fstab
+  ```
+  - ex. {IP of NFS server}:{folder path on server} /var/local-PVEnode-mount
   
-3. mount the directories local
-``` sh
-mount /mnt/ccdc2024Storage #local mount
+3. mount the directories
+  ``` sh
+  mount /mnt/ccdc2024Storage #local mount
 
-mount 192.186.0.86/mnt/ccdc2024Storage #NFS global share
-```
+  mount 192.186.0.86/mnt/ccdc2024Storage #NFS global share
+  ```
 4. Restart the client machines
 
 
@@ -88,7 +88,7 @@ mount 192.186.0.86/mnt/ccdc2024Storage #NFS global share
    1. Add: NFS
    2. Type in ID: "Any name for shared storage:
    3. Server: Ip of NFS server
-   4. The exported directory we made in the  [Setting up NFS server with an NFS share(directory)](#setting-up-nfs-server-with-an-nfs-sharedirectory)
+   4. The exported directory we made in the [Setting up NFS server with an NFS share(directory)](#setting-up-nfs-server-with-an-nfs-sharedirectory)
    ![Alt text](image.png)
 3. Hit "Add"
 
