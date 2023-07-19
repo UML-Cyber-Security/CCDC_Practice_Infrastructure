@@ -36,7 +36,8 @@ There are two things happening: setting a static IP and setting the DNS server
 
 \subsubsection{Setting a Static IP}
 For an image, see Figure~\ref{fig:IPv4Settings}
-First, look up how IP addresses work if you don't know how.
+
+\noindent Look up how IP addresses work if you need to.
 
 You can set the static IP to any IP not currently in use.
 Maybe you can kick machines without a static IP off of their IP, but that is probably not advised.
@@ -51,9 +52,7 @@ Bing was telling me to find it by running \textbf{ip route show} on the Proxmox 
 For an image, see Figure~\ref{fig:IPv4Settings}
 
 This step is less complicated than the last step. However, you can Red-Team yourself (I speak from experience...), so be careful.
-On the Domain Controller, the frst DNS server should be itself (the same as the machine's static IP). The second should be an actual internet DNS server.
+On the Domain Controller, the first DNS server should be itself (the same as the machine's static IP). The second should be an actual internet DNS server.
 In this case 8.8.8.8 is Google's DNS Server.
-
-
 
 \end{document}
