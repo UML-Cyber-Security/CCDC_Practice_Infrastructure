@@ -249,6 +249,104 @@ The following is based on the official [teleport documentation](https://gotelepo
 ### Add Windows RDP  Console 
 https://goteleport.com/docs/desktop-access/active-directory-manual/#allow-remote-rdp-connections -- Manual
 https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
+
+
+1. Open Powershell
+2. Run the commands
+    ```
+    $Name="Teleport Service Account"
+    $SamAccountName="svc-teleport"
+
+    # Generate a random password that meets the "Password must meet complexity
+    # requirements" security policy setting.
+    # Note: if the minimum complexity requirements have been changed from the
+    # Windows default, this part of the script may need to be modified.
+    Add-Type -AssemblyName 'System.Web'
+    do {
+    $Password=[System.Web.Security.Membership]::GeneratePassword(15,1)
+    } until ($Password -match '\d')
+    $SecureStringPassword=ConvertTo-SecureString $Password -AsPlainText -Force
+
+    New-ADUser `
+    -Name $Name `
+    -SamAccountName $SamAccountName `
+    -AccountPassword $SecureStringPassword `
+    -Enabled $true
+    ```
+3. In the **SAME POWERSHELL WINDOW**, run the following 
+    ```
+    # Save your domain's distinguished name to a variable.
+    $DomainDN=$((Get-ADDomain).DistinguishedName)
+
+    # Create the CDP/Teleport container.
+    # If the command fails with "New-ADObject : An attempt was made to add an object
+    # to the directory with a name that is already in use", it means the object
+    # already exists and you can move on to the next step.
+    New-ADObject -Name "Teleport" -Type "container" -Path "CN=CDP,CN=Public Key Services,CN=Services,CN=Configuration,$DomainDN"
+
+    # Gives Teleport the ability to create LDAP containers in the CDP container.
+    dsacls "CN=CDP,CN=Public Key Services,CN=Services,CN=Configuration,$DomainDN" /I:T /G "$($SamAccountName):CC;container;"
+    # Gives Teleport the ability to create and delete cRLDistributionPoint objects in the CDP/Teleport container.
+    dsacls "CN=Teleport,CN=CDP,CN=Public Key Services,CN=Services,CN=Configuration,$DomainDN" /I:T /G "$($SamAccountName):CCDC;cRLDistributionPoint;"
+    # Gives Teleport the ability to write the certificateRevocationList property in the CDP/Teleport container.
+    dsacls "CN=Teleport,CN=CDP,CN=Public Key Services,CN=Services,CN=Configuration,$DomainDN " /I:T /G "$($SamAccountName):WP;certificateRevocationList;"
+    # Gives Teleport the ability to create and delete certificationAuthority objects in the NTAuthCertificates container.
+    dsacls "CN=NTAuthCertificates,CN=Public Key Services,CN=Services,CN=Configuration,$DomainDN" /I:T /G "$($SamAccountName):CCDC;certificationAuthority;"
+    # Gives Teleport the ability to write the cACertificate property in the NTAuthCertificates container.
+    dsacls "CN=NTAuthCertificates,CN=Public Key Services,CN=Services,CN=Configuration,$DomainDN" /I:T /G "$($SamAccountName):WP;cACertificate;"
+    ```
+4. Run the following command ```Get-AdUser -Identity $SamAccountName | Select SID```. Save this information for later. Below is some example output. 
+
+    <img src="Images/W1.png" width=800>
+
+5. Run the following command 
+    ```
+    $GPOName="Block teleport-svc Interactive Login"
+    ```
+6. Run the following command 
+    ```
+    New-GPO -Name $GPOName | New-GPLink -Target $((Get-ADDomain).DistinguishedName)
+    ```
+7. Open the Group Policy Management program
+
+    <img src="Images/W2.png" width=800>
+
+8. Navigate to the GPO created something like: ```($FOREST > Domains > $DOMAIN > Group Policy Objects > Block teleport-svc Interactive Login)```
+
+    <img src="Images/W3.png" width=800>
+
+9. Edit it. Right click it.
+
+    <img src="Images/W4.png" width=800>
+
+10. Edit ```Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > User Rights Assignment```
+
+    <img src="Images/W5.png" width=800>
+
+11. Double click Deny log on locally and in the popup, check Define these policy settings.
+
+    <img src="Images/W6.png" width=800>
+
+12. use the SAM (SID from earlier), check the name and agree to everything.
+
+    <img src="Images/W7.png" width=800>
+    * I may be wrong so I also added the sam account name
+
+        <img src="Images/W8.png" width=800>
+
+13. Repeat fpr ```Deny log on through Remote Desktop Services```. It is in the same menu.
+
+    <img src="Images/W9.png" width=800>
+
+14. Download the Windows Certificate 
+    * Trusted
+        ```curl -o user-ca.cer https://10.0.1.15:443/webapi/auth/export?type=windows```
+    * Untrusted
+      * I just accessed it on a wen browser and saved it.
+
+Stopped at Create another GPO and import the Teleport CA
+
+May want to look into https://til.intrepidintegration.com/powershell/ssl-cert-bypass and try automatic one later.
 ### Add Windows RDP Web
 [Reference!](https://goteleport.com/docs/desktop-access/active-directory/#compare-desktop-access-to-other-rdp-clients)
 
@@ -297,7 +395,7 @@ docker pull public.ecr.aws/gravitational/teleport-distroless:13.1.5
 Then we will have a container that may be used in the future steps! In my case the name of the container was *public.ecr.aws/gravitational/teleport-distroless*. You can check that the container image was installed, and find its name using the command ```docker images```.
 
 ### Configuration
-The configuration file may require some additonal key-pair values from the [Official Configuration Page](https://goteleport.com/docs/reference/config/)
+The configuration file may require some additional key-pair values from the [Official Configuration Page](https://goteleport.com/docs/reference/config/)
 
 We can use the files generated by the [System Install](#server-access) if they exist (and we are migrating)
 
@@ -315,6 +413,6 @@ We can use the files generated by the [System Install](#server-access) if they e
 #### Docker Compose
 
 ## Error Fixing
-If Teleport cannot locate the repository, run a ```nslookup``` command, this will cache the results allowing for work to continue 
-
-![Error + Fix](Images/E1.png)
+1. If Teleport cannot locate the repository, run a ```nslookup``` command, this will cache the results allowing for work to continue 
+    ![Error + Fix](Images/E1.png)
+2. If you have a proxy to teleport, you will be given the IP and Port of the system that is forwarding the request. So you will need to modify that to the internal IP and port 443.
