@@ -6,11 +6,12 @@ This is a document detailing the installation, setup and use of **Teleport**. Th
   - [System Install](#system-install)
   - [Server Access](#server-access)
     - [Disable MFA](#disable-mfa)
-  - [Adding Nodes CLI](#adding-nodes-cli)
+  - [Linux Trusted Cert Store](#linux-trusted-cert-store)
+  - [Adding Nodes CLI Method -- Not Recommended](#adding-nodes-cli-method----not-recommended)
   - [Adding Nodes Web Interface (Linux)](#adding-nodes-web-interface-linux)
   - [Add Windows RDP  Console](#add-windows-rdp--console)
   - [Add Windows RDP Web](#add-windows-rdp-web)
-  - [Look into alternate way to make the certificate trusted -- Not Working ATM](#look-into-alternate-way-to-make-the-certificate-trusted----not-working-atm)
+- [Dissable Session Recordings](#dissable-session-recordings)
 - [Container Based Teleport](#container-based-teleport)
   - [Installation](#installation)
   - [Configuration](#configuration)
@@ -60,8 +61,8 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
 1. Configure DNS, (If we can, since this is internal we will be port forwarding... so make sure the certificate matches the outer-router IP)
     * If this were an outward facing system, we would use lets-encrypt or some other CA service
 2. Install (Should already be done)
-3. Use the Private network method
-    * [Generate a certificate](https://goteleport.com/docs/management/admin/self-signed-certs/) (We can use self signed) For this we will use *openssl* to generate a self signed certificate and key pair.
+3. Use the Private network method. 
+    * [Generate a certificate](https://goteleport.com/docs/management/admin/self-signed-certs/) (We can use self signed) For this we will use *openssl* to generate a self signed certificate and key pair. **If you would like to make te certificate trusted see [Linux Trusted Cert](#linux-trusted-cert-store)**
         ```
             # make a directory to store this info (Configure permissions correctly)
             sudo mkdir -p /var/lib/teleport-info
@@ -159,8 +160,47 @@ The following is based on the official [teleport documentation](https://gotelepo
         second_factor: off
     ```
 
+### Linux Trusted Cert Store
+1. Generate the Certificate with a SAN
+    ```
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /var/lib/teleport-info/privkey.pem  -addext "subjectAltName = DNS:<DNS_URL>, IP:<IP>" -out /var/lib/teleport-info/fullchain.pem 
+    ```
+2. Copy certificate over that is used by the teleport server. This can be through the use of ```scp``` or something
+    * You can copy it directly to the necessary location
+        ```
+        scp <user>@<IP>:/var/lib/teleport-info/fullchain.pem /usr/local/share/ca-certificates/teleport-server.crt
+        ```
+3. Move the certificate to the ```/usr/local/share/ca-certificates/``` directory. An example shown below. This should be the root certificate.
+    ```
+    mv servercert.crt /usr/local/share/ca-certificates/servercert.crt
+    ```
+    * Ensure the file ends in .crt! 
+        ![CA-Update](Images/LTS.png)
+4. Run the following command to update the trusted certificate store
+    ```
+    sudo update-ca-certificates
+    ```
+    * You may want to test that it was loaded properly, by curling the Teleport server 
+        ```
+        curl https://<IP>
+        ```
+5. Originally I had a validation error. This was possibly due to the lack of a SAN, or that I forgot to run the ```update-ca-certificates``` command. After setting up with the ```--insecure``` flag I transitioned to this trusted method, and it worked. 
+6. If you are running Teleport with the ```--insecure``` flag, you can now remove it
+   1. Remove the  ```--insecure``` flag
+        ```
+        nano /lib/systemd/system/teleport.service 
+        ```
+   2. Reload the daemon
+        ```
+        systemctl daemon-reload
+        ```
+   3. Restart Teleport
+        ```
+        systemctl restart teleport
+        ```
 
-### Adding Nodes CLI
+The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/docs/security-trust-store). The ```update-ca-certificates``` command updates the ```/etc/ssl/certs/ca-certificates.crt``` file which is a list of all trusted root certificates. It reads in the new certificates from ```/usr/local/share/ca-certificates/*```.
+### Adding Nodes CLI Method -- Not Recommended
 1. Enter into **Teleport Server**
 2. Install Teleport (**This should already be done if the previous steps have been done**)
     ```
@@ -191,7 +231,6 @@ The following is based on the official [teleport documentation](https://gotelepo
     sudo systemctl enable teleport && \
     sudo systemctl start teleport
     ```
-
 ### Adding Nodes Web Interface (Linux)
 
 1. Login to the Teleport web-interface 
@@ -209,7 +248,8 @@ The following is based on the official [teleport documentation](https://gotelepo
     
     * Add a ```--insecure``` flag to curl if using self signed certs with teleport.  
     * May need to modify the URL to match the INTERNAL IP and to use port 443
-5. Modify the ```/lib/systemd/system/teleport.service```, look at the output of ```systemctl status teleport``` if this is not the location to find it. It should look like the following. **See** [The Alt Section](#look-into-alternate-way-to-make-it-trusted) if using an actual CA.
+5. See the section 
+6. Modify the ```/lib/systemd/system/teleport.service```, look at the output of ```systemctl status teleport``` if this is not the location to find it. It should look like the following. **See** [The Alt Section](#look-into-alternate-way-to-make-it-trusted) if using an actual CA.
     ```
     [Unit]
     Description=Teleport Service
@@ -228,23 +268,24 @@ The following is based on the official [teleport documentation](https://gotelepo
     WantedBy=multi-user.target`
     ```
     * The line ```ExecStart=/usr/local/bin/teleport start --pid-file=/run/teleport.pid``` needs ```--insecure``` added 
-6. Restart the process
+7. Restart the process
     ```
     sudo systemctl daemon-reload && \
     sudo systemctl restart teleport.service
     ```
-7. If using tsh, we will need to use the ```--insecure``` flag
-8. We should see the following on a success
+8. If using tsh, we will need to use the ```--insecure``` flag
+9. We should see the following on a success
 
     <img src="Images/node-web4.png" width=800>
 
-9. Configure the users that can be accessed. An example is shown below.
+10. Configure the users that can be accessed. An example is shown below.
 
     <img src="Images/node-web5.png" width=800>
 
-10. Test the connection
+11. Test the connection
 
     <img src="Images/node-web6.png" width=800>
+
 
 ### Add Windows RDP  Console 
 https://goteleport.com/docs/desktop-access/active-directory-manual/#allow-remote-rdp-connections -- Manual
@@ -507,23 +548,13 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
     <img src="Images/node-web-win1.png" width=800>
 
 
+## Dissable Session Recordings
+We may want to dissable session recordings to preserve our limited disk space. This information is from the [Official Teleport Docs](https://goteleport.com/docs/desktop-access/reference/sessions/)
 
-### Look into alternate way to make the certificate trusted -- Not Working ATM
-1. Generate the Certificate with a SAN
+1. Open the ```teleport.yml``` configuration file
     ```
-    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /var/lib/teleport-info/privkey.pem  -addext "subjectAltName = DNS:<DNS>, IP:<IP>" -out /var/lib/teleport-info/fullchain.pem 
+    nano /etc/teleport.yml
     ```
-2. Copy certificate over that is used by the teleport server. This can be through the use of ```scp``` or something
-3. Move the certificate to the ```/usr/local/share/ca-certificates/``` directory. An example shown below. This should be the root certificate.
-    ```
-    mv servercert.crt /usr/local/share/ca-certificates/servercert.crt
-    ```
-4. Run the following command to update the trusted certificate store
-    ```
-    sudo update-ca-certificates
-    ```
-5. Now we have a certificate validation error, likely due to the fact it is a self signed, we probably need to make an actual CA...
-    * We may need to add an alt name that is the same name, alter images later if this is the case.
 
 
 ## Container Based Teleport 
