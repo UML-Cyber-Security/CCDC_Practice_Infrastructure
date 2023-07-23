@@ -343,10 +343,156 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
         ```curl -o user-ca.cer https://10.0.1.15:443/webapi/auth/export?type=windows```
     * Untrusted
       * I just accessed it on a wen browser and saved it.
+      1. Set powershell to ignore invalid certificates        
+        ```
+        add-type @"
+            using System.Net;
+            using System.Security.Cryptography.X509Certificates;
+            public class TrustAllCertsPolicy : ICertificatePolicy {
+                public bool CheckValidationResult(
+                    ServicePoint srvPoint, X509Certificate certificate,
+                    WebRequest request, int certificateProblem) {
+                    return true;
+                }
+            }
+        "@
+        ```
+      2.  Then run 
+        ```
+        [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+        ```
+      3. Run Curl command (Replace IP with your IP)
+        ```
+        curl -o user-ca.cer https://<IP>:443/webapi/auth/export?type=windows
+        ```
+15. Run the following commands to create an access policy for teleport
+    ```
+    $GPOName="Teleport Access Policy"
+     New-GPO -Name $GPOName | New-GPLink -Target $((Get-ADDomain).DistinguishedName)
+    ```
+16. As previously open the Group Policy Management program and navigate to the policy 
+    ```
+    $FOREST > Domains > $DOMAIN > Group Policy Objects
+    ```
 
-Stopped at Create another GPO and import the Teleport CA
+    <img src="Images/W10.png" width=800>
 
-May want to look into https://til.intrepidintegration.com/powershell/ssl-cert-bypass and try automatic one later.
+17. Edit the policy (right click) goto **Trusted Root Certificate Authorities**
+    ```
+    Computer Configuration > Policies > Windows Settings > Security Settings > Public Key Policies
+    ```
+
+    <img src="Images/W11.png" width=800>
+
+18. Access the **Trusted Root Certificate Authorities** and import the Teleport Certificate.
+    * You will need to right click the empty window and follow the wizard
+
+    <img src="Images/W12.png" width=800>
+
+19. As a Domain administrator, publish the certificate to the domain.
+    * Verify with the following command - look for Domain Admin
+        ```
+        net user administrator /domain 
+        ```
+
+        <img src="Images/W13.png" width=300>
+    
+    * Then run the following command
+    ```
+    certutil –dspublish –f <PathToCertFile.cer> RootCA
+    ```
+
+    <img src="Images/W14.png" width=300>
+
+20. Publish the cert to the NTAuth server, this will be done automatically hereafter 
+    ```
+    certutil –dspublish –f <PathToCertFile.cer> NTAuthCA
+    ```
+
+    <img src="Images/W15.png" width=300>
+
+21. Force the retrevial of the certificate 
+    ```
+    certutil -pulse
+    ```
+22. Teleport emulates a Smart Card. We need to enable Smart Card based authentication 
+    * Still editing the Teleport Group Access Policy 
+        ```
+        Computer Configuration > Policies > Windows Settings > Security Settings > System Services
+        ```
+        <img src="Images/W16.png" width=800>
+    * Click The System Services 
+
+23. Find the **Smart Card** entry and fill it out as shown below
+
+    <img src="Images/W17.png" width=800>
+
+24. Enable RDP connection (Already in one so I assume something has been done...)
+25. Navigate to connections still in the Group Policy Manager for Teleport Access
+    ```
+    Computer Configuration > Policies > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Connections
+    ```
+26. Right Click the policy and select edit
+
+    <img src="Images/W18.png" width=800>
+
+27. Enable Remote RDP connections as shown below
+
+    <img src="Images/W19.png" width=800>
+
+28. Goto the Security section for RDP
+    ```
+    Computer Configuration > Policies > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Security
+    ```
+29. Right click the "Require user authentication for..." as shown below
+
+    <img src="Images/W20.png" width=800>
+
+30. Edit this configuration so it is disabled as shown below
+
+    <img src="Images/W21.png" width=800>
+
+31. Right click "Always prompt..." as shown below 
+
+    <img src="Images/W22.png" width=800>
+
+32. Disable it as shown below
+
+    <img src="Images/W23.png" width=800>
+
+33. Navigate to Firewall Settings 
+    ```
+    Computer Configuration > Policies > Windows Settings > Security Settings > Windows Firewall with Advanced Security (x2)
+    ```
+
+    <img src="Images/W24.png" width=800>
+
+34. Configure 
+    1.  Right click the empty window of inbound rules 
+
+        <img src="Images/W25.png" width=800>
+
+    2.  Select RDP which is under predefined 
+
+        <img src="Images/W26.png" width=800>
+
+    3.  Only select the rule for User Mode (TCP-in) -- Uncheck the others 
+
+        <img src="Images/W27.png" width=800>
+
+    4.  Select Allow
+35. Force update the GPO
+    ```
+    gpupdate.exe /force
+    ```
+36. Open the Microsoft Management Console (MMC) and Navigate to the following location
+    ```
+    Start > Control Panel > Administrative Tools > Certificate Authority
+    ```
+
+**Stopped at CA Steps**
+
+try automatic one later.
 ### Add Windows RDP Web
 [Reference!](https://goteleport.com/docs/desktop-access/active-directory/#compare-desktop-access-to-other-rdp-clients)
 
