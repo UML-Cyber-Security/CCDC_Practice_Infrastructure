@@ -73,6 +73,8 @@ The Setup of the VM is as follows
                 errorfile 503 /etc/haproxy/errors/503.http
                 errorfile 504 /etc/haproxy/errors/504.http
         ```
+   * You may want to increase the timeouts in the default section as shown in the image below 
+        ![Increase Time](Images/HA-Time.png)
 4. We will want to create a frontend for both HTTP and HTTPS. At the bottom of the file add 
         ```
         # Define a Frontend 
