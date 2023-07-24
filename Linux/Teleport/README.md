@@ -9,6 +9,7 @@ This is a document detailing the installation, setup and use of **Teleport**. Th
   - [Linux Trusted Cert Store](#linux-trusted-cert-store)
   - [Adding Nodes CLI Method -- Not Recommended](#adding-nodes-cli-method----not-recommended)
   - [Adding Nodes Web Interface (Linux)](#adding-nodes-web-interface-linux)
+- [Add Teleport Certificate to Windows](#add-teleport-certificate-to-windows)
   - [Add Windows RDP  Console](#add-windows-rdp--console)
   - [Add Windows RDP Web](#add-windows-rdp-web)
 - [Dissable Session Recordings](#dissable-session-recordings)
@@ -287,6 +288,8 @@ The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/doc
     <img src="Images/node-web6.png" width=800>
 
 
+## Add Teleport Certificate to Windows
+https://learn.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate
 ### Add Windows RDP  Console 
 https://goteleport.com/docs/desktop-access/active-directory-manual/#allow-remote-rdp-connections -- Manual
 https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
