@@ -5,11 +5,14 @@
 \usepackage{xcolor}
 \usepackage{tikzsymbols}
 \usepackage{float}
+\usepackage{epigraph}
 
 \lstset{
     basicstyle=\ttfamily,
     backgroundcolor=\color{gray!30},
 }
+
+\renewcommand{\epigraphflush}{flushleft}
 
 \begin{document}
 
@@ -28,8 +31,7 @@ In addition, there are horror stories of people being clever with honeypots and 
 It is not really fair, but if you piss off the red team they will come for you and you will lose. Just take it into account.
 
 \section{Anti-Keylogger}
-"The threat is stronger than the execution"
--Aaron Nimzowitsch
+\epigraph{The threat is stronger than the execution}{Aaron Nimzowitsch}
 
 I remember in the team's practices, the mere idea that the passwords I was typing were being logged caused me distress. 
 Did the attacker know the password I had just changed? Their keylogger did not work, but it got me thinking of how to combat them.
@@ -59,8 +61,10 @@ Maybe you can have a white list with your IP on it so you don't get blocked?
 This whole thing is made a moot point by teleport. But there has to be some creative way to block attackers.
 
 \section{Faking Score Checks}
-Obviously this is immoral, against the rules, etc., and I am not even close to the first person to think of it.
-But it is possible. The scoring engine is ScoreStack, which checks for a response over the network.
+Don't do it.
+
+But for a security competion, the score checking is really not robust. 
+The checks should come from the black team account or another program inside the computer.
 You could cheat by simply using wireshark to observe the score check requests and your machine's responses.
 
 \end{document}
