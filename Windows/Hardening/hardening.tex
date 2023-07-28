@@ -33,19 +33,47 @@ I am not sure if they make good use of it, but the red team does have the entire
 This is probably especially relevant for windows, as kerberos uses hashes extensively. <update with more details>
 
 \section{Active Directory Freebies}
-Disable all of the accounts besides the black teams and your own.
+There are some very easy and quick ways to harden active directory. 
+
+Disable all of the accounts besides the black team and your own.
 
 Change your password to something random and good. 
 
 At some point, you can make a new administrator account with an unusual username. You can keep the old account around as a honeypot if you want.
 
-\section{Red Team Gimmicks}
-The red team loves gimmicks. It adds some fun and lets them be creative. So expect to be surprised.
+After disabling accounts, you must kick them off of the machine! Merely disabling the account does not kick the user off of the machine.
 
+You can also view the ssh connections and kick them off.
+
+Look at GPO and disable any malicious policies, such as policies that disable microsoft defender.
+
+
+\section{Local Account Freebies}
+In addition to active directory, your computer has a local directory of users. These include the Guest user.
+Make sure all of the local accounts are disabled. 
+
+\section{Registry Keys and Autoruns}
+<write a program to scan the windows registry and report any anomalies in the keys.
+Often keys in things like Firefox or AmazonVM thingie will be creatively named by the red team
+so you don't notice them. Need a program to definitively scan all registry keys for malware>
+
+\section{Process Manager}
+Be wary that just because a program is started by System32 does not mean it is safe. <covenant malware>
+The red team may give you some low hanging fruit with malware that rings up on VirusTotal.
+Suspicious processes include:
+conhost.exe / command prompts
+powershell prompts
+exe files
+
+\section{Firewall / Network}
+
+\section{Red Team Gimmicks}
 “I was surprised by it, but I wasn’t surprised that I was surprised. I expected a surprise, I just wasn’t sure which one.” -Fabiano Caruana
 
+The red team loves gimmicks. It adds some fun and lets them be creative. So expect to be surprised.
+
 \subsection{Visitors}
-Visitors are malicious.
+Assume all visitors are malicious.
 If people walk in the room, cover your password sheets. I kept mine in my pocket and only took it out when I needed it. 
 
 \subsection{The Intern}
@@ -54,7 +82,9 @@ They can try to plug USBs into your computers, take pictures with your password 
 Apparently the intern and her handler will follow any rules you tell them. So tell them to not take picures, install unwanted programs, plug in devices, etc.
 
 \subsection{Other devices in the room}
-One time the red team got passwords by having a hidden camera in the room and viewing the passwords on the whiteboard. 
+One time the red team got passwords by having a hidden camera in the room and using it to view passwords on the whiteboard. 
 Be careful of physical devices in the room. I think there was speculation that a doll had a camera in it, idk.
+
+\subsection{}
 
 \end{document}
