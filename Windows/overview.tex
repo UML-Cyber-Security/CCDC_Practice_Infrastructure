@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikzsymbols}
+\usepackage{float}
+
+\lstset{
+    basicstyle=\ttfamily,
+    backgroundcolor=\color{gray!30},
+}
+
+\begin{document}
+
+\graphicspath{ {./Images/} }
+\tableofcontents
+
+\section{Introduction}
+The goal of these documents is to provide a baseline foundation for the Windows team members.
+Please update and improve the documentation wherever you see fit.
+
+I think there are 5 categories to cover:
+
+\begin{enumerate}
+        \item Deployment to Proxmox
+        \item Setup of Active Directory
+        \item Setup of the CA
+        \item Setup of the DFS / highly available files
+        \item Hardening
+        \item Planning (for the competition, timelines)
+        \item Offense (to practice)
+        \item Powershell commands (to reference in one spot)
+\end{enumerate}
+
+Each category has an associated folder
+
+This is my knowledge of Windows. I have tried to include everything I think could be useful to you.
+I encourage you to do the same, add more sections and flesh out the sections with your own experience.
+
+I made a dedicated powershell pdf so we can easily reference them.
+Note that powershell commands are not case sensitive.
+\end{document}

@@ -17,7 +17,7 @@
 \tableofcontents
 
 \section{Introduction}
-Words
+This explains how to 
 
 \section{Prerequisites}
 \begin {enumerate}
@@ -63,7 +63,7 @@ Make sure to login with the administrator account, as seen in \ref{fig:ExampleLo
 
 Your domain admin account should now have the necessary permissions to configure the CA.
 
-\section{Active Directory Certificate Services}
+\section{Installing/Configuring Active Directory Certificate Services}
 
 \begin{figure}[H]
         \centering
@@ -91,8 +91,7 @@ Make sure to select Enterprise CA.
         \label{fig:CAName}
 \end{figure}
 
-TODO: Figure out the importance of the CA name.
-I am not sure the significance of the CA name, but I will update this section once I do.
+As long as it is unique it should be fine, to be safe we can probably stick with the hostname of the CA machine.
 
 \subsection{Confirming the CA works}
 
@@ -146,7 +145,18 @@ certreq -new example.inf example.csr
 \end{figure}
 
 Open up certsrv, either by searching for "Certificate Authority" on the machine,
-or by doing meta + r to run certsrv.msc.
+or by doing meta + r to run certsrv.msc. Right click on the CA's name (as in the screenshot),
+hover over "All Tasks", and click "Submit New Request."
 
+This prompts you to select the .csr file to submit.
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=1\textwidth]{SelectAllFiles.png}
+        \caption{Select the .csr file. To find it, make sure to select "Show All Files" (on the bottom right)}
+        \label{fig:ShowAllFiles}
+\end{figure}
+
+To approve the request, expand the menu. Then click "Pending Requests." Then approve the request.
 \end{document}
 
