@@ -50,10 +50,12 @@ You can also view the ssh connections and kick them off.
 
 Look at GPO and disable any malicious policies, such as policies that disable microsoft defender.
 
-
 \section{Local Account Freebies}
 In addition to active directory, your computer has a local directory of users. These include the Guest user.
-Make sure all of the local accounts are disabled. 
+Make sure all of the local accounts are disabled.
+
+This can be done by getting the local users with: get-LocalUser
+And disabling them with: Disable-LocalUser -Name "Guest"
 
 \section{Registry Keys and Autoruns}
 <write a program to scan the windows registry and report any anomalies in the keys.
@@ -111,6 +113,34 @@ conhost.exe / command prompts
 powershell prompts
 exe files
 
+\section{Securing DNS}
+
+\subsection{Disabling Recursive Lookups}
+"Disabling recursive lookups can help prevent DNS-based DDoS attacks. 
+Recursive DNS queries are when a DNS server processes a domain name 
+request on a domain name for which it is not authoritative 
+(or has not already cached) by querying the root name servers for 
+the IP address of the requested domain name1. A remote attacker could 
+spoof a recursive DNS query with a source address of a network they 
+wish to cause a denial of service for. The attacker spoofs a query 
+with a small payload and causes the DNS server to reply with much 
+more data. This floods the target network with answers to questions 
+it never asked for2. Disabling open recursion, which causes the server 
+to accept DNS 
+requests from any IP address, can reduce DNS attack loopholes" -Bing
+
+https://www.cisa.gov/sites/default/files/publications/DNS-recursion033006.pdf
+
+\subsection{DNSSEC}
+Domain Name System Security Extensions
+
+Protect against DNS spoofing and cache poisoning
+
+https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en
+
+https://www.akadia.com/services/dns_hardening.html
+
+\section{Securing Active Directory}
 
 
 \end{document}
