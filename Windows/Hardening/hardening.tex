@@ -26,36 +26,32 @@ The idea is that if you see that you cannot win, do everything in your power to 
 
 Assume everything is compromised. I think in the past, the red team has even had access to the laptops you are given. Be paranoid!
 
-Assume the red team has fully gone through your public material and has the machines from your previous years.
-I know they have gloated in the past of busting teams when they reuse passwords across multiple years.
-They have a wordlist of all of the passwords used 
+Also assume that the red team has fully gone through your public material the machines from previous years.
+I know they have gloated in the past of busting teams who reuse passwords across multiple years.
+They have a wordlist of all of the passwords used in past competions and run through it. 
+On the topic of passwords, one red teamer gloated that he could enumarate all 12 character passwords in some short amount of time (6 hours?).
+The red team does have the entire night to crack hashes. So make long passwords!
 
-One red teamer was gloating that he can enumarate all 12 character passwords in some short amount of time (6 hours?)
-
-I am not sure if they make good use of it, but the red team does have the entire night to crack hashes. So make long passwords!
 This is probably especially relevant for windows, as kerberos uses hashes extensively. <update with more details>
 
 \section{Active Directory Freebies}
-There are some very easy and quick ways to harden active directory. 
+There are some very easy and quick ways to harden active directory.
 
-Disable all of the accounts besides the black team and your own.
-
-Change your password to something random and good. 
-
-At some point, you can make a new administrator account with an unusual username. You can keep the old account around as a honeypot if you want.
-
-After disabling accounts, you must kick them off of the machine! Merely disabling the account does not kick the user off of the machine.
-
-You can also view the ssh connections and kick them off.
-
-Look at GPO and disable any malicious policies, such as policies that disable microsoft defender.
+\begin{enumerate}
+        \item Disable all of the accounts besides the black team and your own
+        \item Change your password to something random and good
+        \item At some point, you can make a new administrator account with an unusual username. You can keep the old account around as a honeypot if you want
+        \item After disabling accounts, you must kick them off of the machine! Merely disabling the account does not kick the user off of the machine
+        \item You must also view the ssh connections and kick them off. (both ssh and rdp)
+        \item Look at GPO and disable any malicious policies, such as policies that disable microsoft defender.
+\end{enumerate}
 
 \section{Local Account Freebies}
 In addition to active directory, your computer has a local directory of users. These include the Guest user.
 Make sure all of the local accounts are disabled.
 
-This can be done by getting the local users with: get-LocalUser
-And disabling them with: Disable-LocalUser -Name "Guest"
+You can get the local users with: get-LocalUser
+And disabling the accounts with: Disable-LocalUser -Name "Guest"
 
 \section{Registry Keys and Autoruns}
 <write a program to scan the windows registry and report any anomalies in the keys.
@@ -66,6 +62,11 @@ so you don't notice them. Need a program to definitively scan all registry keys 
 Idk
 
 \section{Firewall / Network}
+
+\subsection{Banning IPs}
+Banning IPs makes me paranoid of red teaming myself, but it can be a good idea.
+
+I will look into this program called \href{https://github.com/DigitalRuby/IPBan}{IP Ban}.
 
 \section{Red Team Gimmicks}
 \epigraph{I was surprised by it, but I wasn’t surprised that I was surprised. I expected a surprise, I just wasn’t sure which one.}{Fabiano Caruana}
@@ -138,7 +139,7 @@ Protect against DNS spoofing and cache poisoning
 
 https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en
 
-https://www.akadia.com/services/dns_hardening.html
+https://www.akadia.com/services/dns\_hardening.html
 
 \section{Securing Active Directory}
 

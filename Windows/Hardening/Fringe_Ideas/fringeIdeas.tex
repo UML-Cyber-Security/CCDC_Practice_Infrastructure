@@ -20,7 +20,7 @@
 \tableofcontents
 
 \section{Introduction}
-“Manufacturer's protocol dictates I cannot be captured. I must be destroyed.” - IG-11
+\epigraph{Manufacturer's protocol dictates I cannot be captured. I must be destroyed}{IG-11}
 
 This document is some of my ideas which have been scrutinized/rejected by the team. 
 Please add your own ideas and creative things to try.
@@ -40,16 +40,25 @@ There are many types of loggers, which can log your clipboard, and many other th
 Our goal is to be able to type securely into a compromised machine. To this end, I have made a program which types random characters. There are many possibilities for this
 
 \section{Honeypots}
-You can make honeypots, but it is not advised.
+You can make honeypots, but it is not advised as the red team gets angry. 
+I think smaller honeypots would make them less angry, as opposed to making 
+your entire infrastructure a honeypot.
 
 \subsection{Honeypot Kerberoasting}
 
 \section{Reverse Shells}
 There are many reasons why this is a bad idea. You are installing malware on your computer. 
-You are allowing the traffic through your firewall.
+You are allowing malicious traffic through your firewall.
 
 However, a reverse shell would allow you to maintain persistent access to the machine if the attacker locks you out.
 As we are only competing for a few hours, such access could be invaluable.
+
+We can use a reverse shell that communicates over https and allow that in the firewall.
+
+Somehow it needs to be not detected by the antivirus. There are many ways to obfuscate it, I think a fun one would be
+to translate the program into morse code.
+
+\href{https://docs.metasploit.com/docs/using-metasploit/basics/how-to-use-a-reverse-shell-in-metasploit.html\#windows-common-reverse-shell}{Metasploit Docs}
 
 \section{Disabling SSH}
 The only people trying to ssh into the machines are attackers with scripts, I use RDP for everything.
