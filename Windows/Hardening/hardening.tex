@@ -26,8 +26,8 @@ The idea is that if you see that you cannot win, do everything in your power to 
 
 Assume everything is compromised. I think in the past, the red team has even had access to the laptops you are given. Be paranoid!
 
-Also assume that the red team has fully gone through your public material the machines from previous years.
-I know they have gloated in the past of busting teams who reuse passwords across multiple years.
+Also assume that the red team has fully gone through your public material the machines from previous years, as
+I know they have gloated of busting teams who reuse passwords across multiple years.
 They have a wordlist of all of the passwords used in past competions and run through it. 
 On the topic of passwords, one red teamer gloated that he could enumarate all 12 character passwords in some short amount of time (6 hours?).
 The red team does have the entire night to crack hashes. So make long passwords!
@@ -64,12 +64,13 @@ Idk
 \section{Firewall / Network}
 
 \subsection{Banning IPs}
-Banning IPs makes me paranoid of red teaming myself, but it can be a good idea.
+Banning IPs makes me paranoid of accidentally "red teaming" myself, but it can be a good idea.
 
 I will look into this program called \href{https://github.com/DigitalRuby/IPBan}{IP Ban}.
 
 \section{Red Team Gimmicks}
-\epigraph{I was surprised by it, but I wasn’t surprised that I was surprised. I expected a surprise, I just wasn’t sure which one.}{Fabiano Caruana}
+\epigraph{I was surprised by it, but I wasn’t surprised that I was surprised. I expected a surprise, I just wasn’t sure which one.}
+{Fabiano Caruana}
 
 The red team loves gimmicks. It adds some fun and lets them be creative. So expect to be surprised.
 
@@ -97,22 +98,76 @@ So we can use free antiviruses, or those with a no-card-required free trial.
 
 Kaspersky seems to be a good antivirus choice.
 
-\href{https://www.sophos.com/en-us/free-tools/hitmanpro}{Hitman Pro} seems to be a good choice for scanning the file hashes against a large database.
-
+\href{https://www.sophos.com/en-us/free-tools/hitmanpro}{Hitman Pro}
+seems to be a good choice for scanning the file hashes against a large database.
 Norton Power Eraser can check for Potentially Unwanted Applications (PUA) and can scan for rootkits.
 
 Kaspersky's TDSSKiller to remove rootkits.
 
-\subsection{Process Explorer}
-The best antivirus is you. It's not empowering, it's mostly sad.
+\section{Sysinternals}
+The best antivirus is you. It's not empowering, it's mostly just sad.
 You need to be able to identify malicious processes using Process Explorer
 
+Great presentation, and he made sysinternals: 
+\href{https://youtu.be/vW8eAqZyWeo}{Mark Russinovich on Malware Hunting with Sysinternals}
+
+Video mentions program modifying the shortcut to use command line arguments. 
+Could be a funny way of running malware. Don't trust the shortcut icons!
+
+\subsection{Process Explorer}
 Be wary that just because a program is started by System32 does not mean it is safe. <covenant malware>
 The red team may give you some low hanging fruit with malware that rings up on VirusTotal.
 Suspicious processes include:
 conhost.exe / command prompts
 powershell prompts
 exe files
+
+\href{https://youtu.be/y2bNLCWHFNs}{Professor K on Process Explorer}
+
+"Put malware to sleep, and only then kill it. 
+Then they don't know what's happening.
+A lot of malware out there has
+the buddy system. Instead of racing against the buddy system
+and deleting both malicious files before they respawn each other,
+suspend them and then terminate them."
+
+"Also if it is necessary, you don't want to cause irreperable damage to your system."
+
+Things to look for from the Professor K video:
+\begin{enumerate}
+        \item No "Verified Signer"
+        \item VirusTotal scan
+        \item Strings of the executable
+        \item Process' properties \& the TCP/IP tab
+        \item DLLs of the process
+        \item Handles of the process
+        \item Where the process is launching from
+        \item Can view the autostart location from the registry
+\end{enumerate}
+
+This command checks all executables in the C drive on VirusTotal,
+ and opens the browser to the ones that are detected.
+\begin{lstlisting}[breaklines=true, columns=fullflexible]
+        sigcheck -e -u -vr -s c:\       
+\end{lstlisting}
+
+\subsection{Autoruns}
+
+\begin{enumerate}
+        \item Show only images that are not signed by microsoft
+        \item WMI tab autoruns \href{https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96}{(What is WMI)}
+        \item Timestamp column
+\end{enumerate}
+
+To remove the progrma that is started by the shell, he changes its registry startp from 
+Shell to explorer.exe
+
+\subsection{Process Monitor}
+\epigraph{"When in doubt, run process monitor"}{Mark Russinovich}
+
+Useful filter is:
+Category isRight only shows changes made to the system
+
 
 \section{Securing DNS}
 
