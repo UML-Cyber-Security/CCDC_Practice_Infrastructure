@@ -6,6 +6,8 @@ We first need to configure proxmox to contain the networks necessary for the VMs
 
 All the information regarding this is contained in the [Proxmox Readme](Proxmox/README.md), mainly it directs you to the appropriate document. 
 
+## Ports
+This document contains the PORTS that are used by each service. This is a centralized location that we can refer to when creating both network (edge) and host based firewalls. 
 ## PFSense
 Once the Proxmox networks have been created and configured, we can create and setup the PFSense instances.
 
