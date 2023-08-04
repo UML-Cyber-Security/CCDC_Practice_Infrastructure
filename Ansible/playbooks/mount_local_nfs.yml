@@ -1,0 +1,16 @@
+---
+
+  - hosts: pve1:pve2:pve3:pve4:pve5
+    remote_user: root
+    connection: ansible.netcommon.network_cli
+    become: true
+    tasks:
+
+      - name: Mounting shared nfs server on local machines
+      ansible.builtin.script: mount_ local_nfs.sh
+      
+      - name: Output of mounting shared nfs on Pve/proxmoxmachines
+        debug:
+          msg: {{ inventory_hostname }} is running mounting_local_nfs ansible script
+          var: value
+          

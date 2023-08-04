@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  nginx: 
+    image: nginx
+    networks:
+      - nginx
+      - database
+    ports: 
+      - "80:80"
+      - "443:443"
+  postgres:
+    image: postgres
+    networks:
+      - database
+    environment:
+      - POSTGRES_PASSWORD="mysecretpassword"
+
+
+networks:
+  nginx:
+    driver: overlay
+    attachable: true
+  database:
+    driver: overlay
+    internal: true

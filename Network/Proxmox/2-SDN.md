@@ -9,7 +9,7 @@ This document described the setup and configuration of Software Defined Networks
   - [If HTTP fails Internally and externally](#if-http-fails-internally-and-externally)
 
 ## Installation
-
+1. Ensure Host machine is using Ubuntu 20.04 or greater
 ### Modify Apt Source List
 Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enterprise repository, and remove the enterprise repositories.
 
@@ -83,4 +83,10 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
 
     <img src="Images/SD9.png" width=800>
 
+3. Modify PFSense instances to use the MTU of 1450 on the LAN and OTP Interfaces
     
+    <img src="Images/SD11.png" width=800>
+
+4. For the Internal Routers set the MTU of WAN to 1450 
+
+    <img src="Images/SD12.png" width=800>
