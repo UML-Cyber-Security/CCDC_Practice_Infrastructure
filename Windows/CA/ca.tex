@@ -17,15 +17,17 @@
 \tableofcontents
 
 \section{Introduction}
-This explains how to 
+This explains how to configure the CA and sign certificates with it.
+"Enterprise CA offers features like Certificate Template, Certificate Auto enrollment and Key archival. 
+Enterprise CA is trusted by all domain joined clients."
 
 \section{Prerequisites}
 \begin {enumerate}
 \item You should have joined the CA to the Domain.
-\item You should be logged in as a \textbf{domain administrator}
+\item You should be logged in as a \textbf{domain} administrator in the Cert Publishers group
 \end {enumerate}
 
-To become a domain administrator, RDP into one of the Domain Controllers.
+To add the Cert Publishers permission, RDP into one of the Domain Controllers.
 Then add a user (probably the administrator) to the Cert Publishers group.
 
 \begin{figure}[H]
@@ -38,7 +40,7 @@ Then add a user (probably the administrator) to the Cert Publishers group.
 \begin{figure}[H]
         \centering
         \includegraphics[width=1\textwidth]{BingOnPermissions.png}
-        \caption{Adding administrator to the Cert Publishers group}
+        \caption{Bing on Permissions}
         \label{fig:BingOnPermissions}
 \end{figure}
 
@@ -57,7 +59,7 @@ Make sure to login with the administrator account, as seen in \ref{fig:ExampleLo
 \begin{figure}[H]
         \centering
         \includegraphics[width=1\textwidth]{ExampleLoginNETBIOS.png}
-        \caption{Example login, explicitly with the Domain Administrator}
+        \caption{Example login, explicitly with the Domain Administrator (note the @cyber to show it the domain admin, not the local admin)}
         \label{fig:ExampleLoginNETBIOS}
 \end{figure}
 

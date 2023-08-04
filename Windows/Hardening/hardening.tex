@@ -24,38 +24,34 @@
 The idea is that if you see that you cannot win, do everything in your power to resist. And that memory gave me the determination I needed.}
 {Ding Liren}
 
-Assume everything is compromised. I think in the past, the red team has even had access to the laptops you are given. Be paranoid!
+Assume everything is compromised. Even the laptops you are using for the competition! Be paranoid!
 
-Assume the red team has fully gone through your public material and has the machines from your previous years.
-I know they have gloated in the past of busting teams when they reuse passwords across multiple years.
-They have a wordlist of all of the passwords used 
+Also assume that the red team has fully gone through your public material the machines from previous years, as
+I know they have gloated of busting teams who reuse passwords across multiple years.
+They have a wordlist of all of the passwords used in past competions and run through it. 
+On the topic of passwords, one red teamer gloated that he could enumarate all 12 character passwords in some short amount of time (6 hours?).
+The red team does have the entire night to crack hashes. So make long passwords!
 
-One red teamer was gloating that he can enumarate all 12 character passwords in some short amount of time (6 hours?)
-
-I am not sure if they make good use of it, but the red team does have the entire night to crack hashes. So make long passwords!
 This is probably especially relevant for windows, as kerberos uses hashes extensively. <update with more details>
 
 \section{Active Directory Freebies}
-There are some very easy and quick ways to harden active directory. 
+There are some very easy and quick ways to harden active directory.
 
-Disable all of the accounts besides the black team and your own.
-
-Change your password to something random and good. 
-
-At some point, you can make a new administrator account with an unusual username. You can keep the old account around as a honeypot if you want.
-
-After disabling accounts, you must kick them off of the machine! Merely disabling the account does not kick the user off of the machine.
-
-You can also view the ssh connections and kick them off.
-
-Look at GPO and disable any malicious policies, such as policies that disable microsoft defender.
+\begin{enumerate}
+        \item Disable all of the accounts besides the black team and your own
+        \item Change your password to something random and good
+        \item At some point, you can make a new administrator account with an unusual username. You can keep the old account around as a honeypot if you want
+        \item After disabling accounts, you must kick them off of the machine! Merely disabling the account does not kick the user off of the machine
+        \item You must also view the ssh connections and kick them off. (both ssh and rdp)
+        \item Look at GPO and disable any malicious policies, such as policies that disable microsoft defender.
+\end{enumerate}
 
 \section{Local Account Freebies}
 In addition to active directory, your computer has a local directory of users. These include the Guest user.
 Make sure all of the local accounts are disabled.
 
-This can be done by getting the local users with: get-LocalUser
-And disabling them with: Disable-LocalUser -Name "Guest"
+You can get the local users with: get-LocalUser
+And disabling the accounts with: Disable-LocalUser -Name "Guest"
 
 \section{Registry Keys and Autoruns}
 <write a program to scan the windows registry and report any anomalies in the keys.
@@ -67,8 +63,14 @@ Idk
 
 \section{Firewall / Network}
 
+\subsection{Banning IPs}
+Banning IPs makes me paranoid of accidentally "red teaming" myself, but it can be a good idea.
+
+I will look into this program called \href{https://github.com/DigitalRuby/IPBan}{IP Ban}.
+
 \section{Red Team Gimmicks}
-\epigraph{I was surprised by it, but I wasn’t surprised that I was surprised. I expected a surprise, I just wasn’t sure which one.}{Fabiano Caruana}
+\epigraph{I was surprised by it, but I wasn’t surprised that I was surprised. I expected a surprise, I just wasn’t sure which one.}
+{Fabiano Caruana}
 
 The red team loves gimmicks. It adds some fun and lets them be creative. So expect to be surprised.
 
@@ -96,22 +98,94 @@ So we can use free antiviruses, or those with a no-card-required free trial.
 
 Kaspersky seems to be a good antivirus choice.
 
-\href{https://www.sophos.com/en-us/free-tools/hitmanpro}{Hitman Pro} seems to be a good choice for scanning the file hashes against a large database.
-
+\href{https://www.sophos.com/en-us/free-tools/hitmanpro}{Hitman Pro}
+seems to be a good choice for scanning the file hashes against a large database.
 Norton Power Eraser can check for Potentially Unwanted Applications (PUA) and can scan for rootkits.
 
 Kaspersky's TDSSKiller to remove rootkits.
 
-\subsection{Process Explorer}
-The best antivirus is you. It's not empowering, it's mostly sad.
+\section{Sysinternals}
+The best antivirus is you. It's not empowering, it's mostly just sad.
 You need to be able to identify malicious processes using Process Explorer
 
+Great presentation, and he made sysinternals: 
+\href{https://youtu.be/vW8eAqZyWeo}{Mark Russinovich on Malware Hunting with Sysinternals}
+
+\href{https://youtu.be/A_TPZxuTzBU}{License to Kill: Malware Hunting with the Sysinternals Tools }
+
+Russinovich also wrote a book (don't pirate it): Windows Sysinternals Administrator’s Reference
+
+Video mentions program modifying the shortcut to use command line arguments. 
+Could be a funny way of running malware. Don't trust the shortcut icons!
+
+\subsection{Process Explorer}
 Be wary that just because a program is started by System32 does not mean it is safe. <covenant malware>
 The red team may give you some low hanging fruit with malware that rings up on VirusTotal.
 Suspicious processes include:
 conhost.exe / command prompts
 powershell prompts
 exe files
+
+In process explorer, click "run as task manager." Now Ctrl+Shift+Esc will open Process Explorer (instead of task manager).
+
+\href{https://youtu.be/y2bNLCWHFNs}{Professor K on Process Explorer}
+
+"Put malware to sleep, and only then kill it. 
+Then they don't know what's happening.
+A lot of malware out there has
+the buddy system. Instead of racing against the buddy system
+and deleting both malicious files before they respawn each other,
+suspend them and then terminate them."
+
+"Also if it is necessary, you don't want to cause irreperable damage to your system."
+
+Things to look for from the Professor K video:
+\begin{enumerate}
+        \item No "Verified Signer"
+        \item VirusTotal scan
+        \item Strings of the executable
+        \item Process' properties \& the TCP/IP tab
+        \item DLLs of the process
+        \item Handles of the process
+        \item Where the process is launching from
+        \item Can view the autostart location from the registry
+\end{enumerate}
+
+From Mark Russinovich:
+\begin{enumerate}
+        \item Purple means a process is packed / encrypted
+        \item Have process explorer verify image signatures
+        \item Change your refresh rate to 9 seconds so you can see short lived processes
+\end{enumerate}
+
+This command checks all executables in the C drive on VirusTotal,
+ and opens the browser to the ones that are detected.
+\begin{lstlisting}[breaklines=true, columns=fullflexible]
+        sigcheck -e -u -vr -s c:\       
+\end{lstlisting}
+
+Checks for dlls being signed
+\begin{lstlisting}[breaklines=true, columns=fullflexible]
+        listdlls -u *       
+\end{lstlisting}
+
+\subsection{Autoruns}
+
+\begin{enumerate}
+        \item Show only images that are not signed by microsoft
+        \item WMI tab autoruns \href{https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96}{(What is WMI)}
+        \item Timestamp column
+\end{enumerate}
+
+To remove the progrma that is started by the shell, he changes its registry startp from 
+Shell to explorer.exe
+
+\subsection{Process Monitor}
+\epigraph{"When in doubt, run process monitor"}{Mark Russinovich}
+
+Useful filter is:
+Category isRight only shows changes made to the system
+
 
 \section{Securing DNS}
 
@@ -138,9 +212,15 @@ Protect against DNS spoofing and cache poisoning
 
 https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en
 
-https://www.akadia.com/services/dns_hardening.html
+https://www.akadia.com/services/dns\_hardening.html
 
 \section{Securing Active Directory}
+
+One inject mentioned Sean Metcalf.
+He runs the site \href{https://adsecurity.org/}{adsecurity.org/}
+and I have made a playlist of some useful videos: \href{https://www.youtube.com/playlist?list=PLHkV-wwoQ7s_7vUau-eqiscWoZZNC3EcZ}{playlist}.
+
+\section{Event Logs}
 
 
 \end{document}
