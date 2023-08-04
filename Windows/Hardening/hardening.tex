@@ -24,7 +24,7 @@
 The idea is that if you see that you cannot win, do everything in your power to resist. And that memory gave me the determination I needed.}
 {Ding Liren}
 
-Assume everything is compromised. I think in the past, the red team has even had access to the laptops you are given. Be paranoid!
+Assume everything is compromised. Even the laptops you are using for the competition! Be paranoid!
 
 Also assume that the red team has fully gone through your public material the machines from previous years, as
 I know they have gloated of busting teams who reuse passwords across multiple years.
@@ -111,6 +111,10 @@ You need to be able to identify malicious processes using Process Explorer
 Great presentation, and he made sysinternals: 
 \href{https://youtu.be/vW8eAqZyWeo}{Mark Russinovich on Malware Hunting with Sysinternals}
 
+\href{https://youtu.be/A_TPZxuTzBU}{License to Kill: Malware Hunting with the Sysinternals Tools }
+
+Russinovich also wrote a book (don't pirate it): Windows Sysinternals Administrator’s Reference
+
 Video mentions program modifying the shortcut to use command line arguments. 
 Could be a funny way of running malware. Don't trust the shortcut icons!
 
@@ -121,6 +125,8 @@ Suspicious processes include:
 conhost.exe / command prompts
 powershell prompts
 exe files
+
+In process explorer, click "run as task manager." Now Ctrl+Shift+Esc will open Process Explorer (instead of task manager).
 
 \href{https://youtu.be/y2bNLCWHFNs}{Professor K on Process Explorer}
 
@@ -145,10 +151,22 @@ Things to look for from the Professor K video:
         \item Can view the autostart location from the registry
 \end{enumerate}
 
+From Mark Russinovich:
+\begin{enumerate}
+        \item Purple means a process is packed / encrypted
+        \item Have process explorer verify image signatures
+        \item Change your refresh rate to 9 seconds so you can see short lived processes
+\end{enumerate}
+
 This command checks all executables in the C drive on VirusTotal,
  and opens the browser to the ones that are detected.
 \begin{lstlisting}[breaklines=true, columns=fullflexible]
         sigcheck -e -u -vr -s c:\       
+\end{lstlisting}
+
+Checks for dlls being signed
+\begin{lstlisting}[breaklines=true, columns=fullflexible]
+        listdlls -u *       
 \end{lstlisting}
 
 \subsection{Autoruns}
@@ -197,6 +215,12 @@ https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05
 https://www.akadia.com/services/dns\_hardening.html
 
 \section{Securing Active Directory}
+
+One inject mentioned Sean Metcalf.
+He runs the site \href{https://adsecurity.org/}{adsecurity.org/}
+and I have made a playlist of some useful videos: \href{https://www.youtube.com/playlist?list=PLHkV-wwoQ7s_7vUau-eqiscWoZZNC3EcZ}{playlist}.
+
+\section{Event Logs}
 
 
 \end{document}
