@@ -1,6 +1,6 @@
-# List of Ports Used by Ubunut Machines
+# List of Ports Used by Ubuntu Machines
 
-- [List of Ports Used by Ubunut Machines](#list-of-ports-used-by-ubunut-machines)
+- [List of Ports Used by Ubuntu Machines](#list-of-ports-used-by-ubuntu-machines)
   - [UbuntuMachine1](#ubuntumachine1)
   - [UbuntuMachine2](#ubuntumachine2)
   - [UbuntuMachine3](#ubuntumachine3)
