@@ -25,4 +25,13 @@ They are not something large like "Maintain Website" that would be more suited a
     <img src="Images/T5.png" width=800>
 
 ## Note
-We can add a little thing to make the tasks stand out know as Iocane 
+We can add a little thing to make the tasks stand out know as [Iocane](https://community.taiga.io/t/what-is-this-iocaine-thing-in-taiga-and-how-should-i-use-it/153), this can be used when you are doing a completely new thing!  
+
+1. Open a Task from a [User Story](./Stories.md)
+
+    <img src="Images/TI1.png" width=800>
+
+2. Click on the Iocane button 
+
+    <img src="Images/TI2.png" width=800>
+
