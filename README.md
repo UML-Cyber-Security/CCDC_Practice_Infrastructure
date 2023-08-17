@@ -12,13 +12,7 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
 
 ## Table of Contents (README) <!-- omit from toc -->
 - [Table of Contents (TOPICS)](#table-of-contents-topics)
-- [Taiga Access](#taiga-access)
-  - [Login/Register](#loginregister)
-  - [Access Project](#access-project)
-  - [Access Epic](#access-epic)
-  - [Access Sprint](#access-sprint)
-  - [Access Wiki](#access-wiki)
-  - [Access Issues](#access-issues)
+- [Taiga](#taiga)
 - [PFSense Access](#pfsense-access)
   - [System Info](#system-info)
   - [Steps to Access](#steps-to-access)
@@ -35,8 +29,22 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
 * [Windows](Windows/README.md)
   * [Deployment](Windows/Deployment/ProxmoxSetup.pdf) 
 
-## Taiga Access 
-If you are looking at this in the far future (or even the near future), then its likely the Taiga will not exist or be useful. Hopefully, we are able to preserve the Wiki entries somewhere here!
+## Taiga 
+Please refer to the Taiga Documentation for each of the concepts if needed.
+* Access
+  * [Self_Hosted](./Taiga/Access_Self_Hosted.md)
+  * [Cloud](./Taiga/Access_Cloud.md)
+* [Navigation](./Taiga/Navigation.md)
+* [Project](./Taiga/Project.md)
+* [Epic](./Taiga/Epics.md)
+* [Story](./Taiga/Stories.md)
+* [Task](./Taiga/Tasks.md)
+* [Issues](./Taiga/Issues.md)
+* [Wiki](./Taiga/Wiki.md)
+* [Kanban](./Taiga/Kanban.md)
+* [Sprint](./Taiga/Taiga_Sprints.md)
+
+<!--If you are looking at this in the far future (or even the near future), then its likely the Taiga will not exist or be useful. Hopefully, we are able to preserve the Wiki entries somewhere here!
 
 Otherwise the following are instructions on how we can access Taiga.
 ### Login/Register
@@ -117,7 +125,7 @@ Otherwise the following are instructions on how we can access Taiga.
 3. Once we have done so, we can fill out the issue with the topic and necessary information. You can assign it to a user or ask someone else to do so.
     
     <img src="Images/Taiga-Issue-Internal.png" width=800>
-
+-->
 ## PFSense Access 
 ### System Info
 Proxmox Infrastructure Reference
