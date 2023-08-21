@@ -8,7 +8,7 @@ The *Epic* is a part of a [Project](./Project.md) a larger long lasting thing li
 
     <img src="Images/E1.png" width=800>
 
-2. Click Create Epic, It an epic exists it may look like the image below 
+2. Click Create Epic, If an epic exists it may look like the image below 
 
     <img src="Images/E2.png" width=800>
 
