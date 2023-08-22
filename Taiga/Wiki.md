@@ -1,5 +1,5 @@
 # Wiki
-The *Taiga Wiki* is a centralized location for the Documentation or notes associated with a project. We use this as a replacement for the shared pages provided by applications such as [Confluence](https://www.atlassian.com/software/confluence).  We hope that this is used to centralize working notes and documentation for the project. 
+The *Taiga Wiki* is a centralized location for the Documentation and notes associated with a project. We use this as a replacement for the shared pages provided by applications such as [Confluence](https://www.atlassian.com/software/confluence).  We hope that the wiki is used to centralize working notes and documentation for the project. 
 
 ## Access and Creation
 1. Access the Wiki Page
