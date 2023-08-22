@@ -1,5 +1,5 @@
 # Kanban
-The Kanban board is a way of visually organizing and tracking tasks they are present in [Sprints](./Taiga_Sprints.md) and as a stand alone feature discussed here. The Kanban board is enabled during the [Project](./Project.md) creation or in the settings. 
+The Kanban board is a way of visually organizing and tracking tasks. They are presented both in [Sprints](./Taiga_Sprints.md) and as a stand alone feature. The Kanban board is enabled during the [Project](./Project.md) creation or in the settings. 
 
 ## Access and Use
 1. Navigate to the Kanban Board
