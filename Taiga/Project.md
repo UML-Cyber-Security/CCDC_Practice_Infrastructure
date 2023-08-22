@@ -1,10 +1,10 @@
 # Project
-A project exactly that, you create a *taiga project* for a project that you are working on. You do not mix the tasks or objectives that you aim to complete between projects. The *taiga project* will exist for the duration of the one you are working on, once completed it can be removed to reduce clutter. 
+A project is exactly what it sounds like. You create a *taiga project* for a project that you're working on. Projects should be atomic, do not mix tasks or objectives between projects. Once completed, the *taiga project* can be removed to reduce clutter. 
 
-A project contains **every** object Taiga provides, this includes Epics, Stories, Issued and a Wiki to name a few! These all have their own documents that can be referenced, in addition to those provided by Taiga.
+A project contains **every** object Taiga provides, this includes Epics, Stories, Issued, and a Wiki to name a few! These all have their own documents that can be referenced, in addition to those provided by Taiga.
 
 ## Creation and Setup Steps
-1. Access Taiga Home Page, It may look something like the image below
+1. Access the Taiga Home Page, It may look something like the image below
 
     <img src="Images/P1.png" width=800>
 
@@ -20,7 +20,7 @@ A project contains **every** object Taiga provides, this includes Epics, Stories
 
     <img src="Images/P4.png" width=800>
 
-5. Now we have a project, you may want to add a Kanban or Scrum system to the Project, First goto the settings (Highlighted Below).
+5. Now we have a project, you may want to add a Kanban or Scrum system to the Project, First go to the settings (Highlighted Below).
 
     <img src="Images/P5.png" width=800>
 
@@ -28,10 +28,10 @@ A project contains **every** object Taiga provides, this includes Epics, Stories
 
     <img src="Images/P6.png" width=800>
 
-7. Add some members, Still in the Settings navigate to **Members**. If you made a private repository this is **mandatory**
+7. Add some members. Still in the Settings, navigate to **Members**. If you made a private repository this is **mandatory**
 
     <img src="Images/P7.png" width=800>
 
-8. Click Add Member, Fill in the Username or Email associated with the person.
+8. Click Add Member. Fill in the Username or Email associated with the person.
 
     <img src="Images/P8.png" width=800>
