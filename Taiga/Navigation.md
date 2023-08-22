@@ -8,14 +8,14 @@ This document contains some generalized instructions for navigating Taiga. This 
 - [Access Wiki](#access-wiki)
 - [Access Issues](#access-issues)
 
-## Access A Project
-1. We assume at this point you have both created a Taiga account and logged in. You should see something like the following.
+## Access a Project
+1. We assume at this point you have created a Taiga account and logged in. You should see something like the following.
 
     <img src="Images/Taiga-Home-Logged.png" width=800> 
-2. Additionally you should be added to a Project by one of the other users (admins). Once you are added to the project go to the top left and click projects. You will see something like the following.
+2. Additionally you should be added to a Project by one of the other users (admins). Once you are added to the project, go to the top left and click projects. You will see something like the following.
     
     <img src="Images/Taiga-Projects.png" width=800>
-3. Click on the project that you would like to access, you should see something like the following. Notice the additional options on the Left.
+3. Click on the project that you would like to access, you should see something like the following. Notice the additional options on the left.
     
     <img src="Images/Taiga-Project-Home.png" width=800>
 
@@ -26,18 +26,18 @@ This document contains some generalized instructions for navigating Taiga. This 
 2. Once this is done you should see all the epics (Top Level Tasks) in the project. An example is shown below.
     
     <img src="Images/Taiga-Epics.png" width=800>
-3. Click on the Epic and you will be able access and create User Stories as shown below.
+3. Click on the Epic and you will be able to access and create User Stories as shown below.
     
     <img src="Images/Taiga-Epic-Internal.png" width=800>
 4. We can then click on an existing User Story to add individual tasks as shown below.
     <img src="Images/Taiga-User-Story.png" width=800>
-    * From this we can leave notes and access the tasks. Tasks are the smallest unit of organization, we cannot subdivide further and only one user can be assigned (in Taiga) to a task.
+    * From this we can leave notes and access the tasks. Tasks are the smallest unit of organization, we cannot subdivide further, and only one user can be assigned to a task in Taiga.
 
 ## Access Sprint 
-1. Click on the Scrum tab on the *left* it is highlighted below.
+1. Click on the Scrum tab on the *left*. It is highlighted below.
     
     <img src="Images/Taiga-Project-Home-Sprint.png" width=800>
-2. From this we will get a drop down and can select a Sprint or access *Backlog* from which we can create a sprint and add user stories (By dragging and dropping to the right)
+2. From this, we will get a drop down. We can select a Sprint or access *Backlog*, from which we can create a sprint and add user stories (By dragging and dropping to the right)
     
     <img src="Images/Taiga-Sprint-Drop.png" width=200>
 3. The Backlog allows us to add User Stories to the sprints displayed on the *right* side of the screen. We can also access the sprints from the list on the *right*
