@@ -64,6 +64,32 @@ so you don't notice them. Need a program to definitively scan all registry keys 
 \subsection{What is the Windows Registry?}
 Idk, watch this \href{https://youtu.be/_U78iAem3uo}{video}
 
+Keys and Subkeys:
+These are like folders and subfolders. They can contain other keys (subkeys) and values.
+For instance, HKEY\_LOCAL\_MACHINE\textbackslash SOFTWARE\textbackslash Mozilla might be a key where settings specific to Mozilla software are stored.
+
+Values:
+These are the actual data entries within a key or subkey.
+Each value has a name, a type, and data.
+
+Value Types:
+REG\_SZ: A string value. It's a readable text value and one of the most common types you'll encounter.
+
+REG\_DWORD: A 32-bit number. Often used for flags, settings, or Boolean values. For example, a setting might be 0 (off) or 1 (on).
+
+REG\_QWORD: A 64-bit number.
+
+REG\_BINARY: Raw binary data.
+
+REG\_MULTI\_SZ: Multiple string values, usually in an array. Useful when an application needs to store multiple entries in a single value.
+
+REG\_EXPAND\_SZ: A string that includes variables to be replaced when called by an application. For instance, \%UserProfile\% might expand to the directory path of the current user's profile.
+There are other types, but these are among the most common.
+
+Image File Execution Options (IEFO)
+IEFO are the programs used to associated with file extensions (?). For example, you
+can have firefox.exe start firefox and a batch script.
+
 \section{Firewall / Network}
 
 \subsection{Banning IPs}
@@ -224,6 +250,16 @@ He runs the site \href{https://adsecurity.org/}{adsecurity.org/}
 and I have made a playlist of some useful videos: \href{https://www.youtube.com/playlist?list=PLHkV-wwoQ7s_7vUau-eqiscWoZZNC3EcZ}{playlist}.
 
 \section{Event Logs}
+
+\section{Caution with Shortcuts}
+To view the properties of a shortcut in the taskbar, 
+
+Yes, there's a way to view the properties of a shortcut on the taskbar in Windows, but it requires a few more steps compared to desktop shortcuts:
+
+    Right-click on the shortcut in the taskbar.
+    If the program is already running or pinned to the taskbar, you may see a "jumplist" (a list of recent items, tasks, or pinned items related to that application). If you see this jumplist:
+        Right-click again on the application's name or icon in that jumplist (i.e., the entry at the top).
+    A context menu will appear. Choose Properties from the context menu.
 
 
 \end{document}

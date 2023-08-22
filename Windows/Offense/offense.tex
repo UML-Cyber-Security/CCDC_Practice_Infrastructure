@@ -17,6 +17,9 @@
 \begin{document}
 
 \graphicspath{ {./Images/} }
+
+\title{Windows Offense}
+
 \tableofcontents
 
 \section{Introduction}
@@ -24,69 +27,72 @@
 
 To be a good blue team, we should practice red teaming.
 
-WinPeas, Bloodhound
-
 \section{Covenant Malware}
-\href{https://youtu.be/Fi0jXm8VOFU}{video}
+Covenant is a .NET command and control framework. It works by installing
+Grunts on the target machine. Grunts work like reverse shells, they connect to a listener on 
+the C2 server.
 
-\href{https://github.com/cobbr/Covenant/wiki/Installation-And-Startup}{Instructions on their GitHub}
+You should install covenant on whatever computer you
+plan to use as the C2 server. This will let you control the windows machines. 
+Covenant requires GIT and .NET to work. 
+You will also need to install .NET on the victim machine.
 
-\href{https://blog.netwrix.com/2022/12/16/covenant-c2-tutorial/}{Blog Tutorial}
-That blog stinks at telling you how to make a listener
-\href{https://github.com/cobbr/Covenant-wiki/blob/master/Listeners.md}{Listener}
+\begin{itemize}
+        \item\href{https://github.com/cobbr/Covenant/wiki/Installation-And-Startup}{Instructions on their GitHub}
+        \item \href{https://blog.netwrix.com/2022/12/16/covenant-c2-tutorial/}{Blog Tutorial}
+        \item \href{https://github.com/cobbr/Covenant-wiki/blob/master/Listeners.md}{More information on listeners}
+\end{itemize}
 
-You need GIT and .NET for this to work. You can go to their websites here for windows:
+To install GIT on windows, go here:
 \href{https://git-scm.com/download/win}{https://git-scm.com/download/win}
-\href{https://dotnet.microsoft.com/en-us/download}{https://dotnet.microsoft.com/en-us/download}
+
+To install .NET, you can download it from the
+\href{https://dotnet.microsoft.com/en-us/download}{website} or you can install it in server manager (in the "Features" menu).
+
+To install .NET on linux, follow these 
+\href{https://learn.microsoft.com/en-us/dotnet/core/install/linux-scripted-manual#scripted-install}{directions}
+
+
+After installing the dependencies, we can install and run covenant with:
+
 \begin{lstlisting}
-        git clone --recurse-submodules https://github.com/cobbr/Covenant
-        cd Covenant/Covenant
-        dotnet build
-        dotnet run
+git clone --recurse-submodules https://github.com/cobbr/Covenant
+cd Covenant/Covenant
+dotnet build
+dotnet run
 \end{lstlisting}
 
 "After running these commands, the Covenant service should be up and running. 
 You can then browse to the Covenant application interface on its default web port of 
 7443 to set up a user account and begin using the framework." -Bing
 
-You should install covenant on your computer, or whatever computer you
-plan to use as the C2 server. This will let you control the windows machines.
+If you would like to have listeners on ports 1-1023, you should run Covenant as root.
 
-to install .NET on linux: 
-\href{https://learn.microsoft.com/en-us/dotnet/core/install/linux-scripted-manual#scripted-install}{directions}
-
-"It looks like Covenant is running, but you may not have permission to start 
-listeners on low-numbered ports because you are running Covenant non-elevated" -Bing
-
-Make sure to go to https://127.0.0.1:7443 and not localhost:7443, the https is important
+The web console can be accessed at https://127.0.0.1:7443 and not localhost:7443, as the https is important
 
 For the Grunt to work, .NET has to be installed on the victim.
-It can be installed from the server manager, in the "Features" menu
 
 Anti Grunt countermeasures:
-"Yes, if you uninstall the .NET Framework 3.5 from the victim machine, 
-it is likely that the Grunt will stop working. Grunts are small programs 
-that are executed on the target machine and communicate with the 
-Covenant server to receive commands and send back results. 
-If the Grunt requires the .NET Framework 3.5 to run, 
-then uninstalling it will prevent the Grunt from functioning properly." -Bing
-
+"If you uninstall the .NET Framework 3.5 from the victim machine, 
+it is likely that the Grunt will stop working." -Bing.
 I think it is very funny that malware has dependencies.
 
-to get your IP address over the VPN
-\begin{lstlisting}
-        ip addr show tun0 | grep inet | awk '{ print $2 }'
-\end{lstlisting}
+\subsection{Troubleshooting the VPN}
+I tried a lot of ways to get the Grunt to recognize my machine.
+The only solutions that worked are a Kali VM or \href{sec:CloudflareTunnels}{Cloudflare Tunnels}.
 
-Yes, if you are using RDP to connect to a virtual machine, the virtual machine should be able to see the IP address of the machine you are connecting from. You can check the IP address of the RDP client by following these steps on the virtual machine:
+To get your IP address from the RDP connection:
+\begin{enumerate}
+\item Open the Command Prompt by pressing the Windows key + R and typing cmd.
+\item Type netstat -n | find ":3389" and press Enter. This will display a list of active connections to the RDP port (3389).
+\item Look for the connection that corresponds to your RDP session. The IP address of the RDP client will be listed next to the ESTABLISHED entry.
+\end{enumerate}
 
-Open the Command Prompt by pressing the Windows key + R and typing cmd.
-Type netstat -n | find ":3389" and press Enter. This will display a list of active connections to the RDP port (3389).
-Look for the connection that corresponds to your RDP session. The IP address of the RDP client will be listed next to the ESTABLISHED entry.
-
-Get a kali box on the range. If you get errors when creating VMs in proxmox, you can view the file /var/log/pve/tasks/index for information
+\href{https://youtu.be/Fi0jXm8VOFU}{Advanced Usage of Covenant}
 
 \section{Cloudflare Tunnels}
+\label{sec:CloudflareTunnels}
+
 Justin mentioned how he was going to connect to the machines using cloudflare tunnels. So I will practice that and document it.
 
 You can use your own domain, or you can have cloudflare provide one for you.
@@ -102,19 +108,30 @@ Take note of the random url generated.
 
 cloudflared access tcp --hostname randomsubdomain.trycloudflare.com --url tcp://localhost:5900
 
+\section{BloodHound}
+
+\section{WinPeas}
+Windows Privilege Escalation Scripts.
+
+This script dumps a bunch of information about potentially interesting things to look for on
+ the windows machine. It can be found \href{https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS}{here}.
+ 
+
+\section{SMBGhost / EternalDarkness / CVE-2020-0796}
+https://blog.zecops.com/research/exploiting-smbghost-cve-2020-0796-for-a-local-privilege-escalation-writeup-and-poc/
+https://github.com/carbonblack/tau-tools/tree/master/remediation/EternalDarkness
+https://blogs.vmware.com/security/2020/03/threat-analysis-cve-2020-0796-eternaldarkness-ghostsmb.html
+https://www.cisa.gov/news-events/alerts/2020/06/05/unpatched-microsoft-systems-vulnerable-cve-2020-0796
+
 \section{Malware to look into}
 Here is some random stuff so I don't forget to look into it:
 https://github.com/0x44F/WinKit, https://github.com/D4stiny/spectre, this guy's stuff: https://github.com/DarkCoderSc?tab=repositories,
 https://en.wikipedia.org/wiki/DarkComet, (infected file, do not run on main OS): https://github.com/zxo2004/DarkComet-RAT-5.3.1,
-https://github.com/quasar/Quasar, https://github.com/screetsec/TheFatRat
+https://github.com/quasar/Quasar, https://github.com/screetsec/TheFatRat, https://github.com/DarkCoderSc/win-brute-logon
 
 \section{Legitimate Administration Software}
 https://www.islonline.com/us/en/
 https://devolutions.net/remote-desktop-manager/
-
-
-
-
 
 \end{document}
 

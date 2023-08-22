@@ -6,8 +6,10 @@
 \usepackage{tikzsymbols}
 \usepackage{float}
 \usepackage{epigraph}
+\usepackage{array}
 
 \renewcommand{\textflush}{flushleft}
+\renewcommand{\arraystretch}{1.5}
 
 \lstset{
     basicstyle=\ttfamily,
@@ -23,9 +25,41 @@
 This file details important powershell commands in one place so you do not have to search to find them.
 
 \section{Local Users}
-Disable-LocalUser
+These commands are related to administering the local users (not AD).
 
-Get-LocalUser
+\begin{table}[h]
+\centering
+\begin{tabular}{| m{20em} |c|} % m allows text to wrap around
+Command & Description \\
+\hline
+Disable-LocalUser -Name "Username" & Disabling a local user \\
+Enable-LocalUser -Name "Username" & Enabling a local user \\
+Get-LocalUser & Viewing local users \\
+New-LocalUser -Name "Username" 
+-Password (Read-Host -AsSecureString) & Adding a new local user \\
+\$Password = Read-Host -AsSecureString
+Set-LocalUser -Name "Username" -Password \$Password & Changing password of a local user \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Viewing connections}
+Merely disabling an account does not kick the user off, you should manually kick them.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{| m{20em} |c|} % m allows text to wrap around
+Command & Description \\
+\hline
+query user & View logged-in RDP users \\
+logoff [SessionID] & Disconnecting a user from RDP \\
+Get-NetTCPConnection -State Established | 
+Where-Object { \$\_.LocalPort -eq 22 } & View active SSH connections made with OpenSSH \\
+Get-Process -Name sshd & Getting the SSH process \\
+Stop-Process -Id [PID] -Force & Terminating the user's ssh session \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Installing WSL on Windows Server 2019}
 On Server 2022, you can just do wsl --install. But on 2019 it is more complicated. 
