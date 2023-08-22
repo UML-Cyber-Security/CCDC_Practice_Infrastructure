@@ -12,13 +12,7 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
 
 ## Table of Contents (README) <!-- omit from toc -->
 - [Table of Contents (TOPICS)](#table-of-contents-topics)
-- [Taiga Access](#taiga-access)
-  - [Login/Register](#loginregister)
-  - [Access Project](#access-project)
-  - [Access Epic](#access-epic)
-  - [Access Sprint](#access-sprint)
-  - [Access Wiki](#access-wiki)
-  - [Access Issues](#access-issues)
+- [Taiga](#taiga)
 - [PFSense Access](#pfsense-access)
   - [System Info](#system-info)
   - [Steps to Access](#steps-to-access)
@@ -35,8 +29,22 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
 * [Windows](Windows/README.md)
   * [Deployment](Windows/Deployment/ProxmoxSetup.pdf) 
 
-## Taiga Access 
-If you are looking at this in the far future (or even the near future), then its likely the Taiga will not exist or be useful. Hopefully, we are able to preserve the Wiki entries somewhere here!
+## Taiga 
+Please refer to the Taiga Documentation for each of the concepts if needed.
+* Access
+  * [Self_Hosted](./Taiga/Access_Self_Hosted.md)
+  * [Cloud](./Taiga/Access_Cloud.md)
+* [Navigation](./Taiga/Navigation.md)
+* [Project](./Taiga/Project.md)
+* [Epic](./Taiga/Epics.md)
+* [Story](./Taiga/Stories.md)
+* [Task](./Taiga/Tasks.md)
+* [Issues](./Taiga/Issues.md)
+* [Wiki](./Taiga/Wiki.md)
+* [Kanban](./Taiga/Kanban.md)
+* [Sprint](./Taiga/Taiga_Sprints.md)
+
+<!--If you are looking at this in the far future (or even the near future), then it's likely the Taiga will not exist. Hopefully, we are able to preserve the Wiki entries somewhere here!
 
 Otherwise the following are instructions on how we can access Taiga.
 ### Login/Register
@@ -82,7 +90,7 @@ Otherwise the following are instructions on how we can access Taiga.
     <img src="Images/Taiga-Epic-Internal.png" width=800>
 4. We can then click on an existing User Story to add individual tasks as shown below.
     <img src="Images/Taiga-User-Story.png" width=800>
-    * From this we can leave notes and access the tasks. Tasks are the smallest unit of organization, we cannot subdivide further and only one user can be assigned (in Taiga) to a task.
+    * From this we can leave notes and access the tasks. Tasks are the smallest unit of organization, we cannot subdivide further and only one user can be assigned to a task in Taiga.
 
 ### Access Sprint 
 1. Click on the Scrum tab on the *left* it is highlighted below.
@@ -94,7 +102,7 @@ Otherwise the following are instructions on how we can access Taiga.
 3. The Backlog allows us to add User Stories to the sprints displayed on the *right* side of the screen. We can also access the sprints from the list on the *right*
     
     <img src="Images/Taiga-Sprint.png" width=800>
-4. The internal page once we have selected sprint is shown below. We can see the User Stories and their related tasks. We see a Kanban board that we can move tasks around, and add tasks to the user stories.
+4. Once we have selected sprint, the internal page is shown below. It displays a Kanban board where we can move tasks around, view related tasks, view user stories, and add tasks to the user stories.
     
     <img src="Images/Taiga-Sprint-Internal.png" width=800>
 
@@ -102,10 +110,10 @@ Otherwise the following are instructions on how we can access Taiga.
 1. Click on the Wiki tab on the *left* it is highlighted below
    
    <img src="Images/Taiga-Project-Home-Wiki.png" width=800>
-2. Once we have done that we can see the Main Wiki Page for the Project
+2. Once we have done that, we can see the Main Wiki Page for the Project
 
     <img src="Images/Taiga-Wiki.png" width=800>
-    * On the left we can see Bookmarks (Pages) and once we have selected them we can leave notes, attachments, and see the previous edit history
+    * On the left we can see Bookmarks (Pages). Once we have selected them we can leave notes, attachments, and see the previous edit history
 
 ### Access Issues
 1. Click on the Issues tab on the *left* it is highlighted below
@@ -117,7 +125,7 @@ Otherwise the following are instructions on how we can access Taiga.
 3. Once we have done so, we can fill out the issue with the topic and necessary information. You can assign it to a user or ask someone else to do so.
     
     <img src="Images/Taiga-Issue-Internal.png" width=800>
-
+-->
 ## PFSense Access 
 ### System Info
 Proxmox Infrastructure Reference
