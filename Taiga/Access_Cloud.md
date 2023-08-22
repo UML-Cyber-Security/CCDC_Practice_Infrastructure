@@ -1,7 +1,7 @@
 # Access Cloud Hosted
 
 ## Steps 
-1. Open your prefers web browser!
+1. Open your preferred web browser!
 2. Navigate to [tree.taiga.io](https://tree.taiga.io/discover)
 
     <img src="Images/TCloud1.png" width=800>
