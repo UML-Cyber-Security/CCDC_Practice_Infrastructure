@@ -44,7 +44,7 @@ Please refer to the Taiga Documentation for each of the concepts if needed.
 * [Kanban](./Taiga/Kanban.md)
 * [Sprint](./Taiga/Taiga_Sprints.md)
 
-<!--If you are looking at this in the far future (or even the near future), then its likely the Taiga will not exist or be useful. Hopefully, we are able to preserve the Wiki entries somewhere here!
+<!--If you are looking at this in the far future (or even the near future), then it's likely the Taiga will not exist. Hopefully, we are able to preserve the Wiki entries somewhere here!
 
 Otherwise the following are instructions on how we can access Taiga.
 ### Login/Register
@@ -90,7 +90,7 @@ Otherwise the following are instructions on how we can access Taiga.
     <img src="Images/Taiga-Epic-Internal.png" width=800>
 4. We can then click on an existing User Story to add individual tasks as shown below.
     <img src="Images/Taiga-User-Story.png" width=800>
-    * From this we can leave notes and access the tasks. Tasks are the smallest unit of organization, we cannot subdivide further and only one user can be assigned (in Taiga) to a task.
+    * From this we can leave notes and access the tasks. Tasks are the smallest unit of organization, we cannot subdivide further and only one user can be assigned to a task in Taiga.
 
 ### Access Sprint 
 1. Click on the Scrum tab on the *left* it is highlighted below.
@@ -102,7 +102,7 @@ Otherwise the following are instructions on how we can access Taiga.
 3. The Backlog allows us to add User Stories to the sprints displayed on the *right* side of the screen. We can also access the sprints from the list on the *right*
     
     <img src="Images/Taiga-Sprint.png" width=800>
-4. The internal page once we have selected sprint is shown below. We can see the User Stories and their related tasks. We see a Kanban board that we can move tasks around, and add tasks to the user stories.
+4. Once we have selected sprint, the internal page is shown below. It displays a Kanban board where we can move tasks around, view related tasks, view user stories, and add tasks to the user stories.
     
     <img src="Images/Taiga-Sprint-Internal.png" width=800>
 
@@ -110,10 +110,10 @@ Otherwise the following are instructions on how we can access Taiga.
 1. Click on the Wiki tab on the *left* it is highlighted below
    
    <img src="Images/Taiga-Project-Home-Wiki.png" width=800>
-2. Once we have done that we can see the Main Wiki Page for the Project
+2. Once we have done that, we can see the Main Wiki Page for the Project
 
     <img src="Images/Taiga-Wiki.png" width=800>
-    * On the left we can see Bookmarks (Pages) and once we have selected them we can leave notes, attachments, and see the previous edit history
+    * On the left we can see Bookmarks (Pages). Once we have selected them we can leave notes, attachments, and see the previous edit history
 
 ### Access Issues
 1. Click on the Issues tab on the *left* it is highlighted below
