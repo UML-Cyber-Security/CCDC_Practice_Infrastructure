@@ -1,7 +1,7 @@
 # Changing Host Names
 
 Author(s): 
-    Chisom (Don't ask me anything bother Luke), 
+    Chisom (Ask me anything, don't bother Luke), 
     Luke
 
 ## Preliminary Note: 

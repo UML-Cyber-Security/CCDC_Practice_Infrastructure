@@ -37,9 +37,70 @@ When a user searches for a user, computer, or printer, LDAP runs a search and fi
 users get access to information and resources through LDAP authentication. LDAP administrators require elevated permissions to add or manipulate information in 
 your AD repository database.
 
-\section{Domain Controller}
+\section{Domain Controller Deployment}
+This step is very easy but Chris said I had to document it. 
+Go to the add roles and features wizard, server roles, and check
+"Active Directory Domain Services." After it finishes downloading,
+click the yellow warning icon in the top right of the Server Manager.
+The yellow icon says "Post Deployment Configuration".
 
-\subsection{Network}
+\subsection{Making a new forest}
+In the Deployment Configuration, select "Add a few forest".
+
+In the text field that says "Root domain name", you will put the Fully
+Qualified Domain Name (FQDN).
+
+\paragraph{FQDN guidelines:}
+
+\begin{enumerate}
+\item \textbf{Naming}:
+\begin{itemize}
+        \item Use a subdomain of a domain you own, e.g., \texttt{ad.example.com}.
+        \item Avoid using the exact public domain name.
+\end{itemize}
+
+\item \textbf{Length and Characters}:
+\begin{itemize}
+        \item FQDN should be 155 characters or fewer.
+        \item Use letters (A-Z, a-z), numbers (0-9), and hyphens. No special characters.
+\end{itemize}
+
+\item \textbf{Uniqueness}:
+\begin{itemize}
+        \item Ensure no conflicts with existing names on your network.
+\end{itemize}
+
+\item \textbf{NetBIOS Name}:
+\begin{itemize}
+    \item The NetBIOS name is a legacy computer name format, typically shorter and without domain suffixes.
+    \item For AD DS, it's a non-FQDN version of your domain name, often the prefix of your FQDN. Example: For \texttt{corp.example.com}, the NetBIOS name could be \texttt{CORP}.
+    \item It's used for backward compatibility with older systems and applications that don't recognize FQDNs.
+    \item Ensure it's unique within your network to prevent conflicts.
+\end{itemize}
+
+\item \textbf{Avoid}:
+\begin{itemize}
+        \item Names like \texttt{www}, \texttt{public}, \texttt{com}, \texttt{net}, \texttt{org}.
+\end{itemize}
+\end{enumerate}
+
+After the domain is created, the built-in local "Administrator" 
+account of the server becomes the domain "Administrator" 
+account for that domain.
+
+\paragraph{Directory Services Restore Mode}
+A special boot mode for Windows Domain Controllers used for repairing, 
+restoring, or analyzing Active Directory. In the event of a compromise 
+or corruption of the domain controller, DSRM provides an isolated 
+environment to restore from backups, conduct forensic analysis, or 
+manually rectify issues. It's essential for maintaining the integrity 
+and security of Active Directory services.
+
+\subsection{Adding to an existing forest}
+When adding a new Domain Controller to an existing forest, you should first join the machine to the domain.
+The two machines must have different SIDs. Use the SIDCHGL program as described in the deployment section. 
+
+\section{Network}
 To edit your network settings, follow these directions:
 
 Control Panel $\rightarrow$ Network and Sharing Center $\rightarrow$
@@ -56,7 +117,7 @@ We have two goals in this menu: setting a static IP (to whatever) and setting th
 On non domain controllers, the DNS should be set to use DC1 and DC2.
 On the domain controllers, the DNS should be set to use the other domain controller and the internet (e.g. 8.8.8.8 for Google's DNS).
 
-\subsubsection{Setting a Static IP}
+\subsection{Setting a Static IP}
 For an image, see Figure~\ref{fig:IPv4Settings}
 
 You can set the static IP to any IP not currently in use.
@@ -71,12 +132,23 @@ It is also possible to find the default gateway by running \textbf{ip route show
 \subsubsection{Setting the DNS Servers}
 For an image, see Figure~\ref{fig:IPv4Settings}
 
+I assume you have 2 Domain Controllers.
+
+The Domain Controllers should have their DNS set to
+\begin{enumerate}
+        \item IP of the other Domain Controller
+        \item Own IP (aka the static IP you set)
+        \item Some other DNS that can go on the internet, i.e. 1.1.1.1 or 8.8.8.8
+\end{enumerate}
+
+To set more than 2 DNS servers, go to "Advanced" and then the DNS tab.
+
 This step is less complicated than the last step. However, you can Red-Team yourself (I speak from experience...), so be careful.
 
-On the Domain Controller, the first DNS server should be itself (the same as the machine's static IP). The second should be an actual internet DNS server.
-In this case 8.8.8.8 is Google's DNS Server.
-
 On non domain controllers, both DNS servers should point to the domain controllers.
+
+\textbf{Do not worry if you disconnect after doing this!!!}
+The IP address of the server has changed, of course your rdp connection to it will be cut.
 
 \section{Useful Videos}
 This is a list of useful videos for understanding active directory.

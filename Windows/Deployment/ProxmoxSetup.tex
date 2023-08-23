@@ -9,6 +9,8 @@
 \lstset{
     basicstyle=\ttfamily,
     backgroundcolor=\color{gray!30},
+    breaklines=true,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
 }
 
 \begin{document}
@@ -101,11 +103,14 @@ Bing can handle this one.
 
 \subsection{Installing Firefox}
 By default, Internet Explorer is the only browser installed on the computer. What a terrible browser! You can avoid ever opening IE by installing Firefox from powershell. 
+You may have to type it if you are using the Proxmox NoVNC console. Do this step after setting up RDP so you can paste it. Also paste it from the .tex file, as some strange formatting happens
+in the pdf version and it doesn't work.
+
 \begin{lstlisting}[breaklines=true, columns=fullflexible]
 Invoke-WebRequest -Uri `
 "https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US" `
 -OutFile "$HOME\Desktop\firefox.msi"
-    
+       
 \end{lstlisting}
         
 
