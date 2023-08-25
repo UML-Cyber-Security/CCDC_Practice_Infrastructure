@@ -13,9 +13,9 @@
 }
 
 \renewcommand{\epigraphflush}{flushleft}
-
-\begin{document}
 \title{Hardening}
+\begin{document}
+\maketitle
 
 \graphicspath{ {./Images/} }
 \tableofcontents
@@ -27,16 +27,21 @@ The idea is that if you see that you cannot win, do everything in your power to 
 
 Assume everything is compromised. Even the laptops you are using for the competition! Be paranoid!
 
-Also assume that the red team has fully gone through your public material the machines from previous years, as
-I know they have gloated of busting teams who reuse passwords across multiple years.
-They have a wordlist of all of the passwords used in past competions and run through it. 
-On the topic of passwords, one red teamer gloated that he could enumarate all 12 character passwords in some short amount of time (6 hours?).
-The red team does have the entire night to crack hashes. So make long passwords!
+Assume the Red Team has thoroughly reviewed all publicly available material, 
+including systems from past years. They've highlighted instances of 
+teams reusing passwords over multiple years, and the red team uses a wordlist of 
+passwords from previous competitions. One read teamer even claimed the capability to 
+enumerate all 12-character passwords in 6 hours (involving renting cloud GPUs). 
 
-This is probably especially relevant for windows, as kerberos uses hashes extensively. <update with more details>
+Given that the Red Team has 
+the entire night to crack hashes, it's important to use good passwords.
+I make passwords by thinking of random objects and then scattering some symbols \& numbers around.
+The red team's hash-cracking ability is probably especially relevant for windows, 
+as kerberos uses hashes extensively. 
+%TODO: update with more details about kerberos
 
 \section{Active Directory Freebies}
-There are some very easy and quick ways to harden active directory.
+There are some very quick and easy ways to harden active directory.
 
 \begin{enumerate}
         \item Disable all of the accounts besides the black team and your own
@@ -51,51 +56,66 @@ There are some very easy and quick ways to harden active directory.
 In addition to active directory, your computer has a local directory of users. These include the Guest user.
 Make sure all of the local accounts are disabled.
 
-You can get the local users with: get-LocalUser
-And disabling the accounts with: Disable-LocalUser -Name "Guest"
+You can get the local users with:
+\begin{lstlisting}
+    get-LocalUser
+\end{lstlisting}
+And disable the accounts with: 
+\begin{lstlisting}
+    Disable-LocalUser -Name "Guest"
+\end{lstlisting}
 
 \section{Registry Keys and Autoruns}
+%TODO do this tryhackme room and explain it
 \href{https://tryhackme.com/room/windowsforensics1}{Tryhackme on Windows Forensics}
 Zimmerman registry explorer
 
-<write a program to scan the windows registry and report any anomalies in the keys.
+%TODO: write a program to scan the windows registry and report any anomalies in the keys.
 Often keys in things like Firefox or AmazonVM thingie will be creatively named by the red team
-so you don't notice them. Need a program to definitively scan all registry keys for malware>
+so you don't notice them.
 
 \subsection{What is the Windows Registry?}
 The Windows Registry is a database storing Windows OS and application settings. 
 Watch this \href{https://youtu.be/_U78iAem3uo}{video}
 
-Keys and Subkeys:
+\paragraph{Keys and Subkeys}
 These are like folders and subfolders. They can contain other keys (subkeys) and values.
-For instance, HKEY\_LOCAL\_MACHINE\textbackslash SOFTWARE\textbackslash Mozilla might be a key where settings specific to Mozilla software are stored.
 
-Values:
+\noindent For instance, HKEY\_LOCAL\_MACHINE\textbackslash SOFTWARE\textbackslash Mozilla might be a key where settings specific to Mozilla software are stored.
+
+\noindent Values:
 These are the actual data entries within a key or subkey.
-Each value has a name, a type, and data.
+Each value has a \textbf{name, a type, and data.}
 
-Value Types:
-REG\_SZ: A string value. It's a readable text value and one of the most common types you'll encounter.
+\paragraph{Value Types}
+\begin{itemize}
+\item REG\_SZ: A string value. It's a readable text value and one of the most common types
+ you'll encounter.
 
-REG\_DWORD: A 32-bit number. Often used for flags, settings, or Boolean values. For example, a setting might be 0 (off) or 1 (on).
+\item REG\_DWORD: A 32-bit number. Often used for flags, settings, or Boolean values. 
+For example, a setting might be 0 (off) or 1 (on).
 
-REG\_QWORD: A 64-bit number.
+\item REG\_QWORD: A 64-bit number.
 
-REG\_BINARY: Raw binary data.
+\item REG\_BINARY: Raw binary data.
 
-REG\_MULTI\_SZ: Multiple string values, usually in an array. Useful when an application needs to store multiple entries in a single value.
+\item REG\_MULTI\_SZ: Multiple string values, usually in an array. 
+Useful when an application needs to store multiple entries in a single value.
 
-REG\_EXPAND\_SZ: A string that includes variables to be replaced when called by an application. For instance, \%UserProfile\% might expand to the directory path of the current user's profile.
-There are other types, but these are among the most common.
+\item REG\_EXPAND\_SZ: A string that includes variables to be replaced when called by an application. 
+For instance, \%UserProfile\% might expand to the directory path of the current user's profile.
+\end{itemize}
+There are other types, but these are the most common.
 
-Image File Execution Options (IEFO)
-IEFO are the programs used to associated with file extensions (?). For example, you
-can have firefox.exe start firefox and a batch script.
+Image File Execution Options (IFEO) in the Windows Registry allow 
+developers to specify debugging tools to launch when a particular 
+executable starts, but they can be misused by malware to redirect 
+or hijack the execution of legitimate programs
 
 \section{Firewall / Network}
-
+%TODO: Learn how the windows firewall & networking works
 \subsection{Banning IPs}
-Banning IPs makes me paranoid of accidentally "red teaming" myself, but it can be a good idea.
+Banning IPs makes me paranoid of accidentally ``red teaming" myself, but it can be a good idea.
 
 I will look into this program called \href{https://github.com/DigitalRuby/IPBan}{IP Ban}.
 
@@ -105,7 +125,7 @@ I will look into this program called \href{https://github.com/DigitalRuby/IPBan}
 
 The red team loves gimmicks. It adds some fun and lets them be creative. So expect to be surprised.
 
-\subsection{Visitors}
+\subsection{Visitors to the room}
 Assume all visitors are malicious.
 If people walk in the room, cover your password sheets. I kept mine in my pocket and only took it out when I needed it. 
 
@@ -121,58 +141,61 @@ Be careful of physical devices in the room. I think there was speculation that a
 \section{Running an Anti Virus}
 Windows Defender is good and easy as it comes preinstalled. Of course you should remove any exclusions.
 
-The CCDC rules say programs/information "are completely valid for competition use provided there is no 
+\paragraph{Allowed Programs} Rules about The CCDC rules say programs/information ``are completely valid for competition use provided there is no 
 fee required to access those resources and access to 
 those resources has not been granted based on a previous membership, purchase, or fee"
 
-So we can use free antiviruses, or those with a no-card-required free trial.
+\noindent So we can use free antiviruses, or those with a no-card-required free trial.
 
-Kaspersky seems to be a good antivirus choice.
-
-\href{https://www.sophos.com/en-us/free-tools/hitmanpro}{Hitman Pro}
+\paragraph{Possible Antiviruses}
+\begin{itemize}
+\item Kaspersky free
+\item \href{https://www.sophos.com/en-us/free-tools/hitmanpro}{Hitman Pro}
 seems to be a good choice for scanning the file hashes against a large database.
-Norton Power Eraser can check for Potentially Unwanted Applications (PUA) and can scan for rootkits.
-
-Kaspersky's TDSSKiller to remove rootkits.
+\item Norton Power Eraser can check for Potentially Unwanted Applications (PUA) and can scan for rootkits.
+\item Kaspersky's TDSSKiller to remove rootkits.
+\end{itemize}
 
 \section{Sysinternals}
 The best antivirus is you. It's not empowering, it's mostly just sad.
-You need to be able to identify malicious processes using Process Explorer
+You need to be able to identify malicious processes using Sysinternals tools.
 
-Great presentation, and he made sysinternals: 
-\href{https://youtu.be/vW8eAqZyWeo}{Mark Russinovich on Malware Hunting with Sysinternals}
-
-\href{https://youtu.be/A_TPZxuTzBU}{License to Kill: Malware Hunting with the Sysinternals Tools }
-
-Russinovich also wrote a book (don't pirate it): Windows Sysinternals Administrator’s Reference
-
-Video mentions program modifying the shortcut to use command line arguments. 
-Could be a funny way of running malware. Don't trust the shortcut icons!
+\paragraph{Mark Russinovitch} He has a youtube channel with great presentations on sysinternals (and he made sysinternals!): 
+\begin{itemize}
+\item \href{https://youtu.be/vW8eAqZyWeo}{Mark Russinovich on Malware Hunting with Sysinternals}
+\item \href{https://youtu.be/A_TPZxuTzBU}{License to Kill: Malware Hunting with the Sysinternals Tools }
+\item Russinovich also wrote a book (don't pirate it): Windows Sysinternals Administrator’s Reference
+\end{itemize}
 
 \subsection{Process Explorer}
-Be wary that just because a program is started by System32 does not mean it is safe. <covenant malware>
+Process Explorer provides detailed information about processes, including a hierarchical view of parent 
+and child processes, as well as in-depth details about resources, handles, and DLLs in use.
+It allows you to suspend and kill processes, and can scan the file hashes against VirusTotal.
+
 The red team may give you some low hanging fruit with malware that rings up on VirusTotal.
-Suspicious processes include:
-conhost.exe / command prompts
-powershell prompts
-exe files
+But if it is not that simple, always remember that suspicious processes include:
+conhost.exe / command prompts,
+powershell prompts,
+and exe files.
 
-In process explorer, click "run as task manager." Now Ctrl+Shift+Esc will open Process Explorer (instead of task manager).
+\paragraph{Replacing task manager}
+In process explorer, click ``run as task manager.'' Now Ctrl+Shift+Esc will open Process Explorer (instead of task manager).
 
+\paragraph{Tips from a Professor K video}
 \href{https://youtu.be/y2bNLCWHFNs}{Professor K on Process Explorer}
 
-"Put malware to sleep, and only then kill it. 
+``Put malware to sleep, and only then kill it. 
 Then they don't know what's happening.
 A lot of malware out there has
 the buddy system. Instead of racing against the buddy system
 and deleting both malicious files before they respawn each other,
 suspend them and then terminate them."
 
-"Also if it is necessary, you don't want to cause irreperable damage to your system."
+``Also if it is necessary, you don't want to cause irreperable damage to your system."
 
 Things to look for from the Professor K video:
 \begin{enumerate}
-        \item No "Verified Signer"
+        \item No ``Verified Signer"
         \item VirusTotal scan
         \item Strings of the executable
         \item Process' properties \& the TCP/IP tab
@@ -182,20 +205,30 @@ Things to look for from the Professor K video:
         \item Can view the autostart location from the registry
 \end{enumerate}
 
-From Mark Russinovich:
+\paragraph{From Mark Russinovich:}
 \begin{enumerate}
         \item Purple means a process is packed / encrypted
         \item Have process explorer verify image signatures
         \item Change your refresh rate to 9 seconds so you can see short lived processes
 \end{enumerate}
 
-This command checks all executables in the C drive on VirusTotal,
- and opens the browser to the ones that are detected.
+\paragraph{From me}
+\begin{enumerate}
+    \item Be wary that just because a program is started by System32 does not mean it is safe. 
+    I experienced this personally when Eduardo used the Covenant malware against me. 
+    It used processes started by System32.
+\end{enumerate}    
+
+\paragraph{Sigcheck command}
+The sigcheck command with these flags recursively scans the C: 
+drive for unsigned executables, verifies their status against VirusTotal.com,
+ and opens the browser to the viruses that are detected.
 \begin{lstlisting}[breaklines=true, columns=fullflexible]
         sigcheck -e -u -vr -s c:\       
 \end{lstlisting}
 
-Checks for dlls being signed
+\paragraph{listdlls}
+Lists all processes that have loaded unsigned DLLs
 \begin{lstlisting}[breaklines=true, columns=fullflexible]
         listdlls -u *       
 \end{lstlisting}
@@ -203,20 +236,28 @@ Checks for dlls being signed
 \subsection{Autoruns}
 
 \begin{enumerate}
-        \item Show only images that are not signed by microsoft
-        \item WMI tab autoruns \href{https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96}{(What is WMI)}
-        \item Timestamp column
+        \item Show only images that are not signed by microsoft. This will reduce the noise and focus only on the potential malware.
+        \item WMI tab autoruns \href{https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96}{(What is WMI)} WMI-based persistence is less well-known and therefore may be overlooked during manual investigations. 
+        \item Timestamp column. The timestamp indicates when a file was created or last modified.
 \end{enumerate}
 
-To remove the progrma that is started by the shell, he changes its registry startp from 
+To remove the program that is started by the shell, he changes its registry startup from 
 Shell to explorer.exe
 
 \subsection{Process Monitor}
 \epigraph{"When in doubt, run process monitor"}{Mark Russinovich}
 
-Useful filter is:
-Category isRight only shows changes made to the system
+%TODO: need to watch videos on process monitor and add stuff about it. I think it is significant.
 
+\subsection{TCPView}
+TCPView provides a real-time graphical representation of the active TCP and UDP endpoints on a system. 
+It displays details about the processes that initiated the connections, 
+the local and remote addresses, as well as the state of each connection. 
+This tool is particularly useful for network diagnostics, security investigations, 
+and understanding the network activity of a system.
+
+You can view active TCP and UDP connections from TCPView, but you must go to
+Process Explorer to kill them.
 
 \section{Securing DNS}
 
@@ -234,34 +275,44 @@ it never asked for2. Disabling open recursion, which causes the server
 to accept DNS 
 requests from any IP address, can reduce DNS attack loopholes" -Bing
 
-https://www.cisa.gov/sites/default/files/publications/DNS-recursion033006.pdf
+\href{https://www.cisa.gov/sites/default/files/publications/DNS-recursion033006.pdf}{CISA on DNS recursion}
 
 \subsection{DNSSEC}
 Domain Name System Security Extensions
 
 Protect against DNS spoofing and cache poisoning
 
-https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en
-
-https://www.akadia.com/services/dns\_hardening.html
+\paragraph{DNSSEC Resources}
+\begin{itemize}
+\item \href{https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en}{ICANN on DNSSEC}
+\item \href{https://www.akadia.com/services/dns_hardening.html}{Akadia DNS Hardening}
+\end{itemize}
 
 \section{Securing Active Directory}
 
-One inject mentioned Sean Metcalf.
-He runs the site \href{https://adsecurity.org/}{adsecurity.org/}
+\paragraph{Sean Metcalf}
+A mobster in the AD space. He runs the site \href{https://adsecurity.org/}{adsecurity.org/}
 and I have made a playlist of some useful videos: \href{https://www.youtube.com/playlist?list=PLHkV-wwoQ7s_7vUau-eqiscWoZZNC3EcZ}{playlist}.
 
 \section{Event Logs}
+%TODO: Do event logs tryhackme
+I am going to do this \href{https://tryhackme.com/room/windowseventlogs}{room} and then get back to you.
+But they are definitely very important!
 
 \section{Caution with Shortcuts}
+Shortcuts can have extra properties and run other programs when you click them.
+For example, the Firefox shortcut could really run a script that opens firefox and also some
+other malicious program.
+
+\noindent Viewing the properties of a shortcut in the desktop is very straightforward.
+
+\paragraph{Properties of a shortcut in the taskbar}
 To view the properties of a shortcut in the taskbar, 
-
-Yes, there's a way to view the properties of a shortcut on the taskbar in Windows, but it requires a few more steps compared to desktop shortcuts:
-
-    Right-click on the shortcut in the taskbar.
-    If the program is already running or pinned to the taskbar, you may see a "jumplist" (a list of recent items, tasks, or pinned items related to that application). If you see this jumplist:
-        Right-click again on the application's name or icon in that jumplist (i.e., the entry at the top).
-    A context menu will appear. Choose Properties from the context menu.
-
+\begin{itemize}
+\item Right-click on the shortcut in the taskbar.
+\item If the program is already running or pinned to the taskbar, you may see a ``jumplist" (a list of recent items, tasks, or pinned items related to that application). If you see this jumplist:
+\item Right-click again on the application's name or icon in that jumplist (i.e., the entry at the top).
+\item A context menu will appear. Choose Properties from the context menu.
+\end{itemize}
 
 \end{document}
