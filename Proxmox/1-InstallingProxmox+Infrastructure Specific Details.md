@@ -2,7 +2,7 @@
 
 Author: 
     Luke 
-    Chisom(Don't ask me anything, go bother Luke)
+    Chisom (Ask me anything, don't bother Luke)
 
 ## Table of Contents
 * [Steps](#steps) 

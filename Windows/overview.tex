@@ -11,7 +11,9 @@
     backgroundcolor=\color{gray!30},
 }
 
+\title{Overview}
 \begin{document}
+\maketitle
 
 \graphicspath{ {./Images/} }
 \tableofcontents
@@ -20,7 +22,7 @@
 The goal of these documents is to provide a baseline foundation for the Windows team members.
 Please update and improve the documentation wherever you see fit.
 
-I think there are 5 categories to cover:
+\paragraph{Categories} I think there are 8 categories to cover. Each category has an associated folder
 
 \begin{enumerate}
         \item Deployment to Proxmox
@@ -33,13 +35,16 @@ I think there are 5 categories to cover:
         \item Powershell commands (to reference in one spot)
 \end{enumerate}
 
-Each category has an associated folder
-
 This is my knowledge of Windows. I have tried to include everything I think could be useful to you.
-I encourage you to do the same, add more sections and flesh out the sections with your own experience.
+I encourage you to do the same,to  add more sections and flesh out the sections with your own experience.
 
-I made a dedicated powershell pdf so we can easily reference them.
-Note that powershell commands are not case sensitive.
+\paragraph{Sharing files from Remmina}
+You will be using Remmina a lot, make sure to click "share folder" to send files over RDP.
+The folder is visible under "This PC".
+Windows defender can remove files from the share folder.
 
-There could be unpatched CVEs during the competition. So keep note of them \href{https://stack.watch/product/microsoft/windows-server-2019/}{here}.
+\paragraph{Unpatched CVEs}
+There could be unpatched CVEs during the competition. A list of them can be found \href{https://stack.watch/product/microsoft/windows-server-2019/}{here}.
+For example, CVE-2020-0796 was severe and would surely have been used by the red team.
+
 \end{document}
