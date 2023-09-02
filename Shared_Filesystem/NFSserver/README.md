@@ -4,7 +4,7 @@
 - [Setting UP NFS server to connect to proxmox as a shared storage directory](#setting-up-nfs-server-to-connect-to-proxmox-as-a-shared-storage-directory)
   - [General Information](#general-information)
 - [NFS server Machine Steps](#nfs-server-machine-steps)
-  - [Setting up NFS server with an NFS share(directory)](#setting-up-nfs-server-with-an-nfs-sharedirectory)
+  - [Setting up NFS server with an NFS share (directory)](#setting-up-nfs-server-with-an-nfs-share-directory)
 - [Client Machine Steps](#client-machine-steps)
   - [Creating and Linking directories](#creating-and-linking-directories)
 - [Extra - Ensuring Proxmox recognizes the cluster storage](#extra---ensuring-proxmox-recognizes-the-cluster-storage)
@@ -22,7 +22,7 @@
 
 # NFS server Machine Steps
 
-## Setting up NFS server with an NFS share(directory)
+## Setting up NFS server with an NFS share (directory)
 This directory will be our shared storage where every file, exe, etc is stored.
 
 1. Install NFS Kernel 
@@ -31,7 +31,7 @@ This directory will be our shared storage where every file, exe, etc is stored.
   ```
 2. Create Root Directory
   ```sh
-    sudo mkdir /mnt/ccdc2024Storage #This can be any directory & any name, but must be consitent throught this part of the process
+    sudo mkdir /mnt/ccdc2024Storage #This can be any directory & any name, but must be consistent through this section of the documention
   ```
 3. Set Permissions -
   - Allows any user on the client machines to access and edit the shared directory.
@@ -61,7 +61,7 @@ This directory will be our shared storage where every file, exe, etc is stored.
 ## Creating and Linking directories
 1. Create shared directory that we will mount our NFS  storage to
   ```sh
-  sudo mkdir /mnt/ccdc2024Storage #This can be any directory & any name, but must be consitent throught this part of the process
+  sudo mkdir /mnt/ccdc2024Storage #This can be any directory & any name, but must be consistent through this section of the documentation
   ```
 2. Edit the FStab file
   - Place tabs inbetween each segment, **not spaces**
