@@ -31,20 +31,20 @@ This directory will be our shared storage where every file, exe, etc is stored.
   ```
 2. Create Root Directory
   ```sh
-    sudo mkdir /mnt/ccdc2024Storage
+    sudo mkdir /mnt/ccdc2024Storage #This can be any directory & any name, but must be consitent throught this part of the process
   ```
 3. Set Permissions -
   - Allows any user on the client machines to access and edit the shared directory.
   - Applies to VM stored on the directory
   ```sh
-  sudo chown nobody:nogroup /mnt/ccdc2024Storage #no-one is owner
+  sudo chown nobody:nogroup /mnt/ccdc2024Storage #no-one is the owner
 
   sudo chmod 777 /mnt/ccdc2024Storage #everyone can modify files
   ```
 4. Edit the Export File - Once again modifying permission
   - Add the following line to the "/etc/exports" file
-  ```
-  mnt/myshareddir 192.168.0.0/24 (rw,sync,no_subtree_check)
+  ```sh
+  mnt/ccdc2024Storage 192.168.0.0/24 (rw,sync,no_subtree_check)
   ```
     - This allows access to the entire subnet for our infrastructure
 
@@ -61,7 +61,7 @@ This directory will be our shared storage where every file, exe, etc is stored.
 ## Creating and Linking directories
 1. Create shared directory that we will mount our NFS  storage to
   ```sh
-  sudo mkdir /mnt/ccdc2024Storage
+  sudo mkdir /mnt/ccdc2024Storage #This can be any directory & any name, but must be consitent throught this part of the process
   ```
 2. Edit the FStab file
   - Place tabs inbetween each segment, **not spaces**
