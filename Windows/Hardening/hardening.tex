@@ -324,4 +324,50 @@ To view the properties of a shortcut in the taskbar,
 \item A context menu will appear. Choose Properties from the context menu.
 \end{itemize}
 
+\section{GPO Policies}
+Group Policy Objects (GPOs) are a way to centrally manage 
+and enforce configuration settings for computers 
+and users within an Active Directory domain.
+
+- What are job objects? How can I use them to set limits on program execution / 
+% https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects
+
+% https://www.blackhillsinfosec.com/active-directory-best-practices-to-frustrate-attackers-webcast-write-up/
+% https://billy-boone.medium.com/group-policy-monitoring-for-cyber-security-59d7953c4da5
+\begin{enumerate}
+    \item Audit logs for login attempts, file access, system configurations
+    \item Account Lockout policy, to prevent brute force attacks. Can I hook it up to an auto-ban as well?
+    \item Restrict USB drives (can't hurt. You never know)
+    \item Restrict command prompt and powershell
+    \item SRP (software restriction policies). Only allows identified applications to run.
+    \item Enforce LDAPS. Domain Controller: LDAP server signing requirements
+    \item Enforce encryption for SMB, RPC, others?
+    \item Setup the firewall from GPO to not have to do it multiple times.
+    \begin{itemize}
+        \item Block SSH (we only use RDP, can reduce attack surface/scripting ability)
+        \item Block WinRM
+        \item Allow RDP
+        \item Allow LDAP on port 389.
+        \item Allow LDAPS on port 636.
+        \item Allow DNS on port 53.
+        \item Allow Kerberos on port 88.
+        \item Allow RDP on port 3389 for specified IP ranges or administrators.
+        \item Allow SMB on port 445.
+        \item Allow NetBIOS (if required) on ports 137, 138, 139.
+        \item Allow NTP (network time protocol) on port 123
+        \item 
+    \end{itemize}
+    \item Task scheduler. Can run antivirus scans on all the computers
+    \item Software Installation. Can automatically install antivirus and sysinternals, for example.
+    \item Set the local admin passwords through a script given by GPO. Or can use LAPS (Local Administrator Password Solution).
+    \item Can send a script to kick off all users who had their accounts disabled
+\end{enumerate}
+
+\section{Volatility Framework}
+Metasploit and other viruses can run only in RAM. 
+We can find them from their network connections, but also from 
+RAM forensics.
+
+% https://www.forensicfocus.com/articles/finding-metasploits-meterpreter-traces-with-memory-forensics/
+
 \end{document}
