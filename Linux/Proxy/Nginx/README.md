@@ -38,6 +38,9 @@ Due to the desire for PATH based forwarding we are exploring the use of the NGIN
             proxy_connect_timeout 60s;
             proxy_send_timeout 500s;
 
+            # Set Server Name
+            server_name SomeServer AltName;          
+
             # Include SSL Configurations
             include snippets/ssl-params.conf
 
