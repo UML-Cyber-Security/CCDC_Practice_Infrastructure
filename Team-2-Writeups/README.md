@@ -13,4 +13,4 @@ If you need multiple files feel free to make a subdirectory that is your name in
 **DO NOT UPLOAD SENSITIVE CONFIGURATION INFORMATION** The other team may decide to look at this. If it can be known put it here otherwise we need to figure out how that will be kept.
 
 ## Contents of Writeup 
-Get Chris to post his slideshow. But mainly what did you do, and how did you do it. If you feel verbose may as well put in what you learned if anything, and how the team can be improved. 
+Get Chris to post his slideshow. But mainly what did you do, and how did you do it. If you feel verbose (as you are required to be) put in what you learned if anything, and how the team can be improved. Also we need to include opinions on how the experience was both good and bad.
