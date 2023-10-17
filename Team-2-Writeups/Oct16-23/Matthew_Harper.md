@@ -31,3 +31,5 @@ Documentation needs to be centralized in some way.
 Refer to: https://drive.google.com/file/d/1JRta5wuq1q1F8FQ4ssoZAkn7A86oN5s6/view?usp=sharing For a placeholder
 
 I did like attempting to help people, but when all we are doing is waiting for machines to load, there is not much that can be done. Solving simple problems is also fun, but being left to budget things is not :). 
+
+The main thing that needs to be noted is that we need to create a document explaining **why** it is not possible for us to create the infrastructure as desired in a secure and usable manner.
