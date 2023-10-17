@@ -22,5 +22,12 @@ Documentation needs to be centralized in some way.
    * Everyone seemed to try and do something when their machines were just loading. There is not much you can do but there were attempts to look into what can be done to secure the machines, and how to implement their application services. 
 3. Documentation 
    * People were noting things down (when they could) if someone was implementing something, the other person would note down what was done. Not sure if this was something that was appreciated but I liked it. 
+   * We *need* to centralize this into one area, and have some kind of organization.
 4. Experience 
    * Probably the biggest issue is a lack of experience with the goals of the competition (what is worth out time vs what is not) and what should be done. This is an issue for me too since the planning mostly fell on my head. 
+5. Access to the Google Doc/PDF that was being displayed made life a little complicated when it came to how is this planned...
+
+
+Refer to: https://drive.google.com/file/d/1JRta5wuq1q1F8FQ4ssoZAkn7A86oN5s6/view?usp=sharing For a placeholder
+
+I did like attempting to help people, but when all we are doing is waiting for machines to load, there is not much that can be done. Solving simple problems is also fun, but being left to budget things is not :). 
