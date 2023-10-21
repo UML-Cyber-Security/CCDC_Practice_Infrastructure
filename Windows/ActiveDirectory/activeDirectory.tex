@@ -162,6 +162,82 @@ At some point I should watch all of the videos, take notes on them, and put them
         \item \href{https://youtu.be/ze1UcSLOypw}{Sean Metcalf Active Directory Attacks}
         \item \href{https://youtu.be/Lz6haohGAMc}{More Sean Metcalf Active Directory}
         \item\href{https://youtu.be/b6GUXerE9Ac}{Even more Sean Metcalf Active Directory}
-        \item 
 \end{enumerate}
+
+\section{Enabling LDAPS}
+Run the command certutil -verifystore MY
+
+\section{Why do forests exist?}
+\subsection{What is a forest}
+A forest is a collection of one or more domains that 
+share a common schema, configuration, and global 
+catalog. The forest represents the highest 
+level of logical container in Active Directory.
+
+Trusts can be manually configured between different forests if required.
+
+Certain forest-wide data, like the schema, 
+is replicated to all domain controllers in all domains within the forest.
+
+They can be used for replication and for
+easier management across multiple geographic regions.
+
+\subsection{What is a domain}
+"A domain represents a database. 
+That database holds records about
+ network services-things like computers, users, groups and other 
+ things that use, support, or exist on a network. The domain database is, 
+ in effect, Active Directory."
+ - Robert R. King
+
+A domain is associated with a single DNS namespace (e.g., example.com).
+
+By default, all domains within a forest have two-way, 
+transitive trusts, meaning resources can be easily 
+shared across domains in the same forest.
+
+\subsection{What is a schema?}
+\textbf{Active Directory Schema:}
+\begin{itemize}
+  \item Serves as the blueprint for permissible objects and attributes within Microsoft's Active Directory (AD).
+\end{itemize}
+
+\textbf{Key Elements:}
+\begin{itemize}
+  \item \textit{Object Classes:} Define permissible objects like users, groups, and computers.
+  \item \textit{Attributes:} Specify properties an object can have, e.g., first name, last name for a user.
+  \item \textit{Syntax:} Dictates the type of data an attribute can contain.
+  \item \textit{Constraints:} Apply rules or limitations on attributes, such as mandatoriness.
+  \item \textit{Object Identifiers (OIDs):} Ensure global uniqueness for object classes and attributes.
+\end{itemize}
+
+\textbf{Importance of Schema:}
+\begin{itemize}
+  \item \textit{Standardization:} Enforces consistent creation and management of objects.
+  \item \textit{Extensibility:} Allows for custom object classes and attributes.
+  \item \textit{Search Optimization:} Enables efficient querying via well-designed indexing.
+  \item \textit{Security:} Restricted to administrators with special permissions.
+  \item \textit{Interoperability:} Facilitates uniform interpretation of object data by various applications.
+\end{itemize}
+
+\textbf{Schema Modification:}
+\begin{itemize}
+  \item Sensitive, forest-wide operation requiring careful planning, testing, and coordination.
+\end{itemize}
+
+
+\subsection{Historical limits of domains}
+In old versions of AD, a single domain could handle up to around 
+10 million objects. However, these were not strict limits 
+and more of an operational guideline. 
+
+For Active Directory Domain Services in Windows Server 2008 and later, 
+Microsoft stated that the maximum supported number of objects 
+in Active Directory is 2.15 billion objects. 
+
+There is a limit of $2^{30} \approx 10^9$ billion security 
+identifiers (SIDs) over the life of a domain 
+due to the size of the global relative identifier (RID) 
+pool of 30 bits that makes each SID 
+(that is assigned to user, group, and computer accounts) in a domain unique
 \end{document}

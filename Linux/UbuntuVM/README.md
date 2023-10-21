@@ -13,7 +13,7 @@
 + Note: There is an Ubuntu Template you can pull from if you want to create additional VMs. If you are pulling from this template you can avoid [Configuring Ubuntu Install inside Vm](#configuring-ubuntu-installation-inside-vm) step and skip straight to the [Using Preconfigured template](#using-using-preconfigured-template) step.
 
 1. Hit Create VM - blue button in top right
-2. Ensure the node is PVE4(this is a design choice specific to our system, our linux VMs are under PVE4) & hit next
+2. Ensure the node is PVE4(this is a design choice specific to our system, our linux VMs are under PVE4) & hit next (Please note that this is subject to change, px1 as of now. Use the currently available node and VM ID.)
    1. Keep all Linux machines on the same instance to improve network performance
 ![Alt text](Images/Step1-2.png)
 
@@ -32,7 +32,7 @@
    - Storage : "ccdc2024Storage"
    - Disk Size: "32" - minimal installation requires 8.6gb - You may want to reduce disk size to save space
    - Format : "QEMU image format"
-   - Keep the rest aet to the default options
+   - Keep the rest set to the default options
 6. CPU - Your choice
    - Our System : Kept as default
    - Every value  = 1
