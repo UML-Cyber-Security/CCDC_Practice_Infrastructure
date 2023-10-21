@@ -1,8 +1,8 @@
 # Nginx
 Due to the desire for PATH based forwarding we are exploring the use of the NGINX proxy. This contains the following **Manual** steps to install and configure NGINX for a infrastructure. As the requirements change it is inevitable that the configuration, that is the proxy pass directives will change! 
 
-
-## Install
+This **DID NOT** work as intended, so this can be used as a learning experience and base for later uses of NGINX.
+ ## Install
 1. Update the package list
     ```sh
     apt update
