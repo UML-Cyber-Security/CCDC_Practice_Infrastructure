@@ -13,6 +13,7 @@ This is a document detailing the installation, setup and use of **Teleport**. Th
   - [Add Windows RDP  Console](#add-windows-rdp--console)
   - [Add Windows RDP Web](#add-windows-rdp-web)
 - [Dissable Session Recordings](#dissable-session-recordings)
+- [User Management](#user-management)
 - [Container Based Teleport](#container-based-teleport)
   - [Installation](#installation)
   - [Configuration](#configuration)
@@ -569,6 +570,47 @@ We may want to dissable session recordings to preserve our limited disk space. T
     ```
     nano /etc/teleport.yml
     ```
+
+## User Management 
+This is primarily going to be done through the CLI, and I assume often.
+1. Open a terminal on the teleport machine
+2. Run ```tctl users ls``` to list all the users 
+3. Delete any non-critical or required users using ```tctl users rm <name>```
+4. Add trusted users using ```tctl users add <name> <options>```
+    * Account name
+    * [--roles=](https://goteleport.com/docs/access-controls/reference/)
+      * editor: Allows editing of cluster configuration settings.
+      * auditor: Allows reading cluster events, audit logs, and playing back session records.
+      * access: Allows access to cluster resources.
+      * requestor: Enterprise
+      * reviewer: Enterprise
+   * --logins=
+     * A comma separated list of usernames we can use to login to the system
+   * --windows-logins=
+     * List of allowed Windows logins for the new user
+     * May be notable-- may not be!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Container Based Teleport 
