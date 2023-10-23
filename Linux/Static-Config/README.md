@@ -24,6 +24,29 @@ This section covers a method we can use to manually configure the IP assigned to
 5. We can look at the updated configuration using the following command ```cat /etc/sysconfig/network-scripts/ifcfg-ens3```
 6. Stop DHCP services ```systemctl stop dhcpd```
 
+
+
+**Proven Manual Method**
+1. Open a file ```vim /etc/sysconfig/network-scripts/ifcfg-ens19```
+2. Add in the following information
+  ```
+  TYPE="Ethernet"
+  BOOTPROTO="none"
+  IPADDR="<IP>"
+  NETMASK="<MASK> i.e 255.255.255.0"
+  GATEWAY="<IP>"
+  DEVICE="ens19 (DEV NAME)" 
+  NAME="ens19 (DEV NAME)"
+  ONBOOT="yes"
+  DNS1="<IP>" 
+  ```
+  * No (parens), just for a comment
+3. Reboot and run nmtui on the device (Ensures it is configured)
+  ```
+  nmtui edit <dev>
+  ```
+4. This will result in a similar configuration to the following 
+  ![Alt text](Images/RH1.png)
 ### Debian Based 
 
 1. Open a terminal on the target machine
@@ -68,7 +91,9 @@ This section covers a method we can use to manually configure the IP assigned to
           eth0:
           dhcp4: no
           addresses: [<Static-IP>]
-          gateway4: <Gateway-IPv4>
+          routes:
+            - to: default
+              via: <IP>
     ```
 8. Configure DNS 
     ```
@@ -79,8 +104,36 @@ This section covers a method we can use to manually configure the IP assigned to
           eth0:
           dhcp4: no
           addresses: [<Static-IP>]
-          gateway4: <Gateway-IPv4>
+          routes:
+            - to: default
+              via: <IP>
           nameservers:
             addresses: [<IP>,<IP>]
     ```
 9. Run ```netplan try```
+
+
+For example the following is one we used on an ubuntu machine:
+```
+network:
+  ethernets:
+    ens19:
+    dhcp4: false
+    addresses: [10.0.2.10/24]
+    routes:
+      - to: default
+        via: 10.0.2.1
+    nameservers:
+      addresses: [8.8.8.8]
+  version: 2
+```
+## INterface Manipulation
+
+1. Bring it down
+  ```
+  ip link set dev <interface> down
+  ```
+2. Bring it up 
+  ```
+  ip link set dev <interface> up
+  ```
