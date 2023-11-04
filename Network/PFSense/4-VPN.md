@@ -1,6 +1,9 @@
 Scratch note:
 https://www.comparitech.com/blog/vpn-privacy/openvpn-server-pfsense/
 # VPN
+
+
+## Package manager 
 If the VPM service you want on the system is not there already you can open the *package manager* for PFSense. 
 1. Open the PFSense browser and ckick on system
     ![PM](Images/VP1.png)
@@ -81,5 +84,9 @@ This section will cover how to setup an Open VPN server on your PFSense machine.
     ![OVP](Images/OVP-14.png)
 14. Refer to Package manager and install the ```openvpn-client-export``` utility
 15. Navigate to the Client Export tab for OpenVPN
-    ![OVP](image.png)
-16. Scroll Down and Download
+    ![OVP](Images/OVP-15.png)
+16. Scroll Down and Download (Most-Clients Inline)
+    ![Alt text](Images/OVP-16.png)
+## Wireguard 
+1. Refer to Package manager to install ```wireguard```
+2. https://www.ivpn.net/setup/router/pfsense-wireguard/
