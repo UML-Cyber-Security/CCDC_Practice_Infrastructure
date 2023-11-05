@@ -1,7 +1,5 @@
-Scratch note:
-https://www.comparitech.com/blog/vpn-privacy/openvpn-server-pfsense/
 # VPN
-
+This section details the setup of a VPN Server on the PFSense Router. This will cover both OpenVPN and Wireguard. 
 
 ## Package manager 
 If the VPM service you want on the system is not there already you can open the *package manager* for PFSense. 
@@ -87,6 +85,9 @@ This section will cover how to setup an Open VPN server on your PFSense machine.
     ![OVP](Images/OVP-15.png)
 16. Scroll Down and Download (Most-Clients Inline)
     ![Alt text](Images/OVP-16.png)
+
+Based on: 
+* https://www.comparitech.com/blog/vpn-privacy/openvpn-server-pfsense/
 ## Wireguard 
 1. Refer to Package manager to install ```wireguard```
 2. https://www.ivpn.net/setup/router/pfsense-wireguard/
