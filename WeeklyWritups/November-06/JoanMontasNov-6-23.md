@@ -10,7 +10,7 @@ Name: `Joan Montas`
 - Observed and reported vulnerabilities.
 
 ### Challenges Faced:
-- Changing passwords during system bugs is not recommended.
+- Changing passwords while the system is bug is not recommended.
 - Priority should be given to eliminating vulnerabilities before addressing password setups.
 - Creating a checklist/TODO after installing Wazuh from scratch to avoid overlooking default password changes.
 - Coordination with the network team before modifying layouts is crucial for synchronized actions.
