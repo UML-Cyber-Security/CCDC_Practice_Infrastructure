@@ -13,6 +13,7 @@ This is a document detailing the installation, setup and use of **Teleport**. Th
   - [Add Windows RDP  Console](#add-windows-rdp--console)
   - [Add Windows RDP Web](#add-windows-rdp-web)
 - [Dissable Session Recordings](#dissable-session-recordings)
+- [User Management](#user-management)
 - [Container Based Teleport](#container-based-teleport)
   - [Installation](#installation)
   - [Configuration](#configuration)
@@ -168,28 +169,39 @@ The following is based on the official [teleport documentation](https://gotelepo
     ```
 2. Copy certificate over that is used by the teleport server. This can be through the use of ```scp``` or something
     * You can copy it directly to the necessary location
-        ```
-        scp <user>@<IP>:/var/lib/teleport-info/fullchain.pem /usr/local/share/ca-certificates/teleport-server.crt
-        ```
-3. Move the certificate to the ```/usr/local/share/ca-certificates/``` directory. An example shown below. This should be the root certificate.
+      * Debian
+            ```
+            scp <user>@<IP>:/var/lib/teleport-info/fullchain.pem /usr/local/share/ca-certificates/teleport-server.crt
+            ```
+      * RHEL
+            ```
+            scp <user>@<IP>:/var/lib/teleport-info/fullchain.pem /etc/pki/ca-trust/source/anchors/teleport-server.crt
+            ```
+            * This may also be ```/etc/pki/ca-trust/source/whitelist/```
+3. Move the certificate to the ```/usr/local/share/ca-certificates/``` directory if you are using a debian system. Otherwise for RHEL systems we would copy it to ```/etc/pki/ca-trust/source/whitelist/``` or ```/etc/pki/ca-trust/source/anchors/```. An example for Debain systems is shown below. This should be the root certificate.
     ```
     mv servercert.crt /usr/local/share/ca-certificates/servercert.crt
     ```
     * Ensure the file ends in .crt! 
         ![CA-Update](Images/LTS.png)
 4. Run the following command to update the trusted certificate store
-    ```
-    sudo update-ca-certificates
-    ```
-    * You may want to test that it was loaded properly, by curling the Teleport server 
+    * Debian Systems
+        ```
+        sudo update-ca-certificates
+        ```
+   * RHEL Systems 
+        ```
+        sudo update-ca-trust
+        ```
+   * You may want to test that it was loaded properly, by curling the Teleport server 
         ```
         curl https://<IP>
         ```
-5. Originally I had a validation error. This was possibly due to the lack of a SAN, or that I forgot to run the ```update-ca-certificates``` command. After setting up with the ```--insecure``` flag I transitioned to this trusted method, and it worked. 
+5. Originally I had a validation error. This was possibly due to the lack of a SAN, or that I forgot to run the ```update-ca-certificates``` command. After setting up teleport with the ```--insecure``` flag I transitioned to this trusted method, and it worked. 
 6. If you are running Teleport with the ```--insecure``` flag, you can now remove it
    1. Remove the  ```--insecure``` flag
         ```
-        nano /lib/systemd/system/teleport.service 
+        vim /lib/systemd/system/teleport.service 
         ```
    2. Reload the daemon
         ```
@@ -200,7 +212,7 @@ The following is based on the official [teleport documentation](https://gotelepo
         systemctl restart teleport
         ```
 
-The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/docs/security-trust-store). The ```update-ca-certificates``` command updates the ```/etc/ssl/certs/ca-certificates.crt``` file which is a list of all trusted root certificates. It reads in the new certificates from ```/usr/local/share/ca-certificates/*```.
+The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/docs/security-trust-store). The ```update-ca-certificates``` command updates the ```/etc/ssl/certs/ca-certificates.crt``` file which is a list of all trusted root certificates. It reads in the new certificates from ```/usr/local/share/ca-certificates/*```. In RHEL systems a similar thing is done to update root [certificates](https://www.redhat.com/sysadmin/configure-ca-trust-list). 
 ### Adding Nodes CLI Method -- Not Recommended
 1. Enter into **Teleport Server**
 2. Install Teleport (**This should already be done if the previous steps have been done**)
@@ -558,6 +570,47 @@ We may want to dissable session recordings to preserve our limited disk space. T
     ```
     nano /etc/teleport.yml
     ```
+
+## User Management 
+This is primarily going to be done through the CLI, and I assume often.
+1. Open a terminal on the teleport machine
+2. Run ```tctl users ls``` to list all the users 
+3. Delete any non-critical or required users using ```tctl users rm <name>```
+4. Add trusted users using ```tctl users add <name> <options>```
+    * Account name
+    * [--roles=](https://goteleport.com/docs/access-controls/reference/)
+      * editor: Allows editing of cluster configuration settings.
+      * auditor: Allows reading cluster events, audit logs, and playing back session records.
+      * access: Allows access to cluster resources.
+      * requestor: Enterprise
+      * reviewer: Enterprise
+   * --logins=
+     * A comma separated list of usernames we can use to login to the system
+   * --windows-logins=
+     * List of allowed Windows logins for the new user
+     * May be notable-- may not be!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Container Based Teleport 
