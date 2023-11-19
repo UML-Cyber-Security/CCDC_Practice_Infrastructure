@@ -11,7 +11,7 @@ bash_users=(`grep '/bash$' /etc/passwd | awk -F: '{print $1}'`)
 
 echo -e "--------------------------------------------------------------\nThe following users have UID = 0 and are not root\n--------------------------------------------------------------"
 for user in "${root_id_users_on_system[@]}"; do
-        echo -e "Would you like to delete, lock or ignore the user: $user?\nd for delete or l for lock and anything else for ignore"
+        echo -e "Would you like to delete, lock, change the password of or ignore the user: $user?\nd for delete or l for lock, c for change and anything else for ignore"
         read responce
         responce=$(echo "${responce:0:1}" | tr '[:upper:]' '[:lower:]')
 
@@ -21,6 +21,10 @@ for user in "${root_id_users_on_system[@]}"; do
         elif [[ "$responce" == "l" ]]; then
                passwd -l $user
                echo -e "Locked user $user \n\n"
+        elif [[ "$responce" == "c" ]]; then
+                echo "Please enter a password: "
+                read responce
+                echo "$user:$responce" | chpasswd
         else
                echo -e "We ignored the user $user\n\n"
         fi
@@ -28,7 +32,7 @@ done
 
 echo -e "--------------------------------------------------------------\nThe following users have the /sh shell\n--------------------------------------------------------------"
 for user in "${sh_users[@]}"; do
-        echo -e "Would you like to delete, lock or ignore the user: $user?\nd for delete or l for lock and anything else for ignore"
+        echo -e "Would you like to delete, lock, change the password of or ignore the user: $user?\nd for delete or l for lock, c for change and anything else for ignore"
         read responce
         responce=$(echo "${responce:0:1}" | tr '[:upper:]' '[:lower:]')
 
@@ -38,6 +42,10 @@ for user in "${sh_users[@]}"; do
         elif [[ "$responce" == "l" ]]; then
                 passwd -l $user
                 echo -e "Locked user $user \n\n"
+        elif [[ "$responce" == "c" ]]; then
+                echo "Please enter a password: "
+                read responce
+                echo "$user:$responce" | chpasswd
         else
                 echo -e "We ignored the user $user\n\n"
         fi
@@ -45,7 +53,7 @@ done
 
 echo -e "--------------------------------------------------------------\nThe following users have the /bash shell\n--------------------------------------------------------------"
 for user in "${bash_users[@]}"; do
-        echo -e "Would you like to delete, lock or ignore the user: $user?\nd for delete or l for lock and anything else for ignore"
+        echo -e "Would you like to delete, lock, change the password of or ignore the user: $user?\nd for delete or l for lock, c for change and anything else for ignore"
         read responce
         responce=$(echo "${responce:0:1}" | tr '[:upper:]' '[:lower:]')
 
@@ -55,6 +63,10 @@ for user in "${bash_users[@]}"; do
         elif [[ "$responce" == "l" ]]; then
                 passwd -l $user
                 echo -e "Locked user $user \n\n"
+        elif [[ "$responce" == "c" ]]; then
+                echo "Please enter a password: "
+                read responce
+                echo "$user:$responce" | chpasswd
         else
                 echo -e "We ignored the user $user\n\n"
         fi
