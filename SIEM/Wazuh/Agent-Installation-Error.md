@@ -1,4 +1,4 @@
-## Wazuh installing agents Error: 
+# Wazuh installing agents Error: 
 
 ## Commands run: 
 
