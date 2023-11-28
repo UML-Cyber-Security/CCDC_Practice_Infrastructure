@@ -14,7 +14,7 @@ Name: `Joan Montas`
 - The SIEM machine was having memory issues. We had not install anything out of our usual.
     Some digging aroun I found that we needed to clear some log file and an extra grub/kernel
     perhaps after updating the image we had.
-    Ultimately a new machine was built due to the lack of time.
+    Ultimately it was discover that Ubuntu server comes partitioned by default.
 - Iptable mis-configuration left us blind.
 
 ### Future Plans:
