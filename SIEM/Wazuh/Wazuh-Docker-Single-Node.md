@@ -12,7 +12,7 @@
 
 ## Deploy docker containers
 
-`docker compose up -d`
+`docker-compose up -d`
 
 ## Possible Errors
 
