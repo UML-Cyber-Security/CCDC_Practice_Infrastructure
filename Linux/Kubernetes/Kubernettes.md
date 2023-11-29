@@ -103,13 +103,8 @@ Disclaimer -> Majority of screenshots sourced from [here](https://www.udemy.com/
 
 ## Quick intro
 
-### What is Kubernetes?
 
-It is an open source container orchestration tool developed by google. In realistic terms
-it helps you manage containerized applications in different deployment environment, similar 
-to docker.
-
-### What does it offer?
+### What does Kubernetes offer?
 
 - High availability
   - Lowers downtime, available to users
