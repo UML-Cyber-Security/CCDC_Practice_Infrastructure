@@ -185,3 +185,12 @@ The IP you add above is from the following command and under EXTERNAL-IP, Look f
 Finally,
 
     curl web-app.home-k8s.lab
+
+If you want decided to remove everything.
+
+    cd nginx-ingress
+    helm uninstall nginx-ingress .
+    kubectl delete all --all -n nginx-ingress
+    kubectl delete all --all -n metallb-system
+  
+    
