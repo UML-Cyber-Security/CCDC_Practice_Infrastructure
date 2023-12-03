@@ -10,4 +10,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: traefik-account
-    namespace: traefik # Using "default" because we did not specify a namespace when creating the ClusterAccount.
+    namespace: traefik
