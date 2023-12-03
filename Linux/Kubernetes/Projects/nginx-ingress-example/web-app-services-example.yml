@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: web-app
   labels:
-    app.kubernetes.io/name: web-app
+    app: web-app
 spec:
   selector:
-    app.kubernetes.io/name: web-app
+    app: web-app
   ports:
   - name: http
     port: 80
