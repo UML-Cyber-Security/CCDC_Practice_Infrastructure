@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app 
+  labels:
+    app: test-app 
+  namespace: storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+        - sleep
+        - "12000"
+        volumeMounts:
+          - name: using-nfs-storage
+            mountPath: /demo/data
+      volumes:
+        - name: using-nfs-storage
+          persistentVolumeClaim:
+            claimName: test-app-claim
