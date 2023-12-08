@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nfs-server
-        image: k8s.gcr.io/volume-nfs:latest
+        image: cpuguy83/nfs-server
         volumeMounts:
         - name: nfs-storage
           mountPath: /exports
@@ -62,3 +62,10 @@ spec:
 #  type: LoadBalancer
   
 
+# rancher
+# docker differences
+
+# then move on to ci/cd
+
+# force all traffik via prox5 proxy
+  # can we send some traffick through prox5
