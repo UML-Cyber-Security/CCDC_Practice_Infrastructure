@@ -8,6 +8,7 @@
     - [Linux](#linux)
     - [Windows](#windows)
   - [Virtual Addresses](#virtual-addresses)
+    - [NAT](#nat)
 
 
 ## DNS Notes
@@ -119,3 +120,8 @@ This is because each address only has one set or ports, we cannot forward port 4
 
     <img src="Images/VIP5.png" width=800>
 
+#### NAT
+1. Navigate to Firewall/NAT/1:1
+    ![NAT](Images/N1-1.png)
+2. Add a 1:1 NAT Rule 
+    ![NAT](Images/N1-2.png)
