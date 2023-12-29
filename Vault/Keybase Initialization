@@ -1,0 +1,17 @@
+This is done during the "Initilize the Vault" step
+
+# Initializing keybase (Authorized startup)
+```vault operator init -key-shares=3 -key-threshold=2 -pgp-keys="keybase:jefferai,keybase:vishalnayak,keybase:sethvargo" ```
+
+An truncated output should appear(similar to below)
+
+Key 1: wcBMA37rwGt6FS1VAQgAk1q8XQh6yc...
+Key 2: wcBMA0wwnMXgRzYYAQgAavqbTCxZGD...
+Key 3: wcFMA2DjqDb4YhTAARAAeTFyYxPmUd...
+...
+
+
+ - only the user holding the corresponding private key can decrypt the value
+   - jefferai (user)
+   - vishalnayak (user)
+   - sethvargo (user) 
