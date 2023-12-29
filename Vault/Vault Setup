@@ -31,6 +31,8 @@ There is a configuation file folder (current config is insecure b/c TLS is disab
 ```mkdir -p ./vault/data```
 
 
+
+.
 # Start the vault server w/ specific config file
 (We are **Not** setting up a dev server, which are insecure by default.)
 This is the only piece that interacts w/ data storage and backend.
