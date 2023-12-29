@@ -6,7 +6,7 @@ disable respository
  ```dnf config-manager --set-disable hashicorp```
 
 
- reinstall your shit    
+ reinstall your repo  
 
 
  ```sudo dnf config-manager --disable hashicorp``
