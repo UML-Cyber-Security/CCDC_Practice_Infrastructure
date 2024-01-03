@@ -1,0 +1,18 @@
+# Based on https://geekflare.com/10-best-practices-to-secure-and-harden-your-apache-web-server/ and https://httpd.apache.org/docs/2.4/ssl/ssl_howto.html
+
+<VirtualHost *:443>
+	ServerAdmin admin@dirigo.org
+
+	# Disable TRACE requests
+	TraceEnable off
+
+	# Disable ETag (doesn't seem to work)
+	FileETag none
+	
+	# SSL using only strong protocols and TLS 1.2 and 1.3
+	SSLEngine on
+	SSLCertificateFile "/etc/apache2/ssl/server.crt"
+    SSLCertificateKeyFile "/etc/apache2/ssl/server.key"
+    SSLCipherSuite HIGH:!aNULL:!MD5
+    SSLProtocol -ALL +TLSv1.2 +TLSv1.3
+</VirtualHost>

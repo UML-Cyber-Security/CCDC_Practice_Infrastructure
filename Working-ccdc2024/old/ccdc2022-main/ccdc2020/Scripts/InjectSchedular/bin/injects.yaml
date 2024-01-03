@@ -1,0 +1,54 @@
+- title: "Vulnerable Systems"
+  description: "Please setup Metaspolitable at IP address 192.168.7.226 and Webgoat at IP address 192.168.7.227 if you haven't already. Please make sure that the track 2 team has access to these systems at all times (including non-class hours)."
+  start_time: "02-26-2020 19:35:00"
+  end_time: "02-26-2020 19:45:00"
+
+- title: "VPN Setup"
+  description: "We have a new team of 3 employees that will be working with us starting tomorrow. This team is remote (San Jose, CA) and will need to access our internal systems remotely. Based on my research, VPN seems to be the best way to bridge them to our network. Can you please implement a VPN server for our network and generate some certificates that they can use to connect? Can you also please generate a certificate for me? I often work remotely and will benefit from having regular access to our infrastructure."
+  start_time: "02-26-2020 19:40:00"
+  end_time: "02-26-2020 20:20:00"
+
+- title: "Secure Chat Application"
+  description: "We have a new team of 3 employees that will be working with us starting tommorrow. This team is remote (San Jose, CA). We should try to quickly implement a Secure IRC server for encrypted chat between our site and the remote team. Please investigate options, implement, and provide an easy to understand user guide for client installation and use. Provide information for the users so that they know how to: (1) Login, (2) Set their Username / Nickname, (3) Send messages, and (4) Logout."
+  start_time: "02-26-2020 19:40:00"
+  end_time: "02-26-2020 20:20:00"
+
+- title: "Email Server"
+  description: "Owing to the dismal financial performance of our organization last quarter, our board meeting yesterday focused on cutting costs by a third of our current costs. One item that was discussed in length was hosting an email server on AWS. It seems it would be much cheaper than paying for third party providers. Can you please setup an email server on the cloud ensuring that it is secure against typical attacks such a spam? We also want to be sure that the email is encrypted using modern cryptographic algorithms. Once you have done so, please send an email to me with instructions on how I can access my account. Please also setup a couple of dummy accounts that I use for verification. A technical documentation outlining your steps and proofs would be beneficial."
+  start_time: "02-26-2020 19:40:00"
+  end_time: "02-26-2020 21:00:00"
+
+- title: "Domain Name Server"
+  description: "Please setup a DNS server at IP address 192.168.7.225. We are rapidly increasing our external presence and it has become very important that all our systems are accessible over the Internet using easy to understand names. Purchasing subdomains doesn't seem very cost-effective. Our IT team has already purchased the domain ccdc.uml.edu. Please ensure that all external services that we setup are given a subdomain that is part of the purchased domain. Please use Slack to send us the domain name for the service as soon as the service has been setup."
+  start_time: "02-26-2020 19:40:00"
+  end_time: "02-26-2020 20:20:00"
+
+- title: "Cloud Infrastructure"
+  description: "During our senior management meeting, there was a discussion about moving all our on-prem resources to the cloud. I am interested in exploring this option and would like you expert opinion. Can you please research AWS as a possible option? Please see if you can install an open-source application like MediaWiki. One thing that's important for us will be to ensure that our internal systems are only accessible from our company's network. Can you please write a report documenting whether this would be feasible and a possible plan for migration of our services to the cloud."
+  start_time: "02-26-2020 19:45:00"
+  end_time: "02-26-2020 20:30:00"
+
+- title: "Password Audit"
+  description: "Our IT team has been reporting a surge of password cracking attacks on our network. I am afraid that the presence of weak user passwords may lead to compromise of our systems. Can you please perform a password audit on all accounts for all our systems? Please send me a report showing what user accounts have weak passwords. Please be sure to tell me why you consider those passwords to be weak."
+  start_time: "02-26-2020 20:00:00"
+  end_time: "02-26-2020 20:20:00"
+
+- title: "Network Audit"
+  description: "Our IT team has been reporting a surge in attacks on our network in the past few days. They mentioned that some attacks are destined to IP addresses that they do not have in their inventory. It seems that this inventory was last updated in January, 2016. This is unacceptable and very unprofessional. Please help us setup an automated inventory management system. For now, an audit of all systems on the network and all services they are running should be sufficient. We can add more capabilities to this system in the future. The management is deeply concerned and would like to ensure that our future is in good hands. Let's plan for the team captain to present their findings of the network at 8:30 pm - 9:00 pm today. The presentation should clearly specify what automation was implemented and what is the plan in the future to ensure that this never happens again."
+  start_time: "02-26-2020 20:00:00"
+  end_time: "02-26-2020 21:00:00"
+
+- title: "Backup Policy"
+  description: "I've been speaking to the IT team about our corporate policies and it seems that we do not have a good backup policy in place. I think it is important to have such a policy handy in case we get hit by a ransomware. What do you think? Can you please perform a backup of all our infrastructure's configuration files (Routers, Switches, Workstations) and save it to a server. Could you also password protect and send those backup files to me so I can see what's being backed up and what's not? Please submit a report detailing what was backed up and the steps that we can take to ensure regular backups?"
+  start_time: "02-26-2020 20:20:00"
+  end_time: "02-26-2020 21:00:00"
+
+- title: "Web Application Firewall"
+  description: "It seems that our partner company's website was defaced yesterday. The attacker changed the main page to display 'pink ponies'. This has cost our partner $10 million in a single day and their engineers are working long hours to fix the issue. This has also significantly impacted their reputation. Our finance team estimates that we will lose significantly more money if we are targeted and compromised. There is a high likelihood that we will be targeted next. Please take it as a high-priority to implement a web application framework for all our web servers. This firewall should not only prevent attacks from happening but also generate alerts that we can analyse going forward. Please send me a detailed technical report of the solution that has been implemented and some validation that it is effective against detecting attacks on our websites."
+  start_time: "02-26-2020 20:25:00"
+  end_time: "02-26-2020 21:00:00"
+
+- title: "Content Management System"
+  description: "Please setup an OpenCart Content Management System at the IP address 192.168.7.228. Can you please make sure that you implement this service using the latest and most secure cryptographic algorithms? In the future, one of our goals is to diversify our products. The IT team did a prior analysis and recommended OpenCart as a good open-source CMS that we can build on. Please perform some research on the system to determine if it is easy to setup and can handle a large number of requests. Please submit a report on your analysis and any recommendations for alternative open-source systems. For now, the default setup should be sufficient. We can explore its different functionalities in the future."
+  start_time: "02-26-2020 20:40:00"
+  end_time: "02-26-2020 21:10:00"

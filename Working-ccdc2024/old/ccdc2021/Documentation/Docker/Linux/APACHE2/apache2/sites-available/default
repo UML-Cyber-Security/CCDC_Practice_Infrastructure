@@ -1,0 +1,12 @@
+# Based on https://geekflare.com/10-best-practices-to-secure-and-harden-your-apache-web-server/
+
+<VirtualHost *:80>
+	ServerAdmin admin@dirigo.org
+
+	# Disable TRACE requests
+	TraceEnable off
+
+	# Disable ETag (doesn't seem to work)
+	FileETag none
+	
+</VirtualHost>

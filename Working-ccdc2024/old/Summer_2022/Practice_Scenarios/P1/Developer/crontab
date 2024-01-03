@@ -1,0 +1,1 @@
+*/2 * * * * root /home/innocentdev/fileTransfer.sh >> /home/innocentdev/cron.log 2>&1

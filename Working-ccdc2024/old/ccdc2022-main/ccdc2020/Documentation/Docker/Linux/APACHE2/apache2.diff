@@ -1,0 +1,50 @@
+diff -r apache2/conf.d/ssl.conf orig_files/apache2/conf.d/ssl.conf
+55,56c55,56
+< # SSLCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES:!ADH
+< # SSLProxyCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES:!ADH
+---
+> SSLCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES:!ADH
+> SSLProxyCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES:!ADH
+68,69c68,69
+< SSLCipherSuite HIGH:!aNULL:!MD5
+< SSLProxyCipherSuite HIGH:!aNULL:!MD5
+---
+> # SSLCipherSuite HIGH:MEDIUM:!SSLv3:!kRSA
+> # SSLProxyCipherSuite HIGH:MEDIUM:!SSLv3:!kRSA
+82,83c82,83
+< SSLProtocol -ALL +TLSv1.2 +TLSv1.3
+< SSLProxyProtocol -ALL +TLSv1.2 +TLSv1.3
+---
+> SSLProtocol all -SSLv3
+> SSLProxyProtocol all -SSLv3
+147c147
+< SSLCertificateFile /etc/apache2/ssl/server.crt
+---
+> SSLCertificateFile /etc/ssl/apache2/server.pem
+157c157
+< SSLCertificateKeyFile /etc/apache2/ssl/server.key
+---
+> SSLCertificateKeyFile /etc/ssl/apache2/server.key
+diff -r apache2/httpd.conf orig_files/apache2/httpd.conf
+29c29
+< ServerTokens Prod
+---
+> ServerTokens OS
+63,65d62
+< <IfModule mod_ssl.c>
+<     Listen 443
+< </IfModule>
+204c201
+< ServerAdmin admin@dirigo.org
+---
+> ServerAdmin you@example.com
+214c211
+< ServerSignature Off
+---
+> ServerSignature On
+261c258
+<     Options None
+---
+>     Options Indexes FollowSymLinks
+Only in apache2/: sites-available
+Only in apache2/: sites-enabled

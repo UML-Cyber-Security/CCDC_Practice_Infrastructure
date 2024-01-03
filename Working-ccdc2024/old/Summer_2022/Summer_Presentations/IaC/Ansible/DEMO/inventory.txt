@@ -1,0 +1,11 @@
+ServerOne ansible_host=100.25.47.14 ansible_user=ubuntu ansible_ssh_private_key_file=~/ccdc_demo_IaC.pem web_background_color=blue
+
+[GROUP_ZERO]
+54.89.194.182 ansible_user=ubuntu ansible_ssh_private_key_file=~/ccdc_demo_IaC.pem web_background_color=green
+
+[GROUP_ONE]
+ServerOne
+
+[GROUP_WEB_SERVER:children]
+GROUP_ZERO
+GROUP_ONE

@@ -1,0 +1,94 @@
+# This file was used in another pipeline. It's to showcase some of the commmon commands 
+# that are used in Jenkinsfiles.
+pipeline{
+    agent none
+    stages {
+        stage('Test Docker Build Image - Stage 2'){
+            agent {
+                label 'agent3'
+            }
+
+            steps {
+                sh '''
+                    docker build -t test Webserver/
+                    docker images | grep test
+                '''
+            }
+        }
+
+        stage('Testing - Confirm stable - Stage 3'){
+            agent{
+                label 'agent3'
+            }
+
+            steps {
+                sh '''
+                    docker network create testNetwork
+                    docker run -d --name db --hostname db --network testNetwork -e POSTGRES_PASSWORD=postgres postgres 
+                    docker run -d -p 9000:8000 --env-file=environment-variables --network testNetwork --name web --hostname web test 
+                '''
+                retry(3){
+                    
+                    sh '''
+                        wget http://localhost:9000
+                    '''
+                }
+            }
+            post {
+                success {
+                    sh '''
+                        rm index.html
+                        docker stop web
+                        docker stop db
+                        docker rm web
+                        docker rm db
+                        docker network rm testNetwork
+                    '''
+                }
+            }
+        }
+
+        stage('Testing - Upload to registry - Stage 4'){
+            agent {
+                label 'agent3'
+            }
+
+            steps {
+                sh '''
+                    docker tag test:latest 192.168.0.115:5000/test:latest
+                    docker push 192.168.0.115:5000/test:latest
+                    docker rmi test:latest
+                    docker rmi 192.168.0.115:5000/test:latest
+                    docker images
+                    docker pull 192.168.0.115:5000/test:latest
+                    docker images | grep test
+                    
+                    docker system prune -f -a 
+                    docker volume prune -f
+                '''
+            }
+        }
+
+        stage('Testing - Deploy on hosts - Stage 5'){
+            agent {
+                label 'agent3'
+            }
+
+            steps {
+                sh '''
+                    cd Ansible
+                    ansible-playbook -u jenkins -i inventory.yaml ws-deployment-playbook.yml
+                    docker ps -a
+                    echo $NODE_NAME
+                '''
+                retry(3){
+                    
+                    sh '''
+                        wget http://localhost:9000
+                    '''
+                }
+            }
+        }
+
+    }
+}

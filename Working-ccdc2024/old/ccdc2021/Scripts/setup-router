@@ -1,0 +1,107 @@
+#!/bin/sh -x
+
+PROGRAM=setup-router
+VERSION=1.23
+
+PREFIX=
+. $PREFIX/lib/libalpine.sh
+
+
+usage() {
+	cat <<-__EOF__
+		usage: setup-router [-ntwqlk] -t team
+
+		Setup Team Router
+
+		options:
+		 -n  Enter the hostname (opt)
+		 -t  Enter Team Number
+		 -w  Enter Wan IP Range
+		 -q  Wan IP Subnet (opt)
+		 -l  Enter Lan IP (opt)
+		 -k  Kan IP Subnet (opt)
+	__EOF__
+	exit 1
+}
+
+notimplemented(){
+	echo "Sorry thats not implemented"
+	exit 1
+}
+
+setupfirweall(){
+	iptables -t nat -A PREROUTING -d $1 -j NETMAP --to $2
+	iptables -t nat -A POSTROUTING -s $2 -j NETMAP --to $1
+	if [ $? -eq 0 ]; then
+		/etc/init.d/iptables save
+		iptables-restore /etc/iptables/rules-save
+		echo "[Y] Rules saved and restored."
+	else
+		echo "[N] Rules not saved and restored. There was an error."
+	fi
+}
+
+setupteam(){
+	runset=0
+	paddedteam=0
+	if [ $1 -ge 1 -a $1 -le 99 ]; then
+		paddedteam=$(printf "%02d" $1)
+		runset=1
+	fi
+# HERE DOC EXEC
+if [ $runset -eq 1 ]; then
+cat <<-__EOF__ > /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet static
+	hostname pigfoot
+	address 10.47.1%TEAM%.2
+	netmask 255.255.255.252
+	network 10.47.1%TEAM%.0
+	gateway 10.47.1%TEAM%.1
+	up ip addr add 10.57.1%TEAM%.1/24 dev eth0
+
+auto eth1
+iface eth1 inet static
+	address 192.168.220.1
+	netmask 255.255.255.0
+__EOF__
+sed -i "s/%TEAM%/$paddedteam/g" /etc/network/interfaces
+fi
+# END HEREDOC
+
+}
+
+setuphostname(){
+	/sbin/setup-hostname $1
+}
+
+if [ $# -eq 0 ]; then
+        echo "No arguments provided"
+        usage
+        exit 1
+fi
+
+while getopts ":n:t:w:qlkh" opt ; do
+	case $opt in
+		n) SETHOSTNAME="$OPTARG";;
+		t) SETTEAMNUMBER="$OPTARG";;
+		w) notimplemented;;
+		q) notimplemented;;
+		l) notimplemented;;
+		k) notimplemented;;
+		*) usage;;
+	esac
+done
+shift $(expr $OPTIND - 1)
+
+if [ "$SETHOSTNAME" != "" ]; then
+	setuphostname "$SETHOSTNAME"
+fi
+
+if [ "$SETTEAMNUMBER" != "" ]; then
+	setupteam "$SETTEAMNUMBER"
+fi

@@ -1,0 +1,1 @@
+{"ssl": "letsencrypt", "domain": "demo.local", "reqdata": {"country": "PA", "state": "Panama", "locality": "Panama", "organization": "TryDirect", "organizationalunit": "IT", "email": "info@try.direct", "commonname": "try.direct"}, "subdomains": {"wazuh": "demo.local"}}

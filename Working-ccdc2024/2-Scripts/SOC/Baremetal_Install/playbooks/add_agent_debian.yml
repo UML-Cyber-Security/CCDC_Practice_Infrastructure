@@ -1,0 +1,15 @@
+---
+
+- hosts: Debian_Agents
+  become: true
+  
+  tasks:
+
+    - name: Adding machine as wazuh-agent. Starting and enabling the service
+      ansible.builtin.script: add_agent_debian.sh  
+      tags: add_agent
+      register: value
+
+    - name: Output of adding wazuh as an agent
+      debug:
+        var: value
