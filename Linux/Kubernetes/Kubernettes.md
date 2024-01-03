@@ -1409,7 +1409,7 @@ Below will not change yaml file.
 
 
 
-## Useful stuff to remember
+## Tutorials | Useful stuff to remember
 
 ### Secrets -> data method -> Base 64 
 
@@ -1466,7 +1466,7 @@ Access it and paste the token from earlier step.
     http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/.
 
 
-### Deploying K8 cluster across 1 control and 2 worker nodes 
+### Deploying Bare metal K8 cluster across 1 control and 2 worker nodes 
 
 Also, note this great [video](https://www.youtube.com/watch?v=iwlNCePWiw4)
 
@@ -1725,12 +1725,12 @@ Check all the pods that are `Calico pods` are running with this. (Just keep it o
 
     watch kubectl get pods -n calico-system
 
-Remove the taints on control plane so you can schedule pods on it?? (Optional possibly?)
+(Optional) Remove the taints on control plane so you can schedule pods on it.
 
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-
     kubectl taint nodes --all node-role.kubernetes.io/master-
 
-You will see errors, all you should look for is,
+(Optional) You will see errors, all you should look for is,
 
     node/<your-hostname> untainted
 
@@ -1738,12 +1738,9 @@ Now, check the nodes in your cluster, all should be good ..
 
     kubectl get nodes -o wide
 
+### Installing metallb (Loadbalancer)
 
-### Installing Argo CD
-
-Pretty straightforwad, go [here]()
-
-### Installing metallb
+FYI - This is a solution for implementing a loadbalancer on a bare-metal kubernetes cluster (Aka, a cluster deployed manually on VMS or actual machines.) This is not meant to be a solution for cloud providers as they provide their own load balancers normally.
 
 Enable strictARP here
 
@@ -1847,14 +1844,53 @@ And test it.Get the EXTERNAL-IP of the service and then curl it.
     kubectl get svc web-app
     curl <EXTERNAL-IP> 
 
+### Installing nginx ingress controller
+
 Now, instead of using an IP, lets set up an ingress controller so we can use domain names.
 
 I will be using helm to install this, if you havent installed helm go [here](https://helm.sh/docs/intro/install/)
 
-The ingress controller i am using is [nginx ingress controller](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-manifests/)
+The ingress controller i am using is [nginx ingress controller](https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-helm/)
+
+There are two sources to install this, kubernetes community and nginx offical site. I prefer the community and have found the most success with it.
+
+
+#### From Kubernetes [Community Docs](https://kubernetes.github.io/ingress-nginx/deploy/) (Preffered)
+
+##### Option A - Helm
+
+This is an all in one install / update solution that will place it all in ingress-nginx namespace
+
+    helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
+
+You can check the setable values 
+
+    helm show values ingress-nginx --repo https://kubernetes.github.io/ingress-nginx
+
+##### Option B - Manual
+
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+
+
+#### From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/)
+
+
+##### Option A - Helm Via OCI Registry
+
+The service will be deployed as my-release-nginx-ingress-controller, change my-release in the following command if you want to name it.
+
+    helm install my-release oci://ghcr.io/nginxinc/charts/nginx-ingress --version 1.1.0
+
+To uninstall (Replace my-release with whatever name you used.)
+
+    helm uninstall my-release 
+
+
+##### Option B - Helm Manually
+
 Pull the chart
 
-    helm pull oci://ghcr.io/nginxinc/charts/nginx-ingress --untar --version 1.0.2
+    helm pull oci://ghcr.io/nginxinc/charts/nginx-ingress --untar --version 1.1.0
 
 Cd into folder
 
@@ -1862,19 +1898,21 @@ Cd into folder
 
 Create nginx-ingress namespace
 
-    kubectl create -n nginx-ingress
+    kubectl create namespace nginx-ingress
 
-Deploy the required resources into new namespace
+Deploy the required resources into new namespace (?)
 
     kubectl -n nginx-ingress apply -f crds
 
 Finally run helm install command
 
-    helm install nginx-ingress .
+    helm install --namespace=nginx-ingress nginx-ingress .
 
 Verifiy its running
 
     kubectl get pods -n nginx-ingress
+
+#### Testing basic ingress
 
 Now, lets alter our deployment to use this new ingress tool
 
@@ -1918,4 +1956,116 @@ The IP you add above is from the following command and under EXTERNAL-IP, Look f
 Finally,
 
     curl web-app.home-k8s.lab
+
+#### Assigning DNS name to the ingress
+
+Go to wherever your CA is (Mine is cloudflare) and do the following.
+
+- For more detail, you want to create an A record with your domain name (www.example.com) and have it point to the external IP.
+- Then you can create a CNAME wild card (name would be *) and have it point to your domain name which will point any subdomains to www.example.com.
+
+To test it, you can do the following which is sourced from part 4 [here](https://cert-manager.io/docs/tutorials/acme/nginx-ingress/)
+
+Test Deployment
+
+    kubectl apply -f https://raw.githubusercontent.com/cert-manager/website/master/content/docs/tutorials/acme/example/deployment.yaml
+
+Test Service
+
+    kubectl apply -f https://raw.githubusercontent.com/cert-manager/website/master/content/docs/tutorials/acme/example/service.yaml
+
+Test Ingress, change the hosts values to your DNS name you redirected to earlier (www.example.com)
+
+    kubectl create --edit -f https://raw.githubusercontent.com/cert-manager/website/master/content/docs/tutorials/acme/example/ingress.yaml
+
+You should then be able to browse to this on the web, however it will give an insecure warning since we havent implemented secure certificates.
+
+### Deploying cert-manager
+
+FYI, if you have already deployed metalLB (Or some other LoadBalancer) then cert-manager will automatically be assigned an external IP. Otherwise, you either need to assign a pool or deploy a Loadbalancer. This is out of scope currently.
+
+Prior steps to doing this
+
+- Deploying LoadBalancer 
+- Assigning DNS name to the external IP (For example, via cloudflare I pointed my personal domain to the IP exposed for the nginx ingress.)
+  - For more detail, you want to create an A record with your domain name (www.example.com) and have it point to the external IP.
+  - Then you can create a CNAME wild card (name would be *) and have it point to your domain name which will point any subdomains to www.example.com.
+- Deploying nginx ingress manager (Highly recommended to use kubernetes community guide, not offical )
+
+### Installing CSI driver for NFS Storage
+
+- First ensure [helm](https://helm.sh/docs/intro/install/) is installed
+- Incase stuff changes, this is the [reference](https://github.com/kubernetes-csi/csi-driver-nfs/tree/master/charts) for the driver we are installing.
+
+First add the repo
+
+    helm repo add csi-driver-nfs https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+
+Then install the driver, PLEASE NOTE THE VERSION AT THE END, THIS COULD BE OUTDATED NOW
+
+    helm install csi-driver-nfs csi-driver-nfs/csi-driver-nfs --namespace kube-system --version v4.5.0
+
+Create a storage class resource to define our nfs storage and use this driver, can be in a file like storageclass-nfs.yml
+Also, under paremeters this is the server ip of your NFS share and the directory path of it as well.
+
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: csi-nfs-1
+    provisioner: nfs.csi.k8s.io
+    parameters:
+      server: 10.35.40.210
+      share: /mnt/DataStore01/k8s/NFSfullaccess
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    mountOptions:
+      - hard
+      - nfsvers=4.1
+
+Now, you would want to create a PVC to claim storage from this class.
+
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: pihole-etc-claim # MATCH BELOW claimName TO here
+      namespace: dev
+    spec:
+      accessModes:
+        - ReadWriteMany
+      storageClassName: csi-nfs-1 # Very important this matches the storage class above!!
+      resources:
+        requests:
+          storage: 1Gi
+
+Then, if you wanted to use this in a deployment.
+
+      volumeMounts:
+      - name: etc
+        mountPath: "/etc/pihole" # This is the path on the pod you are deploying.
+    volumes:
+      - name: etc
+        persistentVolumeClaim:
+          claimName: pihole-etc-claim # THIS IS WHAT NEEDS TO MATCH ABOVE
+
+Some important issues I ran into.
+
+- Most of the issues were on the actual NFS server.
+- For this to work, I had to SQUASH all access to root, nothing else.
+  - This is because the pods need to be able to chown files etc, and a non root squash cannot do it (IDK.)
+  - I had this on truenas SCALE, so I went to Shares->clickedonmyshare
+  - Advanced Options, Mapall User -> root , Mapall Group -> root
+- This implementation is EXTREMELY insecure currently, only would be viable with proper firewalling / in a homelab.
+  - However, this share is also not storing any sensitive data.
+
+### Deploying Vault Externally and Linking to Kubernetes (WIP)
+
+#### Installing Vault on Rocky Linux 9
+
+Always check the official [site](https://developer.hashicorp.com/vault) for updates
+
+    sudo yum install -y yum-utils
+    sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    sudo yum -y install vault
+
+
 

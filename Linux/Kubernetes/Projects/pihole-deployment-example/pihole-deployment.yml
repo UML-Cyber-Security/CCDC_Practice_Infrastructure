@@ -50,6 +50,7 @@ metadata:
   name: pihole-service
   labels:
     app: pihole
+  namespace: homelab
 spec:
   selector:
     app: pihole
