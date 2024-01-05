@@ -1978,7 +1978,7 @@ Test Ingress, change the hosts values to your DNS name you redirected to earlier
 
     kubectl create --edit -f https://raw.githubusercontent.com/cert-manager/website/master/content/docs/tutorials/acme/example/ingress.yaml
 
-You should then be able to browse to this on the web, however it will give an insecure warning since we havent implemented secure certificates.
+You should then be able to browse to this on the web, however it will give an insecure warning since we havent implemented secure certificates. We can use cert-manager for that.
 
 ### Deploying cert-manager
 
@@ -1991,6 +1991,134 @@ Prior steps to doing this
   - For more detail, you want to create an A record with your domain name (www.example.com) and have it point to the external IP.
   - Then you can create a CNAME wild card (name would be *) and have it point to your domain name which will point any subdomains to www.example.com.
 - Deploying nginx ingress manager (Highly recommended to use kubernetes community guide, not offical )
+
+Tutorial I am [following](https://cert-manager.io/docs/installation/helm/)
+
+Add helm repo
+
+    helm repo add jetstack https://charts.jetstack.io
+
+Update Helm
+
+    helm repo update
+
+Installing the required CRDS with kubectl
+
+    kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.crds.yaml
+
+Installing cert-manager via helm (Instead of above command you can alternatively add the flag --set installCRDs=true)
+
+    helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.3
+
+You can add other flags for the customization like, check the docs for more info.
+
+    --set prometheus.enabled=false \  # Example: disabling prometheus using a Helm parameter
+    --set webhook.timeoutSeconds=4   # Example: changing the webhook timeout using a Helm parameter
+
+Now we must deploy an Issuer. By default, issuers are per single namespace, but you can do a cluster-wide one with ClusterIssuer.
+
+This is the point that things can be very, very different.
+
+##### Cloudflare
+
+Get your api token and create the following secret
+
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: cloudflare-api-token-secret
+    type: Opaque
+    stringData:
+      api-token: <API Token>
+
+Then deploy a local issuer 
+
+    apiVersion: cert-manager.io/v1
+    kind: Issuer
+    metadata:
+      name: example-issuer
+    spec:
+      acme:
+          # The ACME server URL
+        server: https://acme-v02.api.letsencrypt.org/directory
+          # Email address used for ACME registration
+        email: <your@email>
+          # Name of a secret used to store the ACME account private key (Auto-created, name what you want, must match ingress issuer)
+        privateKeySecretRef:
+          name: letsencrypt-staging
+        # Enable the DNS-01 challenge provider
+        solvers:
+        - dns01:
+            cloudflare:
+              apiTokenSecretRef:
+                name: cloudflare-api-token-secret
+                key: api-token
+
+#### Testing
+
+Here is an example service
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: kuard
+    spec:
+      selector:
+        matchLabels:
+          app: kuard
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: kuard
+        spec:
+          containers:
+          - image: gcr.io/kuar-demo/kuard-amd64:1
+            imagePullPolicy: Always
+            name: kuard
+            ports:
+            - containerPort: 8080
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: kuard
+    spec:
+      ports:
+      - port: 80
+        targetPort: 8080
+        protocol: TCP
+      selector:
+        app: kuard
+
+An example ingress (Change host: to whatever your domain is)
+
+    apiVersion: networking.k8s.io/v1 
+    kind: Ingress
+    metadata:
+      name: kuard
+      annotations:
+        cert-manager.io/issuer: "letsencrypt-staging"
+
+    spec:
+      ingressClassName: nginx
+      tls:
+      - hosts:
+        - example.example.com
+        secretName: quickstart-example-tls
+      rules:
+      - host: example.example.com
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kuard
+                port:
+                  number: 80
+
+
 
 ### Installing CSI driver for NFS Storage
 
@@ -2067,5 +2195,4 @@ Always check the official [site](https://developer.hashicorp.com/vault) for upda
     sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
     sudo yum -y install vault
 
-
-
+### Deploying Vault Internally
