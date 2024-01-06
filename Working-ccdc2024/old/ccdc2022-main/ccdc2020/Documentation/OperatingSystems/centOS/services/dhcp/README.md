@@ -1,0 +1,3 @@
+- Configuring a DHCP (Dynamic Host Configuration Protocol) server [documentation](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-dhcp-configuring-server)
+  - Motivation: For automatic configuration of client network interfacesy
+  - Steps: See documentation

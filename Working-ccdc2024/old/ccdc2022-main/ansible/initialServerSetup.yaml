@@ -1,0 +1,110 @@
+
+---
+- name: setup users
+  hosts: servers
+  become: true
+  vars_files:
+  - var.yaml
+
+  tasks:
+  - name: Change UMASK
+    lineinfile: 
+      dest: "/etc/login.defs" 
+      regexp: '^(#\s*)?UMASK'
+      line: 'UMASK 007'
+    tags:
+    - umask
+
+  - name: Update apt packages
+    become: true
+    apt:
+      update_cache: yes
+      upgrade: 'no'
+    tags:
+    - apt
+
+  - name: Install {{ apt }}
+    apt:
+      name: "{{ apt }}"
+    tags:
+    - apt
+
+
+  - name: Ensure group "{{ CCDC_Group }}" exists
+    ansible.builtin.group:
+      name: "{{ CCDC_Group }}"
+      state: present
+    tags:
+    - group
+
+  - name: "Create user accounts"
+    user:
+      name: "{{ item }}"
+      shell: "/bin/bash"
+      group: "{{ CCDC_Group }}"
+      groups:
+      - "{{ CCDC_Group }}"
+      #create_home: "False"   #Need a place to store ssh files
+    with_items: "{{ users }}"
+    tags:
+    - users
+
+  - name: "Add authorized keys"
+    authorized_key:
+      user: "{{ item }}"
+      key: "{{ lookup('file', 'pub_keys/'+ item + '.id_rsa.pub') }}"
+    with_items: "{{ users }}"
+    tags:
+    - users
+    - ssh
+
+  - name: "Allow admin users to sudo without a password"
+    lineinfile:
+      dest: "/etc/sudoers"
+      state: "present"
+      regexp: "^%{{ CCDC_Group }}"
+      line: "%{{ CCDC_Group }} ALL=(ALL) NOPASSWD: ALL"
+    tags:
+    - group
+  
+  - name: Enable key ssh login
+    lineinfile: 
+      dest: "{{ sshd_config }}" 
+      regexp: '^#?PubkeyAuthentication' 
+      line: 'PubkeyAuthentication yes'
+    notify: restart sshd
+    tags:
+    - ssh
+
+  - name: Disable empty password login
+    lineinfile: 
+      dest: "{{ sshd_config }}" 
+      regexp: '^#?PermitEmptyPasswords' 
+      line: 'PermitEmptyPasswords no'
+    notify: restart sshd
+    tags:
+    - ssh
+
+  - name: Disable remote root login
+    lineinfile: 
+      dest: "{{ sshd_config }}" 
+      regexp: '^#?PermitRootLogin' 
+      line: 'PermitRootLogin no'
+    notify: restart sshd
+    tags:
+    - ssh
+
+  - name: Disable password login
+    lineinfile: 
+      dest: "{{ sshd_config }}" 
+      regexp: '^(#\s*)?PasswordAuthentication'
+      line: 'PasswordAuthentication no'
+    notify: restart sshd
+    tags:
+    - ssh
+
+  handlers:
+  - name: restart sshd
+    service:
+      name=sshd
+      state=restarted

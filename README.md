@@ -14,7 +14,6 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
 - [Table of Contents (TOPICS)](#table-of-contents-topics)
 - [Taiga](#taiga)
 - [PFSense Access](#pfsense-access)
-  - [System Info](#system-info)
   - [Steps to Access](#steps-to-access)
 
 ## Table of Contents (TOPICS) 
@@ -32,17 +31,17 @@ A style guide for this repository is provided in the [Markdown_Style](./Markdown
 ## Taiga 
 Please refer to the Taiga Documentation for each of the concepts if needed.
 * Access
-  * [Self_Hosted](./Taiga/Access_Self_Hosted.md)
-  * [Cloud](./Taiga/Access_Cloud.md)
-* [Navigation](./Taiga/Navigation.md)
-* [Project](./Taiga/Project.md)
-* [Epic](./Taiga/Epics.md)
-* [Story](./Taiga/Stories.md)
-* [Task](./Taiga/Tasks.md)
-* [Issues](./Taiga/Issues.md)
-* [Wiki](./Taiga/Wiki.md)
-* [Kanban](./Taiga/Kanban.md)
-* [Sprint](./Taiga/Taiga_Sprints.md)
+  * [Self_Hosted](./Task-Managment-Workflow/Taiga/Access_Self_Hosted.md)
+  * [Cloud](./Task-Managment-Workflow/Taiga/Access_Cloud.md)
+* [Navigation](./Task-Managment-Workflow/Taiga/Navigation.md)
+* [Project](./Task-Managment-Workflow/Taiga/Project.md)
+* [Epic](./Task-Managment-Workflow/Taiga/Epics.md)
+* [Story](./Task-Managment-Workflow/Taiga/Stories.md)
+* [Task](./Task-Managment-Workflow/Taiga/Tasks.md)
+* [Issues](./Task-Managment-Workflow/Taiga/Issues.md)
+* [Wiki](./Task-Managment-Workflow/Taiga/Wiki.md)
+* [Kanban](./Task-Managment-Workflow/Taiga/Kanban.md)
+* [Sprint](./Task-Managment-Workflow/Taiga/Taiga_Sprints.md)
 
 <!--If you are looking at this in the far future (or even the near future), then it's likely the Taiga will not exist. Hopefully, we are able to preserve the Wiki entries somewhere here!
 
@@ -127,7 +126,10 @@ Otherwise the following are instructions on how we can access Taiga.
     <img src="Images/Taiga-Issue-Internal.png" width=800>
 -->
 ## PFSense Access 
-### System Info
+You can access the proxmox server when connected to the VPN at [https://192.168.7.201:8006]
+
+
+<!-- ### System Info
 Proxmox Infrastructure Reference
 | PC Number | Hostname | IP |
 | --------- | -------- | -- |
@@ -135,9 +137,9 @@ Proxmox Infrastructure Reference
 | WAN-36    | Proxmox4 | [192.168.0.87](https://192.168.0.87:8006/#v1:0:18:4:5:=contentIso:::::5) |
 | WAN-37    | Proxmox3 | [192.168.0.118](https://192.168.0.118:8006/#v1:0:18:4:5:=contentIso:::::5) |
 | WAN-38    | Proxmox2 | [192.168.0.159](https://192.168.0.159:8006/#v1:0:18:4:5:=contentIso:::::5) |
-| WAN-40    | Proxmox1 | [192.168.0.223](https://192.168.0.223:8006/#v1:0:18:4:5:=contentIso:::::5) |
+| WAN-40    | Proxmox1 | [192.168.0.223](https://192.168.0.223:8006/#v1:0:18:4:5:=contentIso:::::5) | -->
 
-(Currently has the Cluster has been started with the above information)
+<!-- (Currently has the Cluster has been started with the above information) -->
 
 Please refer to the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-team/wiki/practice-infrastructure) for the login information. Although you can likely guess this information.
 
@@ -147,5 +149,5 @@ Please refer to the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-t
     * The Proxmox web interface is hosted on the port **8006**
     * **Note**: The IP's in the table above provide hyperlinks
 3. Login using the information on the [Taiga Wiki](https://taiga.cyber.uml.edu/project/ccdc-2024-team/wiki/practice-infrastructure)
-    * This is the usename and password
+    * This is the username and password
 4. Now you have access, it is quite simple I would think

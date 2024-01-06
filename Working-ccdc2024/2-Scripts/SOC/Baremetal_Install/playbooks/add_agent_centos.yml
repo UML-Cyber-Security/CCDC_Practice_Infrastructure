@@ -1,0 +1,14 @@
+---
+
+- hosts: CentOS_Agents
+  become: true
+  tasks:
+
+    - name: Adding machine as wazuh-agent. Starting and enabling the service
+      ansible.builtin.script: add_agent_centos.sh  
+      tags: add_agent
+      register: value
+
+    - name: Output of adding wazuh as an agent
+      debug:
+        var: value

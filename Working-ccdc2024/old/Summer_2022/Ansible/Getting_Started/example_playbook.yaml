@@ -1,0 +1,11 @@
+- name: Example Setup Ansible Playbook
+  hosts: ccdc_uml_infra
+  tasks:
+    - name: Ping hosts
+      ansible.builtin.ping:
+    - name: Print message
+      ansible.builtin.debug:
+        msg: Hello world
+
+    - name: Copy and Execute a script 
+      script: test_script.sh

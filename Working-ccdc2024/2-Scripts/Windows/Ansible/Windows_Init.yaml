@@ -1,0 +1,5 @@
+- name: Windows Init
+  hosts: ccdc_windows
+  tasks:
+    - name: Copy and execute script 
+      script: script.ps1

@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  attacker:
+    build: ./Attacker
+    networks:
+      - p1-publicNetwork
+      
+  ftpserver:
+    build: ./FTPServer   
+    networks:
+      - p1-publicNetwork
+      - p1-privateNetwork
+
+  developer:
+    build: ./Developer    
+    networks:
+      - p1-privateNetwork
+      
+
+networks:
+  p1-publicNetwork:
+  p1-privateNetwork:
