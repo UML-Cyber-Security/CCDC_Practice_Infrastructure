@@ -1,108 +1,8 @@
-<!-- vscode-markdown-toc -->
-* 1. [Terminology](#Terminology)
-	* 1.1. [Main Architecture](#MainArchitecture)
-		* 1.1.1. [Control Plane (Master)](#ControlPlaneMaster)
-		* 1.1.2. [Pod](#Pod)
-		* 1.1.3. [Node](#Node)
-		* 1.1.4. [Replica Set](#ReplicaSet)
-		* 1.1.5. [Deployment](#Deployment)
-		* 1.1.6. [Services](#Services)
-		* 1.1.7. [Labels, Selectors and Annotations](#LabelsSelectorsandAnnotations)
-		* 1.1.8. [Taints and Tolerations](#TaintsandTolerations)
-		* 1.1.9. [Namespaces](#Namespaces)
-		* 1.1.10. [ResourceQuota](#ResourceQuota)
-		* 1.1.11. [Node Selectors and Affinity](#NodeSelectorsandAffinity)
-		* 1.1.12. [Affinity Vs Taint](#AffinityVsTaint)
-		* 1.1.13. [Container Runtime Engine](#ContainerRuntimeEngine)
-		* 1.1.14. [Visual Example of Architecture](#VisualExampleofArchitecture)
-	* 1.2. [Additonal Concepts](#AdditonalConcepts)
-		* 1.2.1. [Imperative vs Declarative](#ImperativevsDeclarative)
-		* 1.2.2. [Networking](#Networking)
-		* 1.2.3. [Volumes (vol)](#Volumesvol)
-		* 1.2.4. [Replication](#Replication)
-* 2. [Configuration Files](#ConfigurationFiles)
-	* 2.1. [YAML](#YAML)
-		* 2.1.1. [YAML Examples with Breakdowns](#YAMLExampleswithBreakdowns)
-		* 2.1.2. [Pod Example](#PodExample)
-		* 2.1.3. [ReplicationController Example](#ReplicationControllerExample)
-		* 2.1.4. [ReplicaSet Example](#ReplicaSetExample)
-		* 2.1.5. [Deployment Example](#DeploymentExample)
-		* 2.1.6. [Service -> NodePort Example](#Service-NodePortExample)
-		* 2.1.7. [Service -> ClusterIP Example](#Service-ClusterIPExample)
-		* 2.1.8. [Labels & Selectors & Annotations Example](#LabelsSelectorsAnnotationsExample)
-		* 2.1.9. [Taint & Tolerations example](#TaintTolerationsexample)
-		* 2.1.10. [Namespace](#Namespace)
-		* 2.1.11. [ResourceQuota](#ResourceQuota-1)
-	* 2.2. [Update configuration / Rollout Control](#UpdateconfigurationRolloutControl)
-		* 2.2.1. [spec.revisionHistoryLimit](#spec.revisionHistoryLimit)
-		* 2.2.2. [spec.progressDeadlineSeconds](#spec.progressDeadlineSeconds)
-		* 2.2.3. [spec.minReadySeconds](#spec.minReadySeconds)
-		* 2.2.4. [spec.strategy](#spec.strategy)
-* 3. [Minikube Cluster](#MinikubeCluster)
-	* 3.1. [Install / Setup on Linux](#InstallSetuponLinux)
-* 4. [crictl](#crictl)
-	* 4.1. [Pull image](#Pullimage)
-	* 4.2. [List images](#Listimages)
-	* 4.3. [List containers](#Listcontainers)
-	* 4.4. [Run command in container](#Runcommandincontainer)
-	* 4.5. [View Logs](#ViewLogs)
-	* 4.6. [View Pods](#ViewPods)
-* 5. [Kubectl (cml)](#Kubectlcml)
-	* 5.1. [Information Objects](#InformationObjects)
-		* 5.1.1. [View all resource types created in cluster](#Viewallresourcetypescreatedincluster)
-		* 5.1.2. [Get detailed information on a resource type](#Getdetailedinformationonaresourcetype)
-		* 5.1.3. [Get the Internal/External IP of a resource type](#GettheInternalExternalIPofaresourcetype)
-		* 5.1.4. [Get detailed information on resource type](#Getdetailedinformationonresourcetype)
-		* 5.1.5. [Check logs](#Checklogs)
-		* 5.1.6. [Viewing information based on namespace](#Viewinginformationbasedonnamespace)
-		* 5.1.7. [Viewing information from all namespaces](#Viewinginformationfromallnamespaces)
-		* 5.1.8. [Viewing information via selectors](#Viewinginformationviaselectors)
-	* 5.2. [Create Objects](#CreateObjects)
-		* 5.2.1. [Deploy yaml file](#Deployyamlfile)
-		* 5.2.2. [Create a pod with specific name and image](#Createapodwithspecificnameandimage)
-		* 5.2.3. [Create a pod with port 444 open](#Createapodwithport444open)
-		* 5.2.4. [Create a pod without making it and instead outputting to yaml.](#Createapodwithoutmakingitandinsteadoutputtingtoyaml.)
-		* 5.2.5. [Create namespace](#Createnamespace)
-	* 5.3. [Update Objects](#UpdateObjects)
-		* 5.3.1. [Edit a yaml file](#Editayamlfile)
-		* 5.3.2. [Re-Deploy changed yaml file](#Re-Deploychangedyamlfile)
-		* 5.3.3. [Restart Pods](#RestartPods)
-		* 5.3.4. [Delete Pods](#DeletePods)
-		* 5.3.5. [Restart Deployments (restarts anything in the deployment yaml file (pods, services))](#RestartDeploymentsrestartsanythinginthedeploymentyamlfilepodsservices)
-		* 5.3.6. [Execute commands in pod](#Executecommandsinpod)
-		* 5.3.7. [Scaling](#Scaling)
-		* 5.3.8. [Switch to namespace](#Switchtonamespace)
-		* 5.3.9. [Apply Taint](#ApplyTaint)
-		* 5.3.10. [Label Nodes](#LabelNodes)
-	* 5.4. [Resource types / Applys to all info](#ResourcetypesApplystoallinfo)
-* 6. [Tutorials | Useful stuff to remember](#TutorialsUsefulstufftoremember)
-	* 6.1. [Secrets -> data method -> Base 64](#Secrets-datamethod-Base64)
-	* 6.2. [Deploying the Dashboard (Insecure.)](#DeployingtheDashboardInsecure.)
-	* 6.3. [Deploying Bare metal K8 cluster across 1 control and 2 worker nodes](#DeployingBaremetalK8clusteracross1controland2workernodes)
-	* 6.4. [Installing metallb (Loadbalancer)](#InstallingmetallbLoadbalancer)
-	* 6.5. [Installing nginx ingress controller](#Installingnginxingresscontroller)
-		* 6.5.1. [From Kubernetes [Community Docs](https://kubernetes.github.io/ingress-nginx/deploy/) (Preffered)](#FromKubernetesCommunityDocshttps:kubernetes.github.ioingress-nginxdeployPreffered)
-		* 6.5.2. [From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/)](#FromNginxOfficialSitehttps:docs.nginx.comnginx-ingress-controller)
-		* 6.5.3. [Testing basic ingress](#Testingbasicingress)
-		* 6.5.4. [Assigning DNS name to the ingress](#AssigningDNSnametotheingress)
-	* 6.6. [Deploying cert-manager](#Deployingcert-manager)
-		* 6.6.1. [Testing](#Testing)
-	* 6.7. [Installing CSI driver for NFS Storage](#InstallingCSIdriverforNFSStorage)
-	* 6.8. [Deploying Vault Externally and Linking to Kubernetes (WIP)](#DeployingVaultExternallyandLinkingtoKubernetesWIP)
-		* 6.8.1. [Installing Vault on Rocky Linux 9](#InstallingVaultonRockyLinux9)
-	* 6.9. [Deploying Vault Internally](#DeployingVaultInternally)
-
-<!-- vscode-markdown-toc-config
-	numbering=true
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
-
 Disclaimer -> Majority of screenshots sourced from [here](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/)
 
-##  1. <a name='Terminology'></a>Terminology
+## Terminology
 
-###  1.1. <a name='MainArchitecture'></a>Main Architecture
+### Main Architecture
 
 ```mermaid
   classDiagram
@@ -129,7 +29,7 @@ Disclaimer -> Majority of screenshots sourced from [here](https://www.udemy.com/
   }
 ```
 
-####  1.1.1. <a name='ControlPlaneMaster'></a>Control Plane (Master) 
+#### Control Plane
 
 The master node requires significantly less resources than a worker node, however it is 
 an extreme single point of failure. You should have more than 1 Master running in a cluster.
@@ -204,9 +104,9 @@ This is running on a physical or virtual machine. It includes the following func
 
 As a general overview of the above functionality, see the below diagrams.
 
----
 
-####  1.1.2. <a name='Pod'></a>Pod 
+
+#### Pod
 
 ![podExample](./Resources/screenshots/podexample.png)
 
@@ -233,7 +133,7 @@ As a general overview of the above functionality, see the below diagrams.
 
 ---
 
-####  1.1.3. <a name='Node'></a>Node 
+#### Node
 
 ![nodeExample](./Resources/screenshots/nodeexample.png)
 
@@ -256,7 +156,7 @@ Three major components
 
 ---
 
-####  1.1.4. <a name='ReplicaSet'></a>Replica Set 
+#### Replica Set
 
 ![replicasetExample](./Resources/screenshots/replicasetexample.png)
 
@@ -269,7 +169,7 @@ Three major components
 
 ---
 
-####  1.1.5. <a name='Deployment'></a>Deployment
+#### Deployment
 
 ![deploymentExample](./Resources/screenshots/deploymentexample.png)
 
@@ -283,9 +183,9 @@ Three major components
 
 ---
 
-####  1.1.6. <a name='Services'></a>Services
+#### Services
 
-##### NodePort 
+##### NodePort
 
 ![nodeportexample](./Resources/screenshots/nodeportexample.png)
 
@@ -331,7 +231,7 @@ If you did this on an unsupported platform, it would handle itself the same as a
 ---
 
 
-####  1.1.7. <a name='LabelsSelectorsandAnnotations'></a>Labels, Selectors and Annotations
+#### Labels, Selectors and Annotations
 
 - Labels are attached as a key:value pair.
   - These are used to add identifiers to an object.
@@ -346,7 +246,7 @@ If you did this on an unsupported platform, it would handle itself the same as a
 
 ---
 
-####  1.1.8. <a name='TaintsandTolerations'></a>Taints and Tolerations
+#### Taints and Tolerations
 
 - Taints are applied to nodes.
 - Pods cannot be placed on a node with a taint, unless they are tolerant to that taint.
@@ -361,7 +261,7 @@ If you did this on an unsupported platform, it would handle itself the same as a
 ---
 
 
-####  1.1.9. <a name='Namespaces'></a>Namespaces 
+#### Namespaces
 
 Great for isolation (resource isolation, not security isolation)
 
@@ -390,12 +290,12 @@ A `key takeaway` here, the namespace encapsulates pods across nodes. It is not r
 | Service Name    | Namespace    | Service    | Domain    |
 
   
-####  1.1.10. <a name='ResourceQuota'></a>ResourceQuota
+#### ResourceQuota
 
 These are used in conjunction with namespaces to actually specify how much resources you want to give each namespace. For example, you can limit the cpu, memory, pods, etc.
 
 
-####  1.1.11. <a name='NodeSelectorsandAffinity'></a>Node Selectors and Affinity
+#### Node Selectors and Affinity
 
 - Node selectors are simple and easy. 
   - They mirror regular selectors with key:value pairs.
@@ -415,7 +315,7 @@ These are used in conjunction with namespaces to actually specify how much resou
     - In newer versions, they are adding one to shutdown pods when updated. (required, required.)
 
 
-####  1.1.12. <a name='AffinityVsTaint'></a>Affinity Vs Taint 
+#### Affinity Vs Taint
 
 - If you want to guarantee a certain pod gets placed on a certain node -> `Affinity`
   - Pods without affinity can also get placed on the same `node`
@@ -423,7 +323,7 @@ These are used in conjunction with namespaces to actually specify how much resou
   - A pod you want on the tainted node could still be placed on an untainted node.
 - If you want to guarantee only certain pods get placed on certain nodes -> `Affinity and Taint`
 
-####  1.1.13. <a name='ContainerRuntimeEngine'></a>Container Runtime Engine 
+#### Container Runtime Engine
 
 - All the components in the master node can be deployed in containers.
 - All our applications are deployed in containers.
@@ -455,7 +355,7 @@ was a bridge of sorts for supporting docker. **Dockershim is no longer supported
   - comes with `ctr`, which provides limited set of features to interact with containers. Mainly used for debugging containerd.
   - `nerdctl` is a much better alternative for cml interactions with containerd. Basically 1to1 sub for docker commands.
 
-####  1.1.14. <a name='VisualExampleofArchitecture'></a>Visual Example of Architecture 
+#### Visual Example of Architecture
 
 This is an example of interaction with Architecture when creating a pod directly via a POST request.
 
@@ -480,9 +380,9 @@ This is an example of interaction with Architecture when creating a pod directly
 
         kube-apiserver -> kubelet -> container runtime engine -> kubelet -> kube-apiserver -> etcd
 
-###  1.2. <a name='AdditonalConcepts'></a>Additonal Concepts
+### Additonal Concepts
 
-####  1.2.1. <a name='ImperativevsDeclarative'></a>Imperative vs Declarative
+#### Imperative vs Declarative
 
 ##### Imperative
 
@@ -505,6 +405,7 @@ something like service-mongo-db. You then change the address, and need to change
 you would change it, Re-Build the image, push to the repo, and then pull into pod.
 
 `Solution` :
+
 ##### ConfigMap (cm)
 
 <mark style="color:purple">**NON CONFIDENTIAL DATA ONLY NO SECRETS**</mark>
@@ -525,7 +426,7 @@ DB_PASS=mongo-pass
 
 Stored in base64, <mark>NOT ENCRYPTED BY DEFAULT</mark>. Requires third party tools to handle actual encryption
 
-####  1.2.2. <a name='Networking'></a>Networking 
+#### Networking
 
 ##### Docker Networking
 
@@ -552,13 +453,13 @@ Stored in base64, <mark>NOT ENCRYPTED BY DEFAULT</mark>. Requires third party to
   - 2380 is used for when you have multiple control planes.
   - 2379 is for the majority of connections. (Where all control plane components connect to)
 
-####  1.2.3. <a name='Volumesvol'></a>Volumes (vol)
+#### Volumes (vol)
 
 Kubernetes itself does not provide data persistance. You are responsible for backing up the data.
 
 Physically attaches remote or local storage to a pod. Makes data persistent upon re-deployment of pods.
 
-####  1.2.4. <a name='Replication'></a>Replication
+#### Replication
 
 You will normally have `nodes` replicated, so that the services running on the `pods` within have some `HA`.
 
@@ -586,14 +487,39 @@ To fix this, we have,
 
 Substitute of deployments that is used for databases. 
 
-These are also a pain in the `***` . So it is better practice to host DB's outside of the cluster. However,
+These are also a pain. So it is better practice to host DB's outside of the cluster. However,
 if that is not possible then you can use this.
 
 
 
-##  2. <a name='ConfigurationFiles'></a>Configuration Files 
+#### Security
 
-###  2.1. <a name='YAML'></a>YAML
+##### Host Machine Security
+
+The first thing you need to do is secure the Host machine itself. At a bare minimum this means Password based authentication is disabled for SSH, SSH keybased authentication is enabled and used, and a simple hardening process has been conducted.
+
+##### API-Server Security
+
+Basic Authentication
+
+- Can create csv file with password,username,userid in the following format
+  - password123,user,u0100
+- You would then suppply this to the kube-apiserver.service file at the end of the ExecStart= block
+  - --basic-auth-file=user-details.csv
+- If you used kubeadm to deploy the server, you must also update that file with the following line. It should be located at /etc/kubernetes/manifests/kube-apiserver.yaml
+  - --basic-auth-file=user-details.csv
+- You could then check the authentication to the api server with the following command
+  - curl -v -k https://master-node-ip:6443/api/v1/pods -u "user1:password123"
+
+---
+
+
+
+
+
+## Configuration Files
+
+### YAML
 
 - Each YAML file consists of 3 parts.
   - Metadata 
@@ -601,7 +527,7 @@ if that is not possible then you can use this.
   - status (auto generated)
     - If desired != Actual, Kubernetes attempts to fix it. (This comes from the etcd)
 
-####  2.1.1. <a name='YAMLExampleswithBreakdowns'></a>YAML Examples with Breakdowns
+#### YAML Examples with Breakdowns
 
 ##### Node Affinity
 
@@ -861,7 +787,7 @@ is represented by `NodePort`.
 
 ---
 
-####  2.1.2. <a name='PodExample'></a>Pod Example 
+#### Pod Example
     
     apiVersion: v1 
     kind: Pod
@@ -881,7 +807,7 @@ This is the pods that would be deployed
     NAME             READY   STATUS    RESTARTS   AGE 
     nginx            1/1     Running   0          45m
 
-####  2.1.3. <a name='ReplicationControllerExample'></a>ReplicationController Example 
+#### ReplicationController Example
 
     apiVersion: v1
     kind: ReplicationController
@@ -912,7 +838,7 @@ This is the pods that would be deployed.
     myapp-rc-jb7b6   1/1     Running   0          11s
     myapp-rc-mqv2s   1/1     Running   0          11s
 
-####  2.1.4. <a name='ReplicaSetExample'></a>ReplicaSet Example
+#### ReplicaSet Example
 
     apiVersion: apps/v1
     kind: ReplicaSet
@@ -948,7 +874,7 @@ This is the pods that would be deployed.
     myapp-replicaset-qzp9k   1/1     Running   0          70s
     myapp-replicaset-xq6vg   1/1     Running   0          70s
 
-####  2.1.5. <a name='DeploymentExample'></a>Deployment Example
+#### Deployment Example
 
     apiVersion: apps/v1
     kind: Deployment
@@ -984,7 +910,7 @@ This is the pods that would be deployed.
     myapp-replicaset-qzp9k   1/1     Running   0          70s
     myapp-replicaset-xq6vg   1/1     Running   0          70s
 
-####  2.1.6. <a name='Service-NodePortExample'></a>Service -> NodePort Example
+#### Service -> NodePort Example
 
     apiVersion: v1 
     kind: Service
@@ -1015,7 +941,7 @@ For reference, the selector params are taken from these spots in a pod declarati
         image: nginx
 
 
-####  2.1.7. <a name='Service-ClusterIPExample'></a>Service -> ClusterIP Example
+#### Service -> ClusterIP Example
 
     apiVersion: v1
     kind: Service
@@ -1030,7 +956,7 @@ For reference, the selector params are taken from these spots in a pod declarati
         app: myapp 
         type: back-end
 
-####  2.1.8. <a name='LabelsSelectorsAnnotationsExample'></a>Labels & Selectors & Annotations Example
+#### Labels & Selectors & Annotations Example
 
     apiVersion: apps/v1
     kind: ReplicaSet
@@ -1054,7 +980,7 @@ For reference, the selector params are taken from these spots in a pod declarati
           - name: simple-webapp
             image: nginx 
 
-####  2.1.9. <a name='TaintTolerationsexample'></a>Taint & Tolerations example
+#### Taint & Tolerations example
 
     apiVersion: v1 
         kind: Pod
@@ -1078,14 +1004,14 @@ This is equivilent to
     kubectl taint nodes node1 app=blue:NoSchedule
 
 
-####  2.1.10. <a name='Namespace'></a>Namespace 
+#### Namespacee 
 
     apiVersion: v1 
     kind: Namespace 
     metadata:
       name: dev 
 
-####  2.1.11. <a name='ResourceQuota-1'></a>ResourceQuota 
+#### ResourceQuotaa 
  
     apiVersion: v1 
     kind: ResourceQuota
@@ -1100,27 +1026,27 @@ This is equivilent to
         limits.cpu: "10"
         limits.memory: 10Gi 
 
-###  2.2. <a name='UpdateconfigurationRolloutControl'></a>Update configuration / Rollout Control 
+### Update configuration / Rollout Control
 
 
-####  2.2.1. <a name='spec.revisionHistoryLimit'></a>spec.revisionHistoryLimit 
+#### spec.revisionHistoryLimitt 
 
 Tells how many revision versions to keep for rolling back to. (Replica sets)
 
     spec:
       revisionHistoryLimit: 5 
 
-####  2.2.2. <a name='spec.progressDeadlineSeconds'></a>spec.progressDeadlineSeconds
+#### spec.progressDeadlineSecondss
 
 Tells how long to wait during a rollout for each new replica to come online. (Timer is independent for each replica.)
 
     spec:
       progressDeadlineSeconds: 300 
 
-####  2.2.3. <a name='spec.minReadySeconds'></a>spec.minReadySeconds
+#### spec.minReadySecondss
 
 
-####  2.2.4. <a name='spec.strategy'></a>spec.strategy 
+#### spec.strategyy 
 
     strategy:
       type: RollingUpdate
@@ -1131,11 +1057,11 @@ Tells how long to wait during a rollout for each new replica to come online. (Ti
 This is saying, 
 
 
-##  3. <a name='MinikubeCluster'></a>Minikube Cluster
+## Minikube Cluster
 
 This is a way to test your production deployment on a single machine. Both master and worker run on a single node.
 
-###  3.1. <a name='InstallSetuponLinux'></a>Install / Setup on Linux
+### Install / Setup on Linux
 
 Always reference the official docs for updates. -> https://minikube.sigs.k8s.io/docs/start/
 
@@ -1182,7 +1108,7 @@ Back to Kubernetes
 
 You now have the minikube cluster running. See below to start interacting with it via kubectl
 
-##  4. <a name='crictl'></a>crictl 
+## crictl
 
 Built by Kubernetes, used to `inspect and debug` container runtimes. As of recently, it is recommended to specify the runtime to 
 crictl.
@@ -1191,46 +1117,46 @@ crictl.
 
     export CONTAINER_RUNTIME_ENDPOINT
 
-###  4.1. <a name='Pullimage'></a>Pull image 
+### Pull image
 
     crictl pull busybox
 
-###  4.2. <a name='Listimages'></a>List images
+### List images
 
     crictl images 
 
-###  4.3. <a name='Listcontainers'></a>List containers 
+### List containers
 
     crictl ps -a 
 
-###  4.4. <a name='Runcommandincontainer'></a>Run command in container 
+### Run command in container
 
     crictl exec -i <containerid> ls 
 
-###  4.5. <a name='ViewLogs'></a>View Logs 
+### View Logs
     
     crictl logs <containerId>
 
-###  4.6. <a name='ViewPods'></a>View Pods 
+### View Pods
 
     crictl pods 
 
 
 
-##  5. <a name='Kubectlcml'></a>Kubectl (cml)
+## Kubectl (cml)
 
 **Note, if using with minikube, you MUST append any commands with minikube**
 
 This is the cml interface way to access the master api server.
 
-###  5.1. <a name='InformationObjects'></a>Information Objects 
+### Information Objects
 
-####  5.1.1. <a name='Viewallresourcetypescreatedincluster'></a>View all resource types created in cluster 
+#### View all resource types created in cluster
 
     kubectl get all
 
 
-####  5.1.2. <a name='Getdetailedinformationonaresourcetype'></a>Get detailed information on a resource type 
+#### Get detailed information on a resource type
 
     kubectl describe <resourceType> <resourceName>
 
@@ -1238,13 +1164,13 @@ This is the cml interface way to access the master api server.
 
     kubectl describe pods <pod>
 
-####  5.1.3. <a name='GettheInternalExternalIPofaresourcetype'></a>Get the Internal/External IP of a resource type  
+#### Get the Internal/External IP of a resource type
 
     kubectl get <component> -o wide
 
     kubectl get pods <pod> -o wide 
 
-####  5.1.4. <a name='Getdetailedinformationonresourcetype'></a>Get detailed information on resource type 
+#### Get detailed information on resource type
 
     kubectl get <resourceType> <resourceName> -o yaml
 
@@ -1256,7 +1182,7 @@ This is the cml interface way to access the master api server.
 
     kubectl get <resourceType> -o wide
 
-####  5.1.5. <a name='Checklogs'></a>Check logs 
+#### Check logs
 
     kubectl logs <podName>
 
@@ -1266,7 +1192,7 @@ This is the cml interface way to access the master api server.
 
     kubectl logs multipod --container <containerName>
 
-####  5.1.6. <a name='Viewinginformationbasedonnamespace'></a>Viewing information based on namespace 
+#### Viewing information based on namespace
 
     This applys to all commands above,
 
@@ -1274,7 +1200,7 @@ This is the cml interface way to access the master api server.
 
     kubectl get pods --namespace=kube-system
 
-####  5.1.7. <a name='Viewinginformationfromallnamespaces'></a>Viewing information from all namespaces
+#### Viewing information from all namespaces
 
     This applys to most above 
 
@@ -1282,16 +1208,16 @@ This is the cml interface way to access the master api server.
 
     kubectl get pods --all-namespaces
 
-####  5.1.8. <a name='Viewinginformationviaselectors'></a>Viewing information via selectors
+#### Viewing information via selectors
 
     kubectl get pods --selector <key=pair>,<key=pair>
 
     kubectl get pods --selector function=front-end,app=App1
 
 
-###  5.2. <a name='CreateObjects'></a>Create Objects
+### Create Objects
 
-####  5.2.1. <a name='Deployyamlfile'></a>Deploy yaml file 
+#### Deploy yaml file
 
     Keep in mind, you MUST deploy in order of requirements. For example, if you have a web application, that uses a db 
     and has a config / secrets you must deploy in the following order.
@@ -1302,44 +1228,44 @@ This is the cml interface way to access the master api server.
 
     kubectl apply -f name.yaml
 
-####  5.2.2. <a name='Createapodwithspecificnameandimage'></a>Create a pod with specific name and image 
+#### Create a pod with specific name and image
 
     kubectl run nginx --image nginx
 
-####  5.2.3. <a name='Createapodwithport444open'></a>Create a pod with port 444 open 
+#### Create a pod with port 444 open
   
     kubectl expose pod valid-pod --port=444 --name=frontend
 
-####  5.2.4. <a name='Createapodwithoutmakingitandinsteadoutputtingtoyaml.'></a>Create a pod without making it and instead outputting to yaml.
+#### Create a pod without making it and instead outputting to yaml.
 
     kubectl run nginx --image=nginx:latest --dry-run=client -o yaml > temp.yaml
 
-####  5.2.5. <a name='Createnamespace'></a>Create namespace 
+#### Create namespace
 
     kubectl create namespace <namespacename>
 
     kubectl create -f namespace-dev.yaml
 
 
-###  5.3. <a name='UpdateObjects'></a>Update Objects 
+### Update Objects
 
-####  5.3.1. <a name='Editayamlfile'></a>Edit a yaml file 
+#### Edit a yaml file
 
     This will NOT update the local yaml file. It works in memory for current running.
 
     kubectl edit <resourceType> <resourceName>
 
-####  5.3.2. <a name='Re-Deploychangedyamlfile'></a>Re-Deploy changed yaml file 
+#### Re-Deploy changed yaml file
 
     kubectl replace -f name.yaml
     
     kubectl replace --force -f name.yaml
 
-####  5.3.3. <a name='RestartPods'></a>Restart Pods 
+#### Restart Pods
 
     kuberctl delete pods -l app=<labelOfpod>
 
-####  5.3.4. <a name='DeletePods'></a>Delete Pods 
+#### Delete Pods
 
     kuberctl delete <resourceType> <resourceName>
 
@@ -1347,11 +1273,11 @@ This is the cml interface way to access the master api server.
 
     kuberctl delete pods --all 
 
-####  5.3.5. <a name='RestartDeploymentsrestartsanythinginthedeploymentyamlfilepodsservices'></a>Restart Deployments (restarts anything in the deployment yaml file (pods, services))
+#### Restart Deployments (restarts anything in the deployment yaml file (pods, services))
 
     kubectl rollout restart deployment <deployment-name>
 
-####  5.3.6. <a name='Executecommandsinpod'></a>Execute commands in pod 
+#### Execute commands in pod
 
     kubectl exec <podname> -- <command>
 
@@ -1359,7 +1285,7 @@ This is the cml interface way to access the master api server.
 
     kubectl exec -it <podname> -- sh
 
-####  5.3.7. <a name='Scaling'></a>Scaling 
+#### Scaling
 
 **IT IS BEST PRACTICE TO ONLY SCALE VIA THE YAML FILE**
 
@@ -1372,19 +1298,19 @@ Below will not change yaml file.
     kubectl scale --replicas=6 replicaset <replicaSetName>
 
 
-####  5.3.8. <a name='Switchtonamespace'></a>Switch to namespace 
+#### Switch to namespace
 
     kubectl config set-context $(kubectl config current-context) --namespace=dev 
 
-####  5.3.9. <a name='ApplyTaint'></a>Apply Taint 
+#### Apply Taint
 
     kubectl taint nodes node-name <key=value:taint-effect>
 
-####  5.3.10. <a name='LabelNodes'></a>Label Nodes 
+#### Label Nodes
 
     kubectl label nodes <node-name> <label-key>=<label-value>
 
-###  5.4. <a name='ResourcetypesApplystoallinfo'></a>Resource types / Applys to all info 
+### Resource types / Applys to all info
 
     Resource types that can be used as <resourceType>
       pods, rs (replicaSet), nodes, services, deploy, ReplicationController, configMap, secrets
@@ -1394,9 +1320,9 @@ Below will not change yaml file.
 
 
 
-##  6. <a name='TutorialsUsefulstufftoremember'></a>Tutorials | Useful stuff to remember
+## Tutorials | Useful stuff to remember
 
-###  6.1. <a name='Secrets-datamethod-Base64'></a>Secrets -> data method -> Base 64 
+### Secrets -> data method -> Base 64
 
 Convert user / pass to base 64 
 
@@ -1418,7 +1344,7 @@ Finally, create the secret using kubectl apply on secrets file.
 
     kubectl apply -f ./secret.yaml
 
-###  6.2. <a name='DeployingtheDashboardInsecure.'></a>Deploying the Dashboard (Insecure.)
+### Deploying the Dashboard (Insecure.)
 
 Create `dashboard-adminuser.yaml`
 
@@ -1451,7 +1377,7 @@ Access it and paste the token from earlier step.
     http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/.
 
 
-###  6.3. <a name='DeployingBaremetalK8clusteracross1controland2workernodes'></a>Deploying Bare metal K8 cluster across 1 control and 2 worker nodes 
+### Deploying Bare metal K8 cluster across 1 control and 2 worker nodes
 
 Also, note this great [video](https://www.youtube.com/watch?v=iwlNCePWiw4)
 
@@ -1723,7 +1649,7 @@ Now, check the nodes in your cluster, all should be good ..
 
     kubectl get nodes -o wide
 
-###  6.4. <a name='InstallingmetallbLoadbalancer'></a>Installing metallb (Loadbalancer)
+### Installing metallb (Loadbalancer)
 
 FYI - This is a solution for implementing a loadbalancer on a bare-metal kubernetes cluster (Aka, a cluster deployed manually on VMS or actual machines.) This is not meant to be a solution for cloud providers as they provide their own load balancers normally.
 
@@ -1829,7 +1755,7 @@ And test it.Get the EXTERNAL-IP of the service and then curl it.
     kubectl get svc web-app
     curl <EXTERNAL-IP> 
 
-###  6.5. <a name='Installingnginxingresscontroller'></a>Installing nginx ingress controller
+### Installing nginx ingress controller
 
 Now, instead of using an IP, lets set up an ingress controller so we can use domain names.
 
@@ -1840,7 +1766,7 @@ The ingress controller i am using is [nginx ingress controller](https://docs.ngi
 There are two sources to install this, kubernetes community and nginx offical site. I prefer the community and have found the most success with it.
 
 
-####  6.5.1. <a name='FromKubernetesCommunityDocshttps:kubernetes.github.ioingress-nginxdeployPreffered'></a>From Kubernetes [Community Docs](https://kubernetes.github.io/ingress-nginx/deploy/) (Preffered)
+#### From Kubernetes [Community Docs](https://kubernetes.github.io/ingress-nginx/deploy/) (Preffered))
 
 ##### Option A - Helm
 
@@ -1857,7 +1783,7 @@ You can check the setable values
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 
 
-####  6.5.2. <a name='FromNginxOfficialSitehttps:docs.nginx.comnginx-ingress-controller'></a>From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/)
+#### From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/))
 
 
 ##### Option A - Helm Via OCI Registry
@@ -1897,7 +1823,7 @@ Verifiy its running
 
     kubectl get pods -n nginx-ingress
 
-####  6.5.3. <a name='Testingbasicingress'></a>Testing basic ingress
+#### Testing basic ingresss
 
 Now, lets alter our deployment to use this new ingress tool
 
@@ -1942,7 +1868,7 @@ Finally,
 
     curl web-app.home-k8s.lab
 
-####  6.5.4. <a name='AssigningDNSnametotheingress'></a>Assigning DNS name to the ingress
+#### Assigning DNS name to the ingresss
 
 Go to wherever your CA is (Mine is cloudflare) and do the following.
 
@@ -1965,7 +1891,7 @@ Test Ingress, change the hosts values to your DNS name you redirected to earlier
 
 You should then be able to browse to this on the web, however it will give an insecure warning since we havent implemented secure certificates. We can use cert-manager for that.
 
-###  6.6. <a name='Deployingcert-manager'></a>Deploying cert-manager
+### Deploying cert-manager
 
 FYI, if you have already deployed metalLB (Or some other LoadBalancer) then cert-manager will automatically be assigned an external IP. Otherwise, you either need to assign a pool or deploy a Loadbalancer. This is out of scope currently.
 
@@ -2039,7 +1965,7 @@ Then deploy a local issuer
                 name: cloudflare-api-token-secret
                 key: api-token
 
-####  6.6.1. <a name='Testing'></a>Testing
+#### Testingg
 
 Here is an example service
 
@@ -2105,7 +2031,7 @@ An example ingress (Change host: to whatever your domain is)
 
 
 
-###  6.7. <a name='InstallingCSIdriverforNFSStorage'></a>Installing CSI driver for NFS Storage
+### Installing CSI driver for NFS Storage
 
 - First ensure [helm](https://helm.sh/docs/intro/install/) is installed
 - Incase stuff changes, this is the [reference](https://github.com/kubernetes-csi/csi-driver-nfs/tree/master/charts) for the driver we are installing.
@@ -2170,9 +2096,9 @@ Some important issues I ran into.
 - This implementation is EXTREMELY insecure currently, only would be viable with proper firewalling / in a homelab.
   - However, this share is also not storing any sensitive data.
 
-###  6.8. <a name='DeployingVaultExternallyandLinkingtoKubernetesWIP'></a>Deploying Vault Externally and Linking to Kubernetes (WIP)
+### Deploying Vault Externally and Linking to Kubernetes (WIP)
 
-####  6.8.1. <a name='InstallingVaultonRockyLinux9'></a>Installing Vault on Rocky Linux 9
+#### Installing Vault on Rocky Linux 99
 
 Always check the official [site](https://developer.hashicorp.com/vault) for updates
 
@@ -2180,4 +2106,12 @@ Always check the official [site](https://developer.hashicorp.com/vault) for upda
     sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
     sudo yum -y install vault
 
-###  6.9. <a name='DeployingVaultInternally'></a>Deploying Vault Internally
+### Deploying Vault Internally
+
+TODO Redeploy cluster to accomodate changed IPs
+### Steps to change IP of Kubernetes Host machine
+
+After you have changed the host IP there are steps that must be taken to ensure kubernetes still functions correctly.
+
+First, change your hosts file to reflect new ip
+
