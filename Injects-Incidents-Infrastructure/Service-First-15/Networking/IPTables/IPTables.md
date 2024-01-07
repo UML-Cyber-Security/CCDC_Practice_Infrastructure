@@ -1,28 +1,28 @@
 # IPTables
-What is this service, what should it be capable of and how secure should it be after this 15 minuets has passed.
+For the Linux machines this is the Firewall of choice. IPTables has been superseded by NFTables, but NFTables can still use the command syntax of IPTables (Which is what we do!) 
 
 ## Dependencies
-Does your service rely on any other services or machines, is there anything you can do if those are not configured or set up?
+This service does not have any dependencies, it however other Firewall services must be disabled, and IPTables installed. Of course it is dependent on the Host Linux System.
 
 ## First 15
-This should be a Bullet point list of what you do in the first 15, if there is a link to a guide, or small command to run you can include it, Example (Linux):
-
-* SSH Access 
-    * Find all SSH authorized keys, log info on them
-        ```find -type d -name authorized_keys -exec ls {} \;```
-    * Remove pre-existing SSH key
-* Audit users
-    * Take note of all Unauthorized Users and Keys for report
-    * Lock Root Account
-        ```passwd -l root```
-    * Lock unauthorized Users 
-    * Randomize Passwords 
-    * Install SSH Keys 
-* Secure SSH
-    * Config ...
+* Log current rules on system from the previous Firewall Solution (Firewalld, NFTables, IPTables, etc)
+* Install IPTables packages 
+* Disable all other Firewall Solutions. 
+* Add Rule to allow SSH access
+* Add Rule to allow Wazuh Agents to function
+* Ensure ACCEPT Rules are catching
+* Audit Network Connections (what is on the system making communications)
+* Default Deny inbound Rule
+* Add Rules to allow other inbound services. 
 
 ## First 30 
-This section should contain anything that should be completed in the first 30 minuets, excluding those mentioned in the first 15 minuets section. Again with the same format 
+* Audit all Outbound Connections. 
+* Add rules to ensure known services can make outbound connections
+* Ensure Those rules are working as expected
+* Default Deny rule
+
 
 ## Stretch Goals
-This is optional, but I would assume appreciated. This section would contain anything you think would be good to have done, but is not something that has to be done in the first 15-30 minuets of the competition.
+* Select machine to be an internal Gateway
+* Configure IPTables for NAT forwarding and whatnot (Never done this before!) 
+* Configure internal machines to set Internal Gateway as the Default Gateway.

@@ -1,28 +1,22 @@
 # NGinx
-What is this service, what should it be capable of and how secure should it be after this 15 minuets has passed.
+This is a reverse proxy service that gives access to the internal network services. This is a transport layer proxy.
 
 ## Dependencies
-Does your service rely on any other services or machines, is there anything you can do if those are not configured or set up?
+This service may depend on the Internal DNS services, and the local Firewall's configuration. Of course it is dependent on the Host Linux System.
 
 ## First 15
-This should be a Bullet point list of what you do in the first 15, if there is a link to a guide, or small command to run you can include it, Example (Linux):
-
-* SSH Access 
-    * Find all SSH authorized keys, log info on them
-        ```find -type d -name authorized_keys -exec ls {} \;```
-    * Remove pre-existing SSH key
-* Audit users
-    * Take note of all Unauthorized Users and Keys for report
-    * Lock Root Account
-        ```passwd -l root```
-    * Lock unauthorized Users 
-    * Randomize Passwords 
-    * Install SSH Keys 
-* Secure SSH
-    * Config ...
-
+* Create backup of the Proxies configuration
+* Ensure there are no extra websites or file systems exposed.
+* Update SSL Keys if present
+* Configure SSL with Certificate from Windows CA (If set up, and external DNS is used)
+  * At least Rotate it
+* Add Entries for services if they do not already exist
 ## First 30 
-This section should contain anything that should be completed in the first 30 minuets, excluding those mentioned in the first 15 minuets section. Again with the same format 
+* Create round-robin entries for each service proxied, one with the DNS entry and one with the IP  
+* Configure SSL with Certificate from Windows CA (If set up, and external DNS is used)
+
 
 ## Stretch Goals
-This is optional, but I would assume appreciated. This section would contain anything you think would be good to have done, but is not something that has to be done in the first 15-30 minuets of the competition.
+* High Availability? 
+  * If possible set up an alternate NGinx service
+  * Use DNS to do a poor man's round robin 

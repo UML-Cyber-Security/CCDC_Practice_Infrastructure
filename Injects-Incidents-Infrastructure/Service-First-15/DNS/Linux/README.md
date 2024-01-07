@@ -1,28 +1,21 @@
 # Linux DNS
-What is this service, what should it be capable of and how secure should it be after this 15 minuets has passed.
+This is a Linux DNS server, there are many programs that could provide this. From the simpler [DNSMASQ](https://thekelleys.org.uk/dnsmasq/doc.html), to the more complicated [Bind9](https://wiki.debian.org/Bind9) services. This can be used for internal or external DNS resolution, which can provide easy access to machines, or more importantly will be used in the score checks. 
 
 ## Dependencies
-Does your service rely on any other services or machines, is there anything you can do if those are not configured or set up?
+The only service that this may rely on is the a proxy if we are exposing a DNS server to the external networks, and the firewalls that will be configured to grant access to the DNS service. Of course it is dependent on the Host Linux System.
 
 ## First 15
-This should be a Bullet point list of what you do in the first 15, if there is a link to a guide, or small command to run you can include it, Example (Linux):
-
-* SSH Access 
-    * Find all SSH authorized keys, log info on them
-        ```find -type d -name authorized_keys -exec ls {} \;```
-    * Remove pre-existing SSH key
-* Audit users
-    * Take note of all Unauthorized Users and Keys for report
-    * Lock Root Account
-        ```passwd -l root```
-    * Lock unauthorized Users 
-    * Randomize Passwords 
-    * Install SSH Keys 
-* Secure SSH
-    * Config ...
+* Make Backup of DNS Entires
+  * Redteam may delete them!
+* Make Backup of DNS Configurations
+* Audit DNS Entries and Config
+  * Are all those that are expected to be there located there.
+  * What ports and interfaces is the DNS server listening on?
+  * In the event the DNS server offers additional services (Like DNSMASQ), are any enabled (DHCP, etc).
 
 ## First 30 
-This section should contain anything that should be completed in the first 30 minuets, excluding those mentioned in the first 15 minuets section. Again with the same format 
-
+* Audit the DNS Server each machine is configured to use (/etc/resolv.conf, nmtui) 
+  * Can Wazuh do this? What about Zabbix
+* Is DNSSec something that is good 
 ## Stretch Goals
-This is optional, but I would assume appreciated. This section would contain anything you think would be good to have done, but is not something that has to be done in the first 15-30 minuets of the competition.
+Enable DNSSec.

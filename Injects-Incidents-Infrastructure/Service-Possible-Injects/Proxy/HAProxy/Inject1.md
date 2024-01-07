@@ -1,17 +1,14 @@
 # HAProxy
-What is this service, the level of difficulty of this inject.
+HAProxy: Easy
 
-**Time**: XX (Contains the estimated time of competition)
+**Time**: 30
 
 ## Expectations 
-What should be implemented and completed by the time this inject is completed 
-1. We should have a list of all users on all machines 
-2. All unauthorized users should be logged, and locked
-3. The password requirements on all Linux machines must bet set to a modern general standard (12 chars, uppercase and lowercase, etc)
-4. ...
+1. Application Proxy to a service (443)
+2. SSL 
 
 ## Dependencies
-What could be attacked while this inject is being implemented to throw those completing it off balance. If a person is auditing users, what happens if more users are added!
+Certificate needs to be generated.
 
 ## Inject
-This is where creative writing skills come into play I guess. Imagine how they could ask you to do this. Then make it more obscure.
+We have not been able to access the service X, please also make it accessible over HTTPS.
