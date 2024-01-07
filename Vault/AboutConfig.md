@@ -10,4 +10,15 @@ storage "raft" {
 }
 cluster_addr = "http://127.0.0.1:8201"
 
-## Listner
+## Listener
+Defines on what ports vault is waiting for incoming connections
+In our case the raft storage represents an internal storage, so our IP and port are internally based.
+
+listener "tcp" {
+  address = "127.0.0.1:8200"
+  tls_disable = 0 #Enables HTTPS
+  tls_cert_file = ...  # certifcation file.pem - Place the full path where it is saved on the machine
+  tls_key_file = ...  # certifcation file_private_key.pem - Place the full path where it is saved on the machine
+}
+
+ui = true #Enables browser interface
