@@ -4,7 +4,7 @@
 # Paste above output into password field below
 # Change user to what you want
 # Change key to what you want
-
+# Can create key with 
 ---
 - name: Copy SSH keys
   hosts: all
