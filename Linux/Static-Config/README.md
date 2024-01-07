@@ -7,6 +7,56 @@ This is a section that pertains to the setting, and modification of **static** (
 ### Redhat
 This section covers a method we can use to manually configure the IP assigned to a redhat Linux machine.
 
+**NMTUI**
+1. Run `nmtui` as a sudo user
+2. Select *Edit a connection*, and hit enter
+   
+  ![Alt text](Images/NMTUI-1.png)
+
+3. Select the network interface you would like to edit and hit enter 
+
+  ![Alt text](Images/NMTUI-2.png)
+
+4. Move down to thew IPv4 configuration. Select Manual configuration.
+
+  ![Alt text](Images/NMTUI-3.png)
+
+5. Move over to *Show* and hit enter
+
+  ![Alt text](Images/NMTUI-4.png)
+
+6. Click *add* and fill out the information (IP address *We are on a /21 network*)
+
+  ![Alt text](Images/NMTUI-5.png)
+
+  * You can find out the default gateway by using the command `ip r`
+
+7. Click OK
+
+  ![Alt text](Images/NMTUI-6.png)
+
+8. Select Back
+
+  ![Alt text](Images/NMTUI-7.png)
+
+9. Select Quit
+
+  ![Alt text](Images/NMTUI-8.png)
+
+10. Restart network manager
+  * Restart service 
+    ```
+    # Ubuntu 
+      sudo systemctl restart network-manager
+    
+    # RHEL
+      sudo systemctl restart NetworkManager
+    ```
+  * Restart the machine 
+    ```
+      sudo restart 
+    ```
+**NMCLI**
 1. Open a terminal on the target machine.
 2. Run ```systemctl status NetworkManager``` to ensure the network management service is running.
 3. Run ```ip a``` or ```ip a show``` to display the current interface configurations, manual or DHCP.
