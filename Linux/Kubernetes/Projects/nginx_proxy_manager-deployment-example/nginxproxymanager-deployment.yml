@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginxproxymanager-deployment
+  labels:
+    lab: nginxproxymanager
+  namespace: homelab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      lab: nginxproxymanager
+  template:
+    metadata:
+      labels:
+        lab: nginxproxymanager
+    spec:
+      containers:
+      - image: jc21/nginx-proxy-manager:latest
+        name: nginxproxymanager
+        volumeMounts:
+        - name: data 
+          mountPath: "/data" 
+        - name: letsencrypt 
+          mountPath: "/etc/letsencrypt"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: nginxproxymanager-data-claim
+        - name: letsencrypt
+          persistentVolumeClaim:
+            claimName: nginxproxymanager-letsencrypt-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginxproxymanager-service
+  labels:
+    lab: nginxproxymanager
+  namespace: homelab
+spec:
+  selector:
+    lab: nginxproxymanager
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  - name: admin-panel
+    port: 8081
+    protocol: TCP
+    targetPort: 81
+  type: LoadBalancer

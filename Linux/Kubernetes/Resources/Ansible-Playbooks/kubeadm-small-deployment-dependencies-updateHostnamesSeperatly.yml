@@ -1,0 +1,68 @@
+# Main purpose of this playbook is to get you to the point in kubeadm where you can just move forward with deploying the cluster.
+# This is designed around having 1 master and x amount of workers.
+# It will take care of the following requirements.
+# - required packages
+# - disabling swap file.
+# - Kernel paremeters, loading kernel paremeters.
+# - Hostname (Dynamic naming, kube-master-1, kube-worker-1, kube-worker-2...kuber-worker-x)
+# - /etc/hosts (For all hosts in hosts.ini)
+# - Installing containerd, kubelet, kubeadm, kubectl
+
+---
+- hosts: all
+  become: yes
+  vars:
+    start_index: 1
+    k8s_release_key_url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key"
+    k8s_signed_by_url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/"
+    k8s_apt_keyring_path: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+    k8s_sources_list_path: "/etc/apt/sources.list.d/kubernetes.list"
+    k8s_package_version: "1.28"
+  tasks:
+    
+    - name: Set hostname for masters
+      hostname:
+        name: "k8-master-{{ start_index + groups['masters'].index(inventory_hostname) }}"
+      when: "'masters' in group_names"
+
+    - name: Set hostname for workers
+      hostname:
+        name: "k8-worker-{{ start_index + groups['workers'].index(inventory_hostname) }}"
+      when: "'workers' in group_names"
+
+    - name: Backup /etc/hosts file (Incase we are updating, or there are existing entries.)
+      shell: mv /etc/hosts /etc/hosts.bak 
+
+    - name: Add initial entries to /etc/hosts
+      copy:
+        content: |
+          127.0.0.1 localhost
+          127.0.1.1 localhost
+
+          # The following lines are desirable for IPv6 capable hosts
+          ::1     ip6-localhost ip6-loopback
+          fe00::0 ip6-localnet
+          ff00::0 ip6-mcastprefix
+          ff02::1 ip6-allnodes
+          ff02::2 ip6-allrouters
+
+          # Custom
+        dest: /etc/hosts
+    
+    - name: Update 127.0.1.1 entry in /etc/hosts
+      replace:
+        path: /etc/hosts
+        regexp: '.*127.0.1.1.*'
+        replace: '127.0.1.1 {{ ansible_hostname }}'
+    
+    - name: Add entries to /etc/hosts for all hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ hostvars[item]['inventory_hostname'] }} {{ hostvars[item]['ansible_hostname'] }}" 
+        create: yes
+      loop: "{{ groups['all'] }}"
+      loop_control:
+        loop_var: item
+
+    - name: Reboot
+      reboot:

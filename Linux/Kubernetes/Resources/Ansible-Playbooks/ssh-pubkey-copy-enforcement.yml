@@ -1,0 +1,34 @@
+# This script will copy your public key and enforce PubkeyAuthentication.
+# Ensure the path to the key is correct.
+
+---
+- name: Copy SSH keys
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Copy SSH public key
+      authorized_key:
+        user: "alex"
+        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+        state: present
+
+    - name: Disable PasswordAuthentication
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: '.*PasswordAuthentication.*'
+        replace: 'PasswordAuthentication no'
+
+    - name: Enforce PubkeyAuthentication 
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: '.*PubkeyAuthentication.*'
+        replace: 'PubkeyAuthentication yes'
+      notify:
+        - Restart SSH
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted

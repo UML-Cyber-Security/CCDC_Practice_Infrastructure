@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-vault-0-volume
+  labels:
+    type: local
+  namespace: vault
+spec:
+  claimRef:
+    namespace: vault
+    name: data-vault-0
+  capacity:
+    storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/vault/data"
