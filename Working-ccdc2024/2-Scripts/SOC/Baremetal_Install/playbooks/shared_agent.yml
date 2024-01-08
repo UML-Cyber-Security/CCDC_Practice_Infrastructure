@@ -1,0 +1,25 @@
+---
+
+- hosts: SOC_Server
+  become: true
+  tasks:
+
+    - name: Enabling docker logs
+      ansible.builtin.blockinfile:
+        path: /var/ossec/etc/shared/default/agent.conf
+        block: |4
+            <wodle name="syscollector">
+              <disabled>no</disabled>
+              <interval>1h</interval>
+              <os>yes</os>
+              <packages>yes</packages>
+              <hotfixes>yes</hotfixes>
+            </wodle>
+        insertafter: '<!-- Shared agent '
+        state: present
+      tags: changeblock
+
+    - name: Restarting Wazuh
+      ansible.builtin.service:
+        name: wazuh-manager
+        state: restarted

@@ -1,0 +1,13 @@
+Errors during downloading metadata for repository 'hashicorp':
+  - Status code: 404 for https://rpm.releases.hashicorp.com/fedora/9/x86_64/stable/repodata/repomd.xml (IP: 13.249.141.76)
+Error: Failed to download metadata for repo 'hashicorp': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+
+disable respository
+ ```dnf config-manager --set-disable hashicorp```
+
+
+ reinstall your repo  
+
+
+ ```sudo dnf config-manager --disable hashicorp``
+```sudo dnf clean all``

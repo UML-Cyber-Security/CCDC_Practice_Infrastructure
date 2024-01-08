@@ -1,0 +1,13 @@
+---
+
+- hosts: Debian_Agents
+  become: true
+  tasks:
+
+    - name: Deleting Wazuh agent
+      ansible.builtin.script: remove_agent_debian.sh
+      register: value
+
+    - name: Recording and printing the output 
+      debug:
+        var: value

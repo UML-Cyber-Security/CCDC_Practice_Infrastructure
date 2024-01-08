@@ -1,0 +1,139 @@
+---
+
+- hosts: SOC_Server
+  become: true
+  
+
+  pre_tasks:
+      
+    - name: Updating the repositories
+      ansible.builtin.package:
+        update_cache: true
+
+    - name: Making sure  wazuh is up and running on the remote machine 
+      ansible.builtin.service:
+        name: wazuh-manager
+        state: started
+          
+  tasks:
+    
+
+    - name: Adding the suricata repo to the machine
+      ansible.builtin.apt_repository:
+        repo: ppa:oisf/suricata-stable
+        state: present
+
+    - name: Installing Suricata
+      ansible.builtin.package:
+        name: suricata
+
+    - name: Downloading emerging threats rule sets
+      ansible.builtin.get_url:
+        url: https://rules.emergingthreats.net/open/suricata-6.0.9/emerging.rules.tar.gz
+        dest: /tmp/
+
+    - name: Extracting the downloaded rule sets 
+      ansible.builtin.unarchive:
+        src: /tmp/emerging.rules.tar.gz
+        dest: /tmp/
+        remote_src: true
+    - name: Copying local.rules file to /etc/suricata/rules
+      ansible.builtin.copy:
+        src: local.rules
+        dest: /etc/suricata/rules
+
+    - name: Moving the rules directory to /etc/suricata/rules
+      ansible.builtin.copy:
+        src: /tmp/rules/
+        dest: /etc/suricata/rules/
+        mode: '0640'
+        remote_src: true
+    - name: Enabling community guidelines
+      ansible.builtin.lineinfile:
+        path: /etc/suricata/suricata.yaml
+        regexp: 'community-id:'
+        line: "      community-id: true"
+        state: present
+      tags:  changeline
+
+    - name: Starting and enabling suricata
+      ansible.builtin.service:
+        name: suricata
+        state: started
+        enabled: yes
+
+    - name: Running suricata and enabling an additional set of available rules  
+      ansible.builtin.command: suricata-update 
+      register: result
+      
+    - name: Enabling additional set of resources
+      ansible.builtin.command: suricata-update enable-source  malsilo/win-malware
+    - name: Output of Suricata update and Enabling an additional source
+      ansible.builtin.debug:
+        var: result
+ 
+    - name: Testing Suricata
+      ansible.builtin.command: suricata -T -c /etc/suricata/suricata.yaml -v 
+      register: output 
+    - name: Output of testing Suricata
+      ansible.builtin.debug:
+        var: output
+
+
+    - name: Integrating Docker and Suricata with Wazuh 
+      ansible.builtin.blockinfile:
+        path: /var/ossec/etc/ossec.conf
+        block: |4
+              <localfile>
+                <log_format>json</log_format>
+                <location>/var/log/suricata/eve.json</location>
+              </localfile>
+              <wodle name="docker-listener">
+                <disabled>no</disabled>
+              </wodle>
+              <localfile>
+                <log_format>syslog</log_format>
+                <location>/var/log/sudo.log</location>
+              </localfile>
+              <localfile>
+                <log_format>syslog</log_format>
+                <location>/var/log/glusterfs/glusterd.log</location>
+                </localfile>
+
+              <localfile> 
+                <log_format>syslog</log_format>
+                <location>/var/log/glusterfs/cli.log</location>
+              </localfile>
+        insertafter: '<!-- Files to monitor' 
+        state: present
+      tags: changeblock
+      
+
+    - name: Restarting Wazuh Indexer
+      ansible.builtin.service:
+        name: wazuh-indexer
+        state: restarted
+      tags: restart_services
+
+    - name: Restarting Wazuh Manager
+      ansible.builtin.service:
+        name: wazuh-manager
+        state: restarted
+      tags: restart_services
+    
+    - name: Restart Wazuh Dashboard
+      ansible.builtin.service:
+        name: wazuh-dashboard
+        state: restarted
+      tags: restart_services
+    - name: Restarting Filebeat
+      ansible.builtin.service:
+        name: filebeat
+        state: restarted
+      tags: restart_services
+
+    - name: Restarting  Suricata
+      ansible.builtin.service:
+        name: suricata
+      tags: restart_services
+          

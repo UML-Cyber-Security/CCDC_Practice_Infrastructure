@@ -1,0 +1,14 @@
+options {
+	version "none"; # do not show version
+	allow-transfer { "none"; }; # disable zone transfers
+
+	forwarders {
+	 	8.8.8.8;
+		8.8.4.4;
+	};
+
+	dnssec-validation auto;
+
+	auth-nxdomain no;    # conform to RFC1035
+	listen-on-v6 { any; };
+};

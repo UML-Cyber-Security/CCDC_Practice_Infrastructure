@@ -1,0 +1,172 @@
+
+# Installing Vault on Windows
+
+ITC = In this Case.
+
+# Install Choco
+```Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))```
+
+    Allows you install different packages on windows    
+
+A reboot may be required.
+## Confirm Choco is installed
+    Type Choco in the command prompt and choco's version # should appear.
+
+#  Install Vault
+```choco install vault```
+
+- Type 'yes' to all installation
+  
+## Verify Vault installation
+```vault```
+
+--------------------------------------------------------------------------------------------
+
+# Create the vault Config file
+Creating a config file instead of using the -dev flag allows us to create the vault more securely.
+Name the configuration file "config.hcl"
+There is a configuation file folder (current config is insecure b/c TLS is disabled)
+
+# Make the directory the storage (itc. raft)
+```mkdir -p ./vault/data```
+
+# Start the vault server w/ specific config file
+(We are **Not** setting up a dev server, which are insecure by default.)
+This is the only piece that interacts w/ data storage and backend.
+```vault server -config=config.hcl```
+
+
+You should see a message at the top
+  - "vault server configuration" & 
+at the bottom
+ - "==> Vault server started! Log data will stream in below:"
+
+
+----------------------------------------------------------------------------------------------------------------
+# Initialize the vault (only happens once)
+Only happens once when the server is started against a new backend 
+In a new terminal, set the  VAULT_ADDR enviornment variable 
+```export VAULT_ADDR='http://127.0.0.1:8200'```
+
+The next command to run in the terminal is 
+ ```vault operator init```
+"see Keybase Initialization" or
+"GnuPG" (preferable) for more secure versions
+This command generates 
+1. **unseal keys** 
+2. **initial root token**
+  - we want these to be as secure as possible, thats why we use GnuPG or keybase.io.
+
+
+------------------------------------------
+# Unseal the vault
+Unseal =  "process of teaching Vault how to decrypt the data is known as unsealing the Vault"
+Unsealing has to happen every time the vault starts
+To unseal the vault you need to have the **Key threshold** amount of unseal keys (see )
+
+```vault operator unseal``` 'paste in valid key after the command'
+ - You will need to do this the same amount of times as the **key threshold** .
+ - Pasting a different key each time
+
+
+## First Output
+ - should be something similar to this
+Unseal Key (will be hidden):
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+**Sealed             true**
+Total Shares       5
+Threshold          3
+Unseal Progress    1/3
+Unseal Nonce       d3d06528-aafd-c63d-a93c-e63ddb34b2a9
+Version            1.7.0
+Storage Type       raft
+HA Enabled         true
+
+
+## Final Output Key                     Value
+---                     -----
+Seal Type               shamir
+Initialized             true
+**Sealed                  false**
+Total Shares            5
+Threshold               3
+Version                 1.7.0
+Storage Type            raft
+Cluster Name            vault-cluster-0ba62cae
+Cluster ID              7d49e5fd-a1a4-c1d1-55e2-7962e43006a1
+HA Enabled              true
+HA Cluster              n/a
+HA Mode                 standby
+Active Node Address     &lt;none&gt;
+Raft Committed Index    24
+Raft Applied Index      24
+
+- When sealed changes to false, your good to move on.
+
+
+
+# Login in to vault
+```vault login```
+
+
+
+
+
+
+
+# Write secrets to a vault
+Vault Hashicorp has a bunch of secret engines, which are somewhat a kin to databases with special features and each have their own type of data they store.
+
+
+
+
+## Key/Value Secrets Vault
+### About:
+This vault stores data in key/value pairs.
+
+
+### Syntax:
+vault kv <subcommand> [options] [args] 
+vault kv put -mount=secret creds passcode=my-long-passcode
+
+
+
+
+vault kv put -mount=secret hello foo=world
+```vault kv put secret/hello foo=world```
+"foo=world" : key=value pair secret
+"secret" : The path
+    
+
+- You can use real files as secrets, which are more secure. You can replace foo=world with a textfile.
+
+- kv
+  - Key/Value secrets engine
+  - (ITC) kv is the base path for the vault for the dev server. 
+
+
+# Retrieve Secrets
+vault kv get secret/foo
+
+vault kv get -mount=secret foo
+
+
+
+
+# Details about Vault
+
+Secrets are encrypted and then written to the backend storage
+Backend storage never sees the value
+
+
+
+# Terminating vault server
+## Kill the running vault server
+```Ctrl+C``
+Terminates the server that is running at http://127.0.0.1:8200
+
+## Unset the Vault Token
+```unset VAULT_TOKEN```

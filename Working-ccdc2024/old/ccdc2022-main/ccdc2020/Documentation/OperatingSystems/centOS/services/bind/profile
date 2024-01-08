@@ -1,0 +1,23 @@
+TTL="3h"
+ATTL="3600"
+EMAILID="cst.practice."
+REFRESH="3h"
+RETRY="1h"
+EXPIER="1w"
+MAXNEGTIVE="1h"
+
+NAMESERVERS=()
+ 
+NAMESERVERSIP=()
+ 
+MAILSERVERS=()
+ 
+function LoadCustomARecords(){
+echo >/dev/null # keep this line
+# echo "ftp $ATTL	IN	A	202.54.2.2"
+# echo "webmail $ATTL   IN	A	202.54.2.5"
+# echo "ipv6host $ATTL  IN	AAAA    2001:470:1f0e:c2::1"
+  echo "test $ATTL      IN	A	32.12.4.43"
+}
+
+

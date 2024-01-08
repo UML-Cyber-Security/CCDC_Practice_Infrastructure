@@ -1,0 +1,14 @@
+$ORIGIN example.com.
+$TTL 3h
+@	IN	SOA		cst.practice.(
+ 2019112401	; Serial yyyymmddnn
+ 3h ; Refresh After 3 hours
+ 1h ; Retry Retry after 1 hour
+ 1w ; Expire after 1 week
+ 1h) ; Minimum negative caching of 1 hour
+
+; Name servers for example.com
+; MX Records
+; A Records
+@ 3600	IN A	53.11.54.1
+test 3600      IN	A	32.12.4.43

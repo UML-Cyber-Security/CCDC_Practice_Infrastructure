@@ -1,0 +1,4 @@
+alert icmp any any -> $HOME_NET any (msg: "ICMP Ping Detected";sid: 1; rev: 1;)
+
+
+

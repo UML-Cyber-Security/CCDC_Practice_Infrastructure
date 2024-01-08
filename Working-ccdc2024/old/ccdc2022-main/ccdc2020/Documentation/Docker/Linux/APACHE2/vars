@@ -1,0 +1,14 @@
+set_var EASYRSA_DN      	"org"
+set_var EASYRSA_BATCH       	"yes"
+
+set_var EASYRSA_REQ_COUNTRY     "US"
+set_var EASYRSA_REQ_PROVINCE    "ME"
+set_var EASYRSA_REQ_CITY        "Rivers Bend"
+set_var EASYRSA_REQ_ORG         "Dirigo Cyber, LLC"
+set_var EASYRSA_REQ_OU		"IT"
+set_var EASYRSA_REQ_EMAIL       "it@dirgio.org"
+set_var EASYRSA_REQ_CN      	"web.dirigo.org"
+
+set_var EASYRSA_KEY_SIZE       	4096
+set_var EASYRSA_CA_EXPIRE      	3650
+set_var EASYRSA_CERT_EXPIRE    	365

@@ -1,0 +1,199 @@
+# Defines version of Docker Stack (Compose) File we are using 
+version: "3.9"
+
+# Defines the "services" (containers) that this stack is going to contain
+services:
+
+  # This defines the haproxy service (DNS will resolve "haproxy" to this container)
+  haproxy:
+    # Defining the image from docker hub that this service is based off of 
+    image: haproxy:latest
+    
+    # Define the volumes to attach to this container
+    volumes:
+      # We are bind mounting the /home/user/HAProxy directory on the HOST machine to /usr/local/etc/haproxy
+      # This means the /usr/local/etc/haproxy will mirror whatever is in /home/user/HAProxy
+      - /home/user/HAProxy/:/usr/local/etc/haproxy:ro
+    
+    # Define host to container port mappings
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2222:2222"
+
+    # Define the networks that this container will be attached to
+    networks: 
+      - web_net
+    
+    # Define decencies, this will not spin up until the dependencies have successfully spun up.
+    depends_on:
+      - web1
+      - web2
+    
+    # This section defines deployment parameters (docker swarm specific stuff)
+    deploy:
+      # define placement constraints 
+      placement:
+        constraints:
+          # This will only deploy on nodes with the manager role
+          - "node.role==manager"
+      # Define restart policy, it will only restart on failures
+      restart_policy:
+        condition: on-failure
+
+  # This defines the web1 service (DNS will resolve "web1" to this container)  
+  web1:
+    # This is the image that the container will be built off of. 
+    # In this case it is a custom Django image
+    image: daintyjet/ccdc23_af_django_ssh
+
+    # Define environment variables that will be imported and used by the 
+    # container and the program running in it. This is not a secure method of 
+    # passing secrets
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    
+    # Defines the networks that this container is attached to
+    networks:
+      - database_net
+      - web_net  
+    
+    # Define decencies, this will not spin up until the dependencies have successfully spun up.
+    depends_on:
+      - db
+    
+    # This section defines deployment parameters (docker swarm specific stuff)
+    deploy:
+
+      # Define the number of replicated containers to create (made a demo of what we can do)
+      replicas: 1
+
+      # define placement constraints 
+      placement:
+        constraints:
+          # Only deploy on swarm nodes that have the label web=m2
+          # We will want to avoid machine based labels where possible as it could
+          # prevent the stack from deploying if a machine goes down 
+          - "node.labels.web==m2"
+      
+      # Define restart policy
+      restart_policy:
+        condition: on-failure
+
+  web2: # unless sorce code is edited, will not connect to db2 -- better to use Gluster and replicated DB
+    image: daintyjet/ccdc23_af_django_ssh
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - database_net
+      - web_net  
+    depends_on:
+      - db2
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "node.labels.web==m2"
+      restart_policy:
+        condition: on-failure
+
+# This defines the db service (DNS will resolve "db" to this container)  
+  db:
+    # This is the image that the container will be built off of.
+    image: postgres
+
+    # Defines the volumes that will be bound to the container
+    volumes:
+      # db is an anonymous volume, it is hosted (somewhere) on the host and is 
+      # bound to the /var/lib/postgresql/data directory in the container 
+      - db:/var/lib/postgresql/data
+    
+    # Define environment variables that will be imported and used by the 
+    # container and the program running in it. This is not a secure method of 
+    # passing secrets
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    # Defines the networks that this container is attached to
+    networks:
+      - database_net
+
+    # This section defines deployment parameters (docker swarm specific stuff)
+    deploy:
+
+      # define placement constraints
+      placement:
+        constraints:
+          # Only deploy on swarm nodes that have the label web=m3
+          # We will want to avoid machine based labels where possible as it could
+          # prevent the stack from deploying if a machine goes down
+          - "node.labels.db==m3"
+      restart_policy:
+        condition: on-failure
+  db2:
+    image: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - database_net
+
+    deploy:
+      placement:
+        constraints:
+          - "node.labels.db==m3"
+      restart_policy:
+        condition: on-failure
+
+  ## Management ## 
+  portainer:
+    # This is the image that the contaier will be built off of.
+    image: portainer/portainer-ce:latest
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer:/data
+    ports:
+      - 9000:9000
+    deploy:
+      placement:
+        constraints:
+          - "node.role==manager"
+      restart_policy:
+        condition: on-failure
+
+# Define Volumes
+volumes: 
+  # Anonymous volume defined for the database containers (machine specific?)
+  db: 
+  # Anonymous volume defined for the portainer container
+  portainer:
+
+# Define Networks 
+networks: 
+  # Define database_net network
+  database_net: 
+    # Since this is a swarm network we use the overlay driver 
+    driver: overlay 
+    # We allow this network to be attached to containers
+    attachable: true
+    # Define this as an internal network, no outbound connections can be created
+    internal: true
+  
+  # Define web_net network
+  web_net:
+    # Since this is a swarm network we use the overlay driver 
+    driver: overlay 
+    # We allow this network to be attached to containers
+    attachable: true
+    # Define this as an internal network, no outbound connections can be created
+    internal: true

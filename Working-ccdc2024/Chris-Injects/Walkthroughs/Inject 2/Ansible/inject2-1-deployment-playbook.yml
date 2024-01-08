@@ -1,0 +1,19 @@
+- name: Deploy image 1 to machines
+  hosts: deployment-machines
+  tasks:
+    - name: Check if hosts are up
+      ansible.builtin.ping:
+    
+    - name: Create image 1 container
+      community.docker.docker_container:
+        name: im1
+        hostname: im1
+        image: 192.168.0.175:5000/custom-image-1-uploaded
+        restart: true
+    
+    - name: Create image 2 container
+      community.docker.docker_container:
+        name: im2
+        hostname: im2
+        image: 192.168.0.175:5000/custom-image-2-uploaded
+        restart: true

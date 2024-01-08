@@ -1,0 +1,17 @@
+Install Pandora: 
+
+https://www.itzgeek.com/how-tos/linux/centos-how-tos/how-to-install-pandorafms-server-on-centos-7-rhel-7-monitoring-solution-for-your-infrastructure.html
+
+-Need to install apache: https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-centos-8
+
+-Need to install MySQL: https://www.itzgeek.com/how-tos/mini-howtos/securing-mysql-server-with-mysql_secure_installation.html
+
+-Install Poly core: follow frome frist link, but use python3. Then follow this link: https://www.itzgeek.com/how-tos/linux/centos-how-tos/semanage-command-not-found-in-centos-8-rhel-8.html
+
+-Different way to try if fail: https://pandorafms.com/manual/en/documentation/02_installation/01_installing#os_settings_and_database_creation
+
+To deal with angents use first link 2nd page
+
+Additional links: 
+https://www.howtoforge.com/tutorial/pandora-fms-monitor-centos-7/
+https://www.tecmint.com/install-and-connect-an-agent-to-pandora-fms-server/
