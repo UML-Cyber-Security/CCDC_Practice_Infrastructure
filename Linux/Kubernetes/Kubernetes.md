@@ -500,7 +500,7 @@ The first thing you need to do is secure the Host machine itself. At a bare mini
 
 ##### API-Server Security
 
-Basic Authentication
+###### Basic Authentication (Not recommended ever)
 
 - Can create csv file with password,username,userid in the following format
   - password123,user,u0100
@@ -511,11 +511,300 @@ Basic Authentication
 - You could then check the authentication to the api server with the following command
   - curl -v -k https://master-node-ip:6443/api/v1/pods -u "user1:password123"
 
+
+Full walkthrough for Kubeadm
+
+Create a user/password file like this
+
+    # User File Contents
+    password123,user1,u0001
+    password123,user2,u0002
+
+Edit the kube-apiserver static pod manifest located at
+
+    /etc/kubernetes/manifests/kube-apiserver.yaml
+
+
+You are going to want to add the volumeMount and volume respectively for where you are storing the auth file.
+
+        volumeMounts:
+        - mountPath: /tmp/users
+          name: usr-details
+          readOnly: true
+    volumes:
+    - hostPath:
+        path: /tmp/users
+        type: DirectoryOrCreate
+      name: usr-details
+
+Under containers -> - command you are going to want to also add the following option which is the path to your auth file.
+
+    - --basic-auth-file=/tmp/users/user-details.csv
+
+Finally, you would need to create the necessary roles and role bindings for these users you are listing
+
+    ---
+    kind: Role
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      namespace: default
+      name: pod-reader
+    rules:
+    - apiGroups: [""] # "" indicates the core API group
+      resources: ["pods"]
+      verbs: ["get", "watch", "list"]
+    
+    ---
+    # This role binding allows "jane" to read pods in the "default" namespace.
+    kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: read-pods
+      namespace: default
+    subjects:
+    - kind: User
+      name: user1 # Name is case sensitive
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: Role #this must be Role or ClusterRole
+      name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to
+      apiGroup: rbac.authorization.k8s.io
+
+You can test the authentication with,
+
+    curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
+
+
+
+###### TLS in Kubernetes Manually
+
+Server certificates for Servers
+
+- Kube-API Server
+- ETCD Server
+- Kubelet Server
+
+Client certificates for Clients (All authenticate to kube-api server)
+
+- admin
+- kube-scheduler
+- kube-controller-manager
+- kube-proxy
+
+Special Cases
+
+- The kube-api server acts as a client when talking to the etcd server. It can use its server certificates for this, or create seperate ones as a client.
+- The kube-api server does the same with the kubelet server and vise versa.
+
+A kubernetes cluster requires atleast 1 certificate authority to verify all the above certificates.
+
+Lets now take a look at generating the certificates. Our first steps will be getting the CA up and running. Keep in mind this section is for a kubernetes cluster that was deployed "the hard way" , not using kubeadm. 
+
+First generate the keys
+
+    openssl genrsa -out ca.key 2048
+
+Then generate the Certificate signing request
+
+    openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr
+
+Sign the certificate (Self signed by CA)
+
+    openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+
+__Lets move on to the client certificates. Lets start with the admin certificate.__
+
+First generate the keys
+
+    openssl genrsa -out admin.key 2048
+
+Then generate the Certificate signing request. Notice the /O, this is a existing group inside kubernetes that identifys the user as an admin.
+
+    openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
+
+
+
+__Lets do the kube-scheduler client certificate__
+
+First generate the keys
+
+    openssl genrsa -out scheduler.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key scheduler.key -subj "/CN=system:kube-scheduler" -out scheduler.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in scheduler.csr -CA ca.crt -CAkey ca.key -out scheduler.crt
+
+__Lets do the kube-controller-manager client certificate__
+
+First generate the keys
+
+    openssl genrsa -out controller-manager.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key controller-manager.key -subj "/CN=system:kube-controller-manager" -out controller-manager.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in controller-manager.csr -CA ca.crt -CAkey ca.key -out controller-manager.crt
+
+
+__Lets do the kube-proxy client certificate__
+
+First generate the keys
+
+    openssl genrsa -out kube-proxy.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key kube-proxy.key -subj "/CN=system:kube-proxy" -out kube-proxy.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in kube-proxy.csr -CA ca.crt -CAkey ca.key -out kube-proxy.crt
+
+
+Okay, how do we use these certificates? Lets take the admin one for example. There are two ways we can use it. Either directly calling the REST API on the cml, or including it into kube-config on the client.
+
+Via cml
+
+    curl https://kube-apiserver:6443/api/v1/pods --key admin.key --cert admin.crt --cacert ca.crt
+
+Via kube-config.yaml, you can check yours with kubectl config view, and edit the file directly at ~/.kube/config
+
+    apiVersion: v1
+    clusters:
+    - cluster:
+        certificate-authority-data: ca.crt
+        server: https://xxxxxx:6443
+      name: kubernetes
+    ...
+    kind: Config
+    users:
+    - name: kubernetes-admin
+      user:
+        client-certificate-data: admin.crt
+        client-key-data: admin.key
+
+As a general rule of thumb, the CA certificate must be specified for every client and server so it can correctly authenticate itself.
+
+__Lets now do the server ones starting with the kube-api server certificate__
+
+First generate the keys
+
+    openssl genrsa -out apiserver.key 2048
+
+We must also create an openssl config file -> openssl.cnf , to account for the other names people refer to the apiserver as.
+
+    [req]
+    req_extensions = v3_req
+    distinguished_name = req_distinguished_name
+    [ v3_req ]
+    basicConstraints = CA:FALSE
+    keyUsage = nonRepudiation,
+    subjectAltName = @alt_names
+    [ alt_names ]
+    DNS.1 = kubernetes
+    DNS.2 = kubernetes.default
+    DNS.3 = kubernetes.default.svc
+    DNS.4 = kubernetes.default.svc.cluster.local
+    IP.1 = clusterIP
+    IP.2 = clusterIP
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key apiserver.key -subj "/CN=kube-apiserver" -out apiserver.csr -config openssl.cnf
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in apiserver.csr -CA ca.crt -CAkey ca.key -out apiserver.crt
+
+__Lets do the kubelet client certificates__
+
+For the kubelet clients, each node needs its own certificate in the naming scheme node01 - nodexxxx etc. You must also edit each kubelet-config.yaml file for each node to add the clientCAFile (ca cert) and the tlsCertFile (client cert) and tlsPrivateKeyFile (client key).
+
+First generate the keys
+
+    openssl genrsa -out node01.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key node01.key -subj "/CN=node01" -out node01.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in node01.csr -CA ca.crt -CAkey ca.key -out node01.crt
+
+You would also need to create a certificate on each node to communicate with the kube-api server. (The above is for the kube-client server.) These would need the following with the naming scheme system:node:node01 and be in group SYSTEM:NODES
+
+First generate the keys
+
+    openssl genrsa -out node-node01.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key node-node01.key -subj "/CN=system:node:node01/O=system:nodes" -out node-node01.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in node-node01.csr -CA ca.crt -CAkey ca.key -out node-node01.crt
+
+The kube-api server now has 3 certificates
+
+- apiserver.crt / apiserver.key
+- apiserver-kubelet-client.crt / apiserver-kubelet-client.key
+- apiserver-etcd-client.crt / apiserver-etcd-client.key
+
+Where do these get passed in? 
+
+
+Well, if we check the kubeapi config @ /etc/systemd/system/kube-apiserver.service , we get
+
+    ...
+      ...
+      # The CA file
+      - --client-ca-file=/etc/kubernetes/pki/ca.crt 
+      ...
+      # APISERVER-etcd-client certificates
+      - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
+      - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+      - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
+      - --etcd-servers=https://127.0.0.1:2379
+      # APISERVER-kubelet-client certificates
+      - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
+      - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
+      ...
+      # APISERVER certificates
+      - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
+      - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+    ...
+
+
+If we check the kubelet config @ /etc/systemd/system/kubelet.service we get
+
+    ...
+    users:
+    - name: system:node:k8-master-1
+      user:
+        client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
+        client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
+
+###### TLS in Kubernetes via Kubeadm tool
+
+
+
+
+
+
 ---
-
-
-
-
 
 ## Configuration Files
 
@@ -2107,6 +2396,75 @@ Always check the official [site](https://developer.hashicorp.com/vault) for upda
     sudo yum -y install vault
 
 ### Deploying Vault Internally
+
+We will use helm, but we need to change some chart values first. Create a file called vault-helm-values.yml and add the following info,
+
+    server:
+      # We are doing standalone because its more secure than Dev and HA requires atleast 5 nodes, we only have 3.
+      standalone:
+        enabled: true
+        config: |
+          ui = true
+
+          listener "tcp" {
+            tls_disable = 1
+            address = "[::]:8200"
+            cluster_address = "[::]:8201"
+          }
+          storage "file" {
+            path = "/vault/data"
+          }
+
+      service:
+        enabled: true
+
+      # This is the most important part, you MUST supply an existing storageclass, for example an NFS share you set up for this to work. Also make sure the accessMode is matching the shares accessmode. In this example, my csi-nfs-1 storageClass is the nfs share from ### Installing CSI driver for NFS Storage above.
+      dataStorage:
+        enabled: true
+        size: 10Gi
+        storageClass: csi-nfs-1
+        accessMode: ReadWriteMany
+
+    ui:
+      enabled: true
+      serviceType: LoadBalancer
+
+
+Now we need to unseal the vault. Whether you have 1 pod or multiple running vault, just choose one. Then run the following command with the chosen pod.
+
+    kubectl exec -ti vault-0 -- vault operator init
+
+This will have the following output.
+
+    Unseal Key 1: MBFSDepD9E6whREc6Dj+k3pMaKJ6cCnCUWcySJQymObb
+    Unseal Key 2: zQj4v22k9ixegS+94HJwmIaWLBL3nZHe1i+b/wHz25fr
+    Unseal Key 3: 7dbPPeeGGW3SmeBFFo04peCKkXFuuyKc8b2DuntA4VU5
+    Unseal Key 4: tLt+ME7Z7hYUATfWnuQdfCEgnKA2L173dptAwfmenCdf
+    Unseal Key 5: vYt9bxLr0+OzJ8m7c7cNMFj7nvdLljj0xWRbpLezFAI9
+
+    Initial Root Token: s.zJNwZlRrqISjyBHFMiEca6GF
+
+    Vault initialized with 5 key shares and a key threshold of 3. Please securely
+    distribute the key shares printed above. When the Vault is re-sealed,
+    restarted, or stopped, you must supply at least 3 of these keys to unseal it
+    before it can start servicing requests.
+
+    Vault does not store the generated root key. Without at least 3 keys to
+    reconstruct the root key, Vault will remain permanently sealed!
+
+    It is possible to generate new unseal keys, provided you have a quorum of
+    existing unseal keys shares. See "vault operator rekey" for more information.
+
+In this case, it says the unseal threshold is 3 keys. So using 3 unique keys from the 5 given above, run the following commands. (The only thing you are changing is the vault-0 name for what pod you used, and the Unseal Key # to use 3 different keys.)
+
+    kubectl exec -ti vault-0 -- vault operator unseal # ... Unseal Key 1
+    kubectl exec -ti vault-0 -- vault operator unseal # ... Unseal Key 2
+    kubectl exec -ti vault-0 -- vault operator unseal # ... Unseal Key 3
+
+Check that your vault pod is correctly running now, then head over to the UI to log in. It will ask for a token, which is the *Initial Root Token* from above. To find it where it is running, you should check your services and look for whatever IP your loadbalancer gave it (Or whatever method you used)
+
+    kubectl get services
+
 
 TODO Redeploy cluster to accomodate changed IPs
 ### Steps to change IP of Kubernetes Host machine

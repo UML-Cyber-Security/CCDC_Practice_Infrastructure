@@ -19,8 +19,8 @@ server:
   dataStorage:
     enabled: true
     size: 10Gi
-    storageClass: vault-store
-    accessMode: ReadWriteOnce
+    storageClass: csi-nfs-1
+    accessMode: ReadWriteMany
 
 ui:
   enabled: true
