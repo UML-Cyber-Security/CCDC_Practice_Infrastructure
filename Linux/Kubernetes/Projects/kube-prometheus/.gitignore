@@ -1,0 +1,12 @@
+tmp/
+minikube-manifests/
+vendor/
+./auth
+.swp
+crdschemas/
+.mdoxcache
+
+docs/
+
+developer-workspace/gitpod/_output
+developer-workspace/codespaces/kind 
