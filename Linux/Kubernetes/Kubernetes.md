@@ -131,8 +131,6 @@ As a general overview of the above functionality, see the below diagrams.
     - Used when accessing a Node 
     - http://node-ip:port 
 
----
-
 #### Node
 
 ![nodeExample](./Resources/screenshots/nodeexample.png)
@@ -154,8 +152,6 @@ Three major components
   - You have a web server in one container on node a, and you have a db running in one container in 
     node b. The `kube-proxy` handles this communication.
 
----
-
 #### Replica Set
 
 ![replicasetExample](./Resources/screenshots/replicasetexample.png)
@@ -167,8 +163,6 @@ Three major components
 - If you were to define 3 replicas in a replica set, and had 3 nodes already existing with a matching label, then it would deploy NO new pods.
 - When scaling pods, always update via the yaml file, and just run replace command to push it.
 
----
-
 #### Deployment
 
 ![deploymentExample](./Resources/screenshots/deploymentexample.png)
@@ -179,9 +173,6 @@ Three major components
   - Rolling updates 
   - Rollbacks 
   - Ability to pause and resume environment to change requirements in-between. (underlying app version, resource allocation, etc.)
-
-
----
 
 #### Services
 
@@ -228,9 +219,6 @@ Instead of having to set up a vm + nginx or some type of proxy manager to handle
 
 If you did this on an unsupported platform, it would handle itself the same as a NodePort.
 
----
-
-
 #### Labels, Selectors and Annotations
 
 - Labels are attached as a key:value pair.
@@ -244,7 +232,6 @@ If you did this on an unsupported platform, it would handle itself the same as a
 - Annotations are just that, they are way to add some extra information.
   - For example, I may add that the current buildVersion is 1.3.
 
----
 
 #### Taints and Tolerations
 
@@ -257,8 +244,6 @@ If you did this on an unsupported platform, it would handle itself the same as a
     - When applied to a node with existing pods, any pods not tolerant of the taint will be killed (ejected from that node).
 - The master node automatically has a taint applied, that is why nothing gets placed on it.
 - `Key Concept:` Taints only restrict pods from being placed on them. They do NOT gaurentee that a pod will be placed on a node just because it is tolerant.
-  
----
 
 
 #### Namespaces
@@ -804,7 +789,7 @@ If we check the kubelet config @ /etc/systemd/system/kubelet.service we get
 
 
 
----
+
 
 ## Configuration Files
 
@@ -839,7 +824,7 @@ If we check the kubelet config @ /etc/systemd/system/kubelet.service we get
                 values:
                 - Large 
 
---- 
+ 
 
     apiVersion: 
     kind:
@@ -933,7 +918,7 @@ You can also only check for the key with
           port: 8080 
           targetPort: 27017
 
----
+
 
 Lets break this up. 
 
@@ -950,7 +935,7 @@ Lets break this up.
 - The `name` is the name of the deployment 
 - The `labels` here are optional.
 
----
+
 
     spec:
       replicas: 3 # Deploy 3
@@ -964,7 +949,7 @@ Lets break this up.
 - `matchLabels` is saying all pods that match this label (id,key pair) belong to the deployment above.
   - Important to note. `app: mongo` is a value/key pair. It can be anything, but it is best practice to use app as the id.
 
----
+
 
     template: # Blueprint (configuration) for the pods 
         metadata:
@@ -988,7 +973,7 @@ is also checked for the service access.
 - `ports` Important, reference the docker image you copied for this. It will most likely be under a section 
 "Connect to x from another docker container."
 
----
+
 BUT WAIT..HOW DO I LOAD ENV VARIABLES LISTED ON DOCKER HUB??
 
           env:
@@ -1021,7 +1006,7 @@ BUT WAIT..HOW DO I LOAD ENV VARIABLES LISTED ON DOCKER HUB??
         password: bW9uZ29wYXNz
 
 
----
+
 
 This is the service parts.
 
@@ -1036,7 +1021,7 @@ and act as load balancers.
 - `metadata` required. 
 - `name` name of service, endpoint used for access. Defined in our `mongo-config.yaml` under `mongo-url`. Must be same.
 
----
+
 
     spec:
       selector:
@@ -1056,7 +1041,7 @@ port you will access it at. Can change to what we want, best practice to set to 
 - `targetPort` This is the containerPort of deployment. Should always be the same. The service forwards requests to 
 the application within the pod via this port.
 
---- 
+ 
 The above is for an `INTERNAL SERVICE`. If you want an `EXTERNAL SERVICE` you need to add the elemnts below,
 
     spec:
@@ -1074,7 +1059,7 @@ is represented by `NodePort`.
 - `nodePort` Opens a port on the nodes IP `NodeIP:NodePort`
   - IMPORTANT -> Must be between `30000-32767`
 
----
+
 
 #### Pod Example
     
@@ -1673,7 +1658,7 @@ Also, note this great [video](https://www.youtube.com/watch?v=iwlNCePWiw4)
 I am following this [guide](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/) to install kubeadm.
 
 
----
+
 First disable Swap file. 
 
 **For Ubuntu**
@@ -1696,7 +1681,7 @@ Permanently disable swap file
     check its off  
     sudo swapon --show
 
----
+
 Now, ensure MAC address and UUID are unique for each node.
 
 **For Ubuntu**
@@ -1713,7 +1698,7 @@ Check UUID
 
     sudo cat /sys/class/dmi/id/product_uuid
 
----
+
 Finally, I am going to setup the hostnames.
 
     Master -> k8s-master.lab.local 
@@ -1777,7 +1762,7 @@ Apply sysctl params without reboot
 
     sudo sysctl --system
 
----
+
 **This is back to being on all**
 
 Install a container runtime, some options include docker engine, containerd, CRI-O. We will use containerd.
@@ -1818,7 +1803,7 @@ Restart services
 
     sudo systemctl restart containerd && sudo systemctl enable containerd
 
----
+
 
 Install kubeadm, kubelet and kubectl 
 
@@ -1836,7 +1821,7 @@ Install
 
     sudo apt update && sudo apt install -y kubelet kubeadm kubectl && sudo apt-mark hold kubelet kubeadm kubectl
 
---- 
+ 
 
 **Deploying the cluster**
 
@@ -1905,8 +1890,10 @@ Test your creation
 
 You will notice it says `NotReady` for all 3, this is because we do not have a `CNI (Container Network Interface)` setup for the cluster. As a quick info sess, CNI handles the Pod-to-Pod communication. Read more [here](https://kubernetes.io/docs/concepts/services-networking/). 
 
-I am going to use `Calico` as my `Network Addon`. You can see a list of other available ones [here](https://kubernetes.io/docs/concepts/cluster-kubeadm join 10.35.40.211:6443 --token oem3vy.6s7s91618qsyfkke \
-	--discovery-token-ca-cert-hash sha256:dd731e63f10ec6114b48f75a761cf833b8a3703fe53031829b685eed6bef1030 administration/addons/#networking-and-network-policy). The one I am using is for `50 Nodes or Less`
+#### Calico CNI
+
+I am going to use `Calico` as my `Network Addon`. You can see a list of other available ones [here](https://kubernetes.io/docs/concepts/cluster-administration/addons/). The one I am using is for `50 Nodes or Less`
+
 The following instructions are from `Calico` install [site](https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart). Reference them for future changes. Okay, lets start.
 
 Install Tigera Calico operator and custom resource definitions (BTW this is a `Namespace` kind.)
@@ -1937,6 +1924,28 @@ Check all the pods that are `Calico pods` are running with this. (Just keep it o
 Now, check the nodes in your cluster, all should be good ..
 
     kubectl get nodes -o wide
+
+#### Flannel CNI
+
+The following instructions are from `Calico` install [site](https://github.com/flannel-io/flannel). Reference them for future changes.
+
+Grab the manifest first, we need to change the podCIDR to whatever we set above
+
+    wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
+Search for the term `10.244.0.0/16` and change it to whatever you did. It should look like below
+
+     net-conf.json: |
+    {
+      "Network": "10.244.0.0/16",
+      "Backend": {
+        "Type": "vxlan"
+      }
+    }
+
+Finally just apply the manifest
+
+    kubectl apply -f kube-flannel.yml
 
 ### Installing metallb (Loadbalancer)
 
@@ -2254,7 +2263,7 @@ Then deploy a local issuer
                 name: cloudflare-api-token-secret
                 key: api-token
 
-#### Testingg
+#### Testing
 
 Here is an example service
 
@@ -2385,8 +2394,6 @@ Some important issues I ran into.
 - This implementation is EXTREMELY insecure currently, only would be viable with proper firewalling / in a homelab.
   - However, this share is also not storing any sensitive data.
 
-### Deploying Vault Externally and Linking to Kubernetes (WIP)
-
 #### Installing Vault on Rocky Linux 99
 
 Always check the official [site](https://developer.hashicorp.com/vault) for updates
@@ -2465,11 +2472,38 @@ Check that your vault pod is correctly running now, then head over to the UI to 
 
     kubectl get services
 
+### Deploy Longhorn
 
-TODO Redeploy cluster to accomodate changed IPs
-### Steps to change IP of Kubernetes Host machine
+Sidenote: Longhorn is a great solution when running a baremetal kubernetes cluster and you want to have local storage available for all the nodes and useable by statefulsets (databases). However, it is not necessarily needed if you already have a NFS solution or some other provided csi.
 
-After you have changed the host IP there are steps that must be taken to ensure kubernetes still functions correctly.
+#### Via Helm
 
-First, change your hosts file to reflect new ip
+Add longhorn Repo and update
 
+    helm repo add longhorn https://charts.longhorn.io
+    
+    helm repo update
+
+Install longhorn in its own namespace
+
+    helm install longhorn longhorn/longhorn --namespace longhorn-system --create-namespace --version 1.5.3
+
+Check success
+
+    kubectl -n longhorn-system get pod
+
+#### Manually (Kubectl)
+
+Apply the manifest
+
+    kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.5.3/deploy/longhorn.yaml
+
+If you want to look at it before applying
+
+    wget https://raw.githubusercontent.com/longhorn/longhorn/v1.5.3/deploy/longhorn.yaml\
+
+    kubectl apply -f longhorn.yaml
+
+Check success
+
+    kubectl get pods --namespace longhorn-system --watch
