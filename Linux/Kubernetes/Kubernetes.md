@@ -785,11 +785,55 @@ If we check the kubelet config @ /etc/systemd/system/kubelet.service we get
 ###### TLS in Kubernetes via Kubeadm tool
 
 
+##### Network policies
 
+###### Kubernetes Networking Policies
 
+By default, Kubernetes is designed as an Allow all mesh, where everything can talk to everything. 
 
+Within and without kubernetes there is `Ingress` and `Egress`. These are decided from the perspective of the object, where incoming is ingress and outgoing is egress.
 
+This example explained it well for me, you have a web server hosted on kubernetes.
 
+- The user requests something from the web server on port 80.
+- The web server in turn communicates with the API on port 5000.
+- The API has to communicate with the etcd on port 3306.
+
+This is visualized as the following,
+
+![ingress-egress](./Resources/screenshots/networkpolicyingressegress.png)
+
+A few points to make this image more clear.
+
+- From the web servers perspective (blue on the left), it has ingress on port 80 from the user, out egress on port 5000 to the API.
+- From the apis perspective, it has ingress from the web server on port 5000, and egress on port 3306 to etcd
+- From etcd perspective, it has ingress on port 3306 from the api, and egress on 3306 TO the api.
+
+If we were to convert these into rules, we would be left with the following,
+
+![policyrules](./Resources/screenshots/networkpolicyrules.png)
+
+Lets run with this idea, what if we dont want the website to access the etcd directly, but be forced to communicate via the api to reach it. To accomplish this, we would create an ingress network policy for the etcd pod that only allows ingress from the api. When you create the policy, it goes from allow all to only that rule, so you do not have to block by default. 
+
+Also, you do not have to worry about returning traffic. If you allow ingress from somewhere, egress related to that ingress is automatically allowed out. It is the same as normal networking where you typically allow connected, established. 
+
+However, it is extremely important to realize the following difference, although my communication is allowed back if I allow ingress from the API pod, unrelated communication is NOT allowed unless specifically stated. For example, if the etcd pod was trying to make an API call unrelated to the current communication, it would not be allowed without the proper egress rule.
+
+OKAY! Lets recap.
+
+- We can now block and allow certain traffic to and from pods by using selectors and labels.
+
+But, what if we have pods in other namespaces like dev, test and prod, and we only want the pod to be matched (and allowed traffic) in our current namespace. EASY! See below examples on network policies, but you would just add a namespaceSelector field. I am pointing this out here so you realize that other namespaces could have the same labels and end up unintentionally being allowed. You could also use this namespace selector to only allow communication inside a namespace without restricting the pod.
+
+The final case to consider, what about an IP outside of the kubernetes cluster? Simple again, just use an ipBlock object. This is where another extremely `important` detail comes up.
+
+![npingressorrules](./Resources/screenshots/networkpolicyorrules.png)
+
+In the above example, notice the 3 - next to podSelector, namespaceSelector, and ipBlock. Since these are all seperated, they are all OR rules. If any of the three match traffic is allowed, now compare that to below. 
+
+![npingressandrules](./Resources/screenshots/networkpolicyandrules.png)
+
+In thios above example, notice it is now only 2, and namespaceSelector is part of the podSelector array. In this scenario, the traffic must match the api-pod label AND be in the prod envirement, OR be coming from the ipBlock range.
 
 ## Configuration Files
 
@@ -1278,14 +1322,14 @@ This is equivilent to
     kubectl taint nodes node1 app=blue:NoSchedule
 
 
-#### Namespacee 
+#### Namespace
 
     apiVersion: v1 
     kind: Namespace 
     metadata:
       name: dev 
 
-#### ResourceQuotaa 
+#### ResourceQuota
  
     apiVersion: v1 
     kind: ResourceQuota
@@ -1299,6 +1343,78 @@ This is equivilent to
         requests.memory: 5Gi 
         limits.cpu: "10"
         limits.memory: 10Gi 
+
+#### NetworkPolicy
+
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: db-policy
+    spec:
+      podSelector:
+        matchLabels:
+          # This is the label for the pod we are applying this rule too (in this case etcd)
+          role: db
+      policyTypes:
+      - Ingress
+      - Egress
+      ingress:
+      - from:
+        - podSelector:
+            matchLabels:
+              # this is the label for where the ingress is allowed to come from (the api server(pod))
+              name: api-pod
+          # This is specifying the namespace you want to allow. It is also AND'd with the above. Add an - if you want it as an OR.
+          namespaceSelector:
+            matchLabels:
+              name: prod
+        - ipBlock:
+            # You can also allow external IP coming in.
+            cidr: 192.168.3.10/32
+        ports:
+        - protocol: TCP
+          port: 3306
+      egress:
+      # Changes to to when it is egress. This allows etcd to communicate with the outside IP
+      - to:
+        - ipBlock:
+            cidr: 192.168.3.10/32
+        ports:
+        - protocol: TCP
+          port: 80
+
+#### Persistent Volume (PV)
+
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: nfs-main-volume
+      labels:
+        type: local
+    spec:
+      persistentVolumeReclaimPolicy: Retain
+      claimRef:
+        name: nfs-main-claim
+      storageClassName: manual
+      capacity:
+        storage: 200Mi
+      accessModes:
+        - ReadWriteMany
+      hostPath:
+        path: "/data/nfs"
+
+#### Persistent Volume Claim (PVC)
+
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: claim-log-1
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Mi
 
 ### Update configuration / Rollout Control
 
@@ -2402,7 +2518,7 @@ Always check the official [site](https://developer.hashicorp.com/vault) for upda
     sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
     sudo yum -y install vault
 
-### Deploying Vault Internally
+### Deploying Vault Internally in Standalone mode Without TLS (Simplest method)
 
 We will use helm, but we need to change some chart values first. Create a file called vault-helm-values.yml and add the following info,
 
@@ -2472,6 +2588,11 @@ Check that your vault pod is correctly running now, then head over to the UI to 
 
     kubectl get services
 
+TODO Get TLS working
+### Deploying Vault Internally in Standalone mode with TLS
+
+[Resource](https://developer.hashicorp.com/vault/docs/platform/k8s/helm/examples/standalone-tls)
+
 ### Deploy Longhorn
 
 Sidenote: Longhorn is a great solution when running a baremetal kubernetes cluster and you want to have local storage available for all the nodes and useable by statefulsets (databases). However, it is not necessarily needed if you already have a NFS solution or some other provided csi.
@@ -2507,3 +2628,25 @@ If you want to look at it before applying
 Check success
 
     kubectl get pods --namespace longhorn-system --watch
+
+
+TODO Deploy postgressql-ha
+### Deploy Postgressql
+
+#### In HA Mode
+
+#### Normally
+
+
+TODO Deploy gitlab
+### Deploy gitlab
+
+
+
+TODO Deploy semaphore
+### Deploy semaphore
+
+Will most likely depend on postgressql
+
+[here](https://docs.semui.co/)
+
