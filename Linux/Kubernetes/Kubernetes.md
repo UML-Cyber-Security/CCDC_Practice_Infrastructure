@@ -2006,6 +2006,21 @@ Test your creation
 
 You will notice it says `NotReady` for all 3, this is because we do not have a `CNI (Container Network Interface)` setup for the cluster. As a quick info sess, CNI handles the Pod-to-Pod communication. Read more [here](https://kubernetes.io/docs/concepts/services-networking/). 
 
+Install one of the below CNIS, then come back here.
+
+(Optional, not recommended) Remove the taints on control plane so you can schedule pods on it.
+
+    kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+    kubectl taint nodes --all node-role.kubernetes.io/master-
+
+(Optional, not recommended) You will see errors, all you should look for is,
+
+    node/<your-hostname> untainted
+
+Now, check the nodes in your cluster, all should be good ..
+
+    kubectl get nodes -o wide
+
 #### Calico CNI
 
 I am going to use `Calico` as my `Network Addon`. You can see a list of other available ones [here](https://kubernetes.io/docs/concepts/cluster-administration/addons/). The one I am using is for `50 Nodes or Less`
@@ -2043,7 +2058,7 @@ Now, check the nodes in your cluster, all should be good ..
 
 #### Flannel CNI
 
-The following instructions are from `Calico` install [site](https://github.com/flannel-io/flannel). Reference them for future changes.
+The following instructions are from `Flannel` install [site](https://github.com/flannel-io/flannel). Reference them for future changes.
 
 Grab the manifest first, we need to change the podCIDR to whatever we set above
 
@@ -2164,7 +2179,7 @@ Then apply it,
 
     kubectl apply -f web-app-deployment.yml
 
-And test it.Get the EXTERNAL-IP of the service and then curl it.
+And test it. Get the EXTERNAL-IP of the service and then curl it.
     
     kubectl get svc web-app
     curl <EXTERNAL-IP> 
@@ -2197,7 +2212,7 @@ You can check the setable values
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 
 
-#### From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/))
+#### From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/)
 
 
 ##### Option A - Helm Via OCI Registry
@@ -2314,6 +2329,7 @@ Prior steps to doing this
 - Deploying LoadBalancer 
 - Assigning DNS name to the external IP (For example, via cloudflare I pointed my personal domain to the IP exposed for the nginx ingress.)
   - For more detail, you want to create an A record with your domain name (www.example.com) and have it point to the external IP.
+  - The IP to point to is the external IP for the nginx ingress controller, check in the nginx-ingress namespace under services, or just get services from --all-namespaces and look for it.
   - Then you can create a CNAME wild card (name would be *) and have it point to your domain name which will point any subdomains to www.example.com.
 - Deploying nginx ingress manager (Highly recommended to use kubernetes community guide, not offical )
 
@@ -2443,6 +2459,9 @@ An example ingress (Change host: to whatever your domain is)
                 port:
                   number: 80
 
+You can browse to it to connect, but a good quick check is with the following, where you should see the domain you set and the IP of the loadbalancer.
+
+    kubectl get ingress
 
 
 ### Installing CSI driver for NFS Storage
