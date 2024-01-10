@@ -1939,9 +1939,9 @@ Install
 
  
 
-**Deploying the cluster**
+#### Deploying the cluster
 
-**Give it a good old reboot before this.**
+**Give it a good old reboot before this.** -- (If you used ansible dependencies install, start here.)
 
 ON THE `CONTROL PLANE` 
 
@@ -1976,7 +1976,7 @@ Side-note, I got an error about not being able to retrieve from port 8433. This 
     cp: overwrite '/home/alex/.kube/config'? 
     You must type y, you cant just press enter.
 
-Okay, cool! Lets join the `Worker Nodes`
+#### Joining Worker Nodes
 
 If you already have the join node output copied, skip the next 3 commands.
 
@@ -1992,7 +1992,7 @@ To get the hash, you can run this.
 
     openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
 
-Once you have all this you can join the node with 
+Once you have all this you can join the node with (Make sure to use sudo)
 
     sudo kubeadm join --token <token> <control-plane-host>:<control-plane-port> --discovery-token-ca-cert-hash sha256:<hash>
 

@@ -1,5 +1,9 @@
-# This script will copy your public key and enforce PubkeyAuthentication.
-# Ensure the path to the key is correct.
+# Usage
+# This script will copy your public key and enforce PubkeyAuthentication by disabling password authentication 
+# and ensuring pubkeyauthentication is enabled
+
+# Instructions
+# Make sure the lookup path to your public key is correct.
 
 ---
 - name: Copy SSH keys

@@ -1,10 +1,16 @@
+# Usage
+# This ansible playbook will create a user, copy over a given ssh key allowing pubkeyauthentication, 
+# ensure the user has escelated priviladges, and sets the password.
+
+
+# Instructions
 # run the below command to get the hash for the password you want to use (Requires whois package)
 # mkpasswd --method=sha-512
 
 # Paste above output into password field below
 # Change user to what you want
 # Change key to what you want
-# Can create key with 
+# Can create key with ssh-keygen -t ed25519
 ---
 - name: Copy SSH keys
   hosts: all
