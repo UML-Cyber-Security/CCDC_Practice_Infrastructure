@@ -40,9 +40,9 @@
 ## TODO
 
 ### Deployments
-- postgressql-ha
-- Deploy Gitlab + Redis backend
-- Gitlab webservice
+- ~~postgressql-ha~~
+- ~~Deploy Gitlab + Redis backend~~
+- ~~Gitlab webservice~~
 - ~~Deploy Vault~~
 - Deploy Prometheus and Grafana
 - Deploy Semaphore

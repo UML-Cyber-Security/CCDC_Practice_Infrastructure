@@ -1,9 +1,0 @@
-groups:
-- name: example-group
-  rules:
-  - alert: ExampleAlert
-    expr: vector(1)
-    labels:
-      severity: "warning"
-    annotations:
-      description: This is an example alert.
