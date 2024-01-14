@@ -1,4 +1,4 @@
-# Deploying x
+# Deploying Kubernetes Dashboard
 
 [toc]
 
@@ -15,3 +15,5 @@
 ## Troubleshooting Topics
 
 ## Resources
+
+[Kubernetes-Docs](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)

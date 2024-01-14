@@ -44,7 +44,7 @@
 - ~~Deploy Gitlab + Redis backend~~
 - ~~Gitlab webservice~~
 - ~~Deploy Vault~~
-- Deploy Prometheus and Grafana
+- ~~Deploy Prometheus and Grafana~~
 - Deploy Semaphore
 
 ### Integrations

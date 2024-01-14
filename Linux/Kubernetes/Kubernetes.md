@@ -1,5 +1,7 @@
 Disclaimer -> Majority of screenshots sourced from [here](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/)
 
+[toc]
+
 ## Terminology
 
 ### Main Architecture
@@ -583,7 +585,9 @@ Special Cases
 
 A kubernetes cluster requires atleast 1 certificate authority to verify all the above certificates.
 
-Lets now take a look at generating the certificates. Our first steps will be getting the CA up and running. Keep in mind this section is for a kubernetes cluster that was deployed "the hard way" , not using kubeadm. 
+Lets now take a look at generating the certificates. Our first steps will be getting the CA up and running. 
+
+**Keep in mind this section is for a kubernetes cluster that was deployed "the hard way" , not using kubeadm. When deploying a cluster with kubeadm, the following process is automated and done during the initiation phase.**
 
 First generate the keys
 
@@ -782,8 +786,122 @@ If we check the kubelet config @ /etc/systemd/system/kubelet.service we get
         client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
         client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
 
-###### TLS in Kubernetes via Kubeadm tool
+###### Proccess of Interacting with Certificates API via Kubectl
 
+When interacting with kubernetes, you can handle the acceptance and distribution of certificates via the certificates api, compared to having to manually go into the cluster each time and add the certificates. The following is a full example process of this.
+
+This whole process is mostly handled by the controller-manager. It also has two options where you can specify the clusters signing cert file and signing key file, under `/etc/kubernetes/manifests/kube-controller-manager.yaml`
+
+Create some temporary fields to, can remove as needed. 
+
+```bash
+export VAULT_K8S_NAMESPACE="vault" \
+export VAULT_HELM_RELEASE_NAME="vault" \
+export VAULT_SERVICE_NAME="vault-internal" \
+export K8S_CLUSTER_NAME="cluster.local" \
+export WORKDIR=/tmp/vault
+```
+
+Generate private key (Locally)
+
+    openssl genrsa -out ${WORKDIR}/vault.key 2048
+
+Create CSR (Certificate Signing Request) config file. This is required when there can be multiple domains associated with your certificate, like in the example below it can be .namespace, .servicename, etc.
+
+```bash
+cat > ${WORKDIR}/vault-csr.conf <<EOF
+[req]
+default_bits = 2048
+prompt = no
+encrypt_key = yes
+default_md = sha256
+distinguished_name = kubelet_serving
+req_extensions = v3_req
+[ kubelet_serving ]
+O = system:nodes
+CN = system:node:*.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = *.${VAULT_SERVICE_NAME}
+DNS.2 = *.${VAULT_SERVICE_NAME}.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}
+DNS.3 = *.${VAULT_K8S_NAMESPACE}
+IP.1 = 127.0.0.1
+EOF
+```There was a formatting error, skip this line when copying. (include the EOF in the above line though)
+```
+Generate CSR (Certificate Signing Request) from above config and private key. You can do this without the config if not required.
+
+    openssl req -new -key ${WORKDIR}/vault.key -out ${WORKDIR}/vault.csr -config ${WORKDIR}/vault-csr.conf
+
+Create CSR (Certificate Signing Request) Yaml file to send to Kubernetes. This is what is important. 
+
+```bash
+cat > ${WORKDIR}/csr.yaml <<EOF
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: vault.svc
+spec:
+  signerName: kubernetes.io/kubelet-serving
+  expirationSeconds: 8640000
+  request: $(cat ${WORKDIR}/vault.csr|base64|tr -d '\n')
+  usages:
+  - digital signature
+  - key encipherment
+  - server auth
+EOF
+```
+
+The above in its normal yaml format.
+
+```yaml
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: vault.svc
+spec:
+  signerName: kubernetes.io/kubelet-serving
+  expirationSeconds: 8640000
+  # You could also manually supply this, by base64 decoding the .csr file and putting the contents here. This is just easier.
+  request: $(cat ${WORKDIR}/vault.csr|base64|tr -d '\n')
+  usages:
+  - digital signature
+  - key encipherment
+  - server auth
+```
+
+Send to cluster
+
+    kubectl create -f ${WORKDIR}/csr.yaml
+
+Approve CSR with Cluster
+
+    kubectl certificate approve vault.svc
+
+Confirm certificate signed
+
+    kubectl get csr
+
+####### Store cert + key in Kubernetes secret store
+
+Retreive cert from kubernetes to local and store in crt file.
+
+    kubectl get csr vault.svc -o jsonpath='{.status.certificate}' | openssl base64 -d -A -out ${WORKDIR}/vault.crt
+
+Retreive kube CA certificate from kubernetes to local
+
+```bash
+kubectl config view \
+--raw \
+--minify \
+--flatten \
+-o jsonpath='{.clusters[].cluster.certificate-authority-data}' \
+| base64 -d > ${WORKDIR}/vault.ca
+```
 
 ##### Network policies
 
