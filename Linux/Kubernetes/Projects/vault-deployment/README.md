@@ -238,6 +238,10 @@ server:
           service_registration "kubernetes" {}
 ```
 
+```bash
+helm install vault hashicorp/vault --namespace vault -f values.yml
+```
+
 ## Unsealing Vault after using one of above methods
 
 Now we need to unseal the vault. Whether you have 1 pod or multiple running vault, just choose one. Then run the following command with the chosen pod.

@@ -1449,57 +1449,103 @@ This is equivilent to
 
 #### ResourceQuota
  
-    apiVersion: v1 
-    kind: ResourceQuota
-    metadata:
-      name: compute-quota
-      namespace: dev 
-    spec:
-      hard:
-        pods: "10"
-        requests.cpu: "4"
-        requests.memory: 5Gi 
-        limits.cpu: "10"
-        limits.memory: 10Gi 
+ ```yaml
+apiVersion: v1 
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: dev 
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 5Gi 
+    limits.cpu: "10"
+    limits.memory: 10Gi 
+```
 
 #### NetworkPolicy
 
-    apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: db-policy
-    spec:
-      podSelector:
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-policy
+spec:
+  podSelector:
+    matchLabels:
+      # This is the label for the pod we are applying this rule too (in this case etcd)
+      role: db
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
         matchLabels:
-          # This is the label for the pod we are applying this rule too (in this case etcd)
-          role: db
-      policyTypes:
-      - Ingress
-      - Egress
-      ingress:
-      - from:
-        - podSelector:
-            matchLabels:
-              # this is the label for where the ingress is allowed to come from (the api server(pod))
-              name: api-pod
-          # This is specifying the namespace you want to allow. It is also AND'd with the above. Add an - if you want it as an OR.
-          namespaceSelector:
-            matchLabels:
-              name: prod
-        - ipBlock:
-            # You can also allow external IP coming in.
-            cidr: 192.168.3.10/32
-        ports:
-        - protocol: TCP
-          port: 3306
-      egress:
-      # Changes to to when it is egress. This allows etcd to communicate with the outside IP
-      - to:
-        - ipBlock:
-            cidr: 192.168.3.10/32
-        ports:
-        - protocol: TCP
-          port: 80
+          # this is the label for where the ingress is allowed to come from (the api server(pod))
+          name: api-pod
+      # This is specifying the namespace you want to allow. It is also AND'd with the above. Add an - if you want it as an OR.
+      namespaceSelector:
+        matchLabels:
+          name: prod
+    - ipBlock:
+        # You can also allow external IP coming in.
+        cidr: 192.168.3.10/32
+    ports:
+    - protocol: TCP
+      port: 3306
+  egress:
+  # Changes to to when it is egress. This allows etcd to communicate with the outside IP
+  - to:
+    - ipBlock:
+        cidr: 192.168.3.10/32
+    ports:
+    - protocol: TCP
+      port: 80
+```
+
+#### LimitRange
+
+```yaml
+apiVerison: v1
+kind: LimitRange
+metadata:
+  name: cpu-resource-constraint
+spec:
+  limits:
+  - default:
+    cpu: 500m
+  defaultRequest:
+    cpu: 500m
+  max:
+    cpu: "1"
+  min:
+    cpu: 100m
+  type: Container
+```
+
+```yaml
+apiVerison: v1
+kind: LimitRange
+metadata:
+  name: memory-resource-constraint
+spec:
+  limits:
+  - default:
+    memory: 500Mi
+  defaultRequest:
+    memory: 500Mi
+  max:
+    memory: "1Gi"
+  min:
+    memory: 100Mi
+  type: Container
+```
+
+#### Resource Quota
+
+
 
 #### Persistent Volume (PV)
 

@@ -5,7 +5,7 @@ metadata:
   name: gitlab
   namespace: dev
 spec:
-  instances: 3
+  instances: 2
 
   # Example of rolling update strategy:
   # - unsupervised: automated update of the primary once all
@@ -23,4 +23,4 @@ spec:
   # Require 1Gi of space
   storage:
     storageClass: longhorn
-    size: 2Gi
+    size: 5Gi
