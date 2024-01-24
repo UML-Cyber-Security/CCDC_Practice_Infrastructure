@@ -14,9 +14,28 @@ Load certificate into Cyber Range Desktop. SSH into the desktop and then pull in
 What port is available on the Ansible Machine
 ### Proxy
 
-### SOC
-List all packaged
-Structure of COMP (sudo tee / > )
+## SOC
+
+### Wazuh Setup Check (SOC)
+
+- Make sure all agents are connected (count number of machines, verify machines by MAC adress)
+- Create and screenshot/export every agents inventory data file
+
+- Verify every agents ossec.conf file
+- Generate a SCA & Vulnerability report for every agent if possible
+
+
+### Machine Setup Check (SOC)
+
+- Check OS version (cat /etc/os-release > file.txt)
+
+- Check how Wazuh is installed (Docker/Baremetal)
+- List all running process (psaux > file.txt)
+- List all open ports (sudo netstat -tuln, ss -tuln, lsof -i -P -n | grep LISTEN, or nmap)
+- List out strucutre (sudo tree / > file.txt)
+- Brief check of any vulnerabilites (shadow, group, authkeys)
+- List out all installed Programs on machine (dpkg --list > file.txt) !Might be other package installer, has service version!
+- IF BORED, list out hashes of all binary's (cd /bin, for FILE in*; do md5sum $FILE; done > file.txt)
 
 ### Ansible
 
