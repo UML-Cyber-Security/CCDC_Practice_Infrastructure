@@ -1,8 +1,5 @@
 #!/bin/bash
 
-exit_code=0
-
-
 if(( $(systemctl status auditd | grep -i "running" | wc -l ) == 0 )); then
     echo "Auditd is not running, please consider running it to increase logging capabilities"
     exit 1
