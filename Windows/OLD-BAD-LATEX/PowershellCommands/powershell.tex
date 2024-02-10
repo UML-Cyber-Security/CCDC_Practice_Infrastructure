@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikzsymbols}
+\usepackage{float}
+\usepackage{epigraph}
+\usepackage{array}
+\usepackage{float}
+
+\renewcommand{\textflush}{flushleft}
+\renewcommand{\arraystretch}{1.5}
+
+\lstset{
+    basicstyle=\ttfamily,
+    backgroundcolor=\color{gray!30},
+}
+\title{Powershell}
+\begin{document}
+\maketitle
+
+\graphicspath{ {./Images/} }
+\tableofcontents
+
+\section{Introduction}
+This file details important powershell commands in one place so you do not have to search to find them.
+Note that powershell commands are not case sensitive.
+
+\section{Local Users}
+These commands are related to administering the local users (not AD).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{| m{20em} |c|} % m allows text to wrap around
+\hline
+Command & Description \\
+\hline
+Disable-LocalUser -Name "Username" & Disabling a local user \\
+\hline
+Enable-LocalUser -Name "Username" & Enabling a local user \\
+\hline
+Get-LocalUser & Viewing local users \\
+\hline
+New-LocalUser -Name "Username" 
+-Password (Read-Host -AsSecureString) & Adding a new local user \\
+\hline
+\$Password = Read-Host -AsSecureString
+Set-LocalUser -Name "Username" -Password \$Password & Changing password of a local user \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Viewing connections}
+Merely disabling an account does not kick the user off, you should manually kick them.
+These commands are useful for viewing the current connected users and kicking them off.
+\begin{table}[H]
+\centering
+\begin{tabular}{| m{20em} |c|} % m allows text to wrap around
+\hline
+Command & Description \\
+\hline
+query user & View logged-in RDP users \\
+\hline
+logoff [SessionID] & Disconnecting a user from RDP \\
+\hline
+Get-NetTCPConnection -State Established | 
+Where-Object { \$\_.LocalPort -eq 22 } & View active SSH connections made with OpenSSH \\
+\hline
+Get-Process -Name sshd & Getting the SSH process \\
+\hline
+Stop-Process -Id [PID] -Force & Terminating the user's ssh session \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Installing WSL on Windows Server 2019}
+On Server 2022, you can just do wsl --install. But on 2019 it is more complicated. 
+
+Follow these directions: \href{https://learn.microsoft.com/en-us/windows/wsl/install-on-server}{microsoft.com/wsl/install-on-server}
+
+\end{document}

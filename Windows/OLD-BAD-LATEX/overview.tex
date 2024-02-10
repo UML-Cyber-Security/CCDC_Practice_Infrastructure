@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikzsymbols}
+\usepackage{float}
+
+\lstset{
+    basicstyle=\ttfamily,
+    backgroundcolor=\color{gray!30},
+}
+
+\title{Overview}
+\begin{document}
+\maketitle
+
+\graphicspath{ {./Images/} }
+\tableofcontents
+
+\section{Introduction}
+The goal of these documents is to provide a baseline foundation for the Windows team members.
+Please update and improve the documentation wherever you see fit.
+
+\paragraph{Categories} I think there are 8 categories to cover. Each category has an associated folder
+
+\begin{enumerate}
+        \item Deployment to Proxmox
+        \item Setup of Active Directory
+        \item Setup of the CA
+        \item Setup of the DFS / highly available files
+        \item Hardening
+        \item Planning (for the competition, timelines)
+        \item Offense (to practice)
+        \item Powershell commands (to reference in one spot)
+\end{enumerate}
+
+This is my knowledge of Windows. I have tried to include everything I think could be useful to you.
+I encourage you to do the same,to  add more sections and flesh out the sections with your own experience.
+
+\paragraph{Sharing files from Remmina}
+You will be using Remmina a lot, make sure to click "share folder" to send files over RDP.
+The folder is visible under "This PC".
+Windows defender can remove files from the share folder.
+
+\paragraph{Unpatched CVEs}
+There could be unpatched CVEs during the competition. A list of them can be found \href{https://stack.watch/product/microsoft/windows-server-2019/}{here}.
+For example, CVE-2020-0796 was severe and would surely have been used by the red team.
+
+\end{document}

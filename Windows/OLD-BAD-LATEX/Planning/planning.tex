@@ -1,0 +1,75 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikzsymbols}
+\usepackage{float}
+\usepackage{epigraph}
+
+\lstset{
+    basicstyle=\ttfamily,
+    backgroundcolor=\color{gray!30},
+}
+
+\renewcommand{\epigraphflush}{flushleft}
+\title{Planning}
+\begin{document}
+\maketitle
+
+\graphicspath{ {./Images/} }
+\tableofcontents
+
+\section{Introduction}
+This document is dedicated to how to learn the material, what in the 
+documents needs improving, and how to prepare for the competition.
+
+Ironically, this section needs to be fleshed out more. 
+It will be as time goes on. I think the most valuable thing is to edit it after your experience with the competition.
+Then we can figure out what we did wrong and what we need to improve on.
+
+\section{Practice}
+\epigraph{Theory and practice are the same in theory, but not in practice}{Ben Finegold}
+
+\subsection{Take notes from the red team}
+\epigraph{If you want to win, you must understand why you have been losing}{Internet person}
+
+\section{Incident Response Templates}
+We lost a lot of points due to a failure to do incident response. You should make a report for literally everything you do.
+They give a brief tempalte to use, you should use that.
+
+My year we submitted one giant incident response and it was terrible. Make a lot of smaller ones, and submit them quickly.
+
+\section{Injects}
+\epigraph{Dance like no one is watching; email like it may one day be read aloud in a deposition.}{Olivia Nuzzi}
+
+They do not like it if you joke in your response, even if they joke in their inject.
+
+\section{First Contact}
+\epigraph{I am speed}{Lightning McQueen}
+
+Speed is very important. I am not sure of how long you have before the red team attacks you, but it is not more than 10-15 minutes.
+By this time, you should have removed all low hanging fruit so they do not mess you up before you can even begin.
+
+This is my tentative starting plan for the 2024 competition:
+\begin{enumerate}
+        \item Run initial scripts (~5 min completion?)
+        \item Look around with Process Explorer
+\end{enumerate}
+
+\subsection{Initial Scripts}
+Your scripts should automate the menial work for you. This includes:
+\begin{enumerate}
+        \item Clearing the autoruns, clearing the task scheduler, correcting the registry (and writing the changes down)
+        \item Setting up logs / confirming logs are set up.
+        \item Downloading antivirus programs
+        \item Disabling AD accounts (not the black team!)
+        \item Disabling all local accounts
+        \item Changing your password (and obfuscating it to negate keyloggers)
+        \item Booting all RDP \& SSH users off of the machine (important, disabling accounts is not enough)
+        \item Removing GPO policies
+        \item Configuring the local firewall
+        \item Run Antivirueses (Norton Power Eraser \& Kaspersky)
+\end{enumerate}
+
+\end{document}
