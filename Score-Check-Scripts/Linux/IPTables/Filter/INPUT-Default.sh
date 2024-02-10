@@ -1,8 +1,5 @@
 #!/bin/bash
 
-exit_code=0
-
-
 if(( $(iptables -L | grep -i "CHAIN INPUT (policy ACCEPT)" | wc -l ) != 0 )); then
     echo "The INPUT Chain default policy is ACCEPT. For improved Security consider changing the default policy"
     exit 1
