@@ -25,10 +25,10 @@ TOKEN=$(curl -s -u "$USERNAME:$PASSWORD" -k -X POST "$URL/security/user/authenti
 
 if [ "$TOKEN" = "$INVALID_ID" ]; then
     echo "The machine IS secure"
-    exit_code=1
+    exit_code=0
 else
     echo "The machine is NOT secure, api password is left as default"
-    exit_code=0
+    exit_code=1
 fi
 
 exit $exit_code
