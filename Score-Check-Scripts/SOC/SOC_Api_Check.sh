@@ -21,8 +21,10 @@ PORT="55000"
 
 URL="https://$HOSTNAME:$PORT"
 
+# Try to curl the Wazuh API to see if the username and password is still defualt.
 TOKEN=$(curl -s -u "$USERNAME:$PASSWORD" -k -X POST "$URL/security/user/authenticate?raw=true")
 
+# If the login fails that means we have changed the password
 if [ "$TOKEN" = "$INVALID_ID" ]; then
     echo "The machine IS secure"
     exit_code=0
