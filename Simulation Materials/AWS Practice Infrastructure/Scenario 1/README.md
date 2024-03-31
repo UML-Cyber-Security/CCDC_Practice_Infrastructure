@@ -6,11 +6,11 @@
 *Average Deployment Time*: Less than 10 minutes.
 
 ## General Idea
-This scenario is essentially the beginning of future practices for future CCDC teams at UML. It is made as a POC that general scenarios that can vary in degrees of complexity can be made quickly. 
+This scenario is essentially the beginning of future practices for future CCDC teams at UML. While this is mainly a POC, it can be used as a reference and modified to spin up various different infrastructures with varying degrees of complexity.
 
 Now, this scenario was a result of an unforeseen power outage that caused a rapid shift in original plans. And so, the actual machines and services are completely barebones with the help of some red team pre-compromises already in place :)
 
-And so, this scenario puts the team under the stress of trying to find out what services they have available to them (hint hint, there's no services) and see how fast they can understand the infrastructure that was given to them. It's mainly to understand their process about when their thrown into unfamiliar territory.
+And so, this scenario puts the team under the stress of trying to find out what services they have available to them (hint hint, there are no services) and see how fast they can understand the infrastructure that was given to them. It's mainly to understand their process about when their thrown into unfamiliar territory.
 
 ## How to deploy
 
@@ -50,7 +50,7 @@ One configuration you may want to change is the `CR-VPN-Pub-IP` variable located
     After a successful run, you will see in the `Ansible/` directory a new directory named `exported-certs`. This will contain all the certs (not organized into subfolders) that were generated for use by the blackteam, blueteam and redteam respectively. Organize and distribute them as you see fit.
 
 
-And that's it! You now have a full infrastructure ready to go that will help the blue team practice! Good luck.
+And that's it! You now have a full infrastructure ready to go that will help the blue team practice! Good luck!
 
 ### Friendly Reminders
 
@@ -60,7 +60,7 @@ And that's it! You now have a full infrastructure ready to go that will help the
 
 3. All the blueteam accounts are given NOPASSWD permissions. If they're wondering about the password for root... why are they not resetting it in the first place ;)
 
-4. When doing a `terraform destroy`, make sure you're disconnected from the WireGuard VPN.
+4. When doing a `terraform destroy`, make sure you're disconnected from the WireGuard VPN or else the state of Terraform might be corrupted and manual effort will be needed to clean up the rest.
 
 
 ## RHEL Notes
