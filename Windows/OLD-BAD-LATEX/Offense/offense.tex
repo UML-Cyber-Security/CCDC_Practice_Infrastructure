@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikzsymbols}
+\usepackage{float}
+\usepackage{epigraph}
+\usepackage{changepage}
+
+\lstset{
+    basicstyle=\ttfamily,
+    backgroundcolor=\color{gray!30},
+}
+
+\renewcommand{\epigraphflush}{flushleft}
+
+\title{Offense}
+\begin{document}
+\maketitle
+
+\graphicspath{ {./Images/} }
+
+\title{Windows Offense}
+
+\tableofcontents
+
+\section{Introduction}
+\epigraph{If you know the enemy and know yourself, you need not fear the result of a hundred battles.}{Sun Tzu}
+
+To be a good blue team, we should practice red teaming.
+
+\section{Covenant Malware}
+Covenant is a .NET command and control framework. It works by installing
+Grunts on the target machine. Grunts work like reverse shells, they connect to a listener on 
+the C2 server.
+
+You should install covenant on whatever computer you
+plan to use as the C2 server. This will let you control the windows machines. 
+Covenant requires GIT and .NET to work. 
+You will also need to install .NET on the victim machine.
+
+\begin{itemize}
+        \item\href{https://github.com/cobbr/Covenant/wiki/Installation-And-Startup}{Instructions on their GitHub}
+        \item \href{https://blog.netwrix.com/2022/12/16/covenant-c2-tutorial/}{Blog Tutorial}
+        \item \href{https://github.com/cobbr/Covenant-wiki/blob/master/Listeners.md}{More information on listeners}
+\end{itemize}
+
+To install GIT on windows, go here:
+\href{https://git-scm.com/download/win}{https://git-scm.com/download/win}
+
+To install .NET, you can download it from the
+\href{https://dotnet.microsoft.com/en-us/download}{website} or you can install it in server manager (in the "Features" menu).
+
+To install .NET on linux, follow these 
+\href{https://learn.microsoft.com/en-us/dotnet/core/install/linux-scripted-manual#scripted-install}{directions}
+
+
+After installing the dependencies, we can install and run covenant with:
+
+\begin{lstlisting}
+git clone --recurse-submodules https://github.com/cobbr/Covenant
+cd Covenant/Covenant
+dotnet build
+dotnet run
+\end{lstlisting}
+
+"After running these commands, the Covenant service should be up and running. 
+You can then browse to the Covenant application interface on its default web port of 
+7443 to set up a user account and begin using the framework." -Bing
+
+If you would like to have listeners on ports 1-1023, you should run Covenant as root.
+
+The web console can be accessed at https://127.0.0.1:7443 and not localhost:7443, as the https is important
+
+For the Grunt to work, .NET has to be installed on the victim.
+
+Anti Grunt countermeasures:
+"If you uninstall the .NET Framework 3.5 from the victim machine, 
+it is likely that the Grunt will stop working." -Bing.
+I think it is very funny that malware has dependencies.
+
+\subsection{Troubleshooting the VPN}
+I tried a lot of ways to get the Grunt to recognize my machine.
+The only solutions that worked are a Kali VM or \href{sec:CloudflareTunnels}{Cloudflare Tunnels}.
+
+To get your IP address from the RDP connection:
+\begin{enumerate}
+\item Open the Command Prompt by pressing the Windows key + R and typing cmd.
+\item Type netstat -n | find ":3389" and press Enter. This will display a list of active connections to the RDP port (3389).
+\item Look for the connection that corresponds to your RDP session. The IP address of the RDP client will be listed next to the ESTABLISHED entry.
+\end{enumerate}
+
+\href{https://youtu.be/Fi0jXm8VOFU}{Advanced Usage of Covenant}
+
+\section{Cloudflare Tunnels}
+\label{sec:CloudflareTunnels}
+
+Justin mentioned how he was going to connect to the machines using cloudflare tunnels. So I will practice that and document it.
+
+\begin{enumerate}
+\item You can use your own domain, or you can have cloudflare provide one for you.
+\item You need to install cloudflared on the machines you are connecting to
+\item To install on proxmox:
+\begin{adjustwidth}{-5cm}{}
+\begin{lstlisting}
+wget -q 
+https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
+&& sudo dpkg -i cloudflared-linux-amd64.deb
+\end{lstlisting}
+\end{adjustwidth}
+    
+\item To do it without a domain: cloudflared tunnel --url http://localhost:80
+
+\item Take note of the random url generated.
+
+\item cloudflared access tcp --hostname randomsubdomain.trycloudflare.com --url tcp://localhost:5900
+\end{enumerate}
+\section{BloodHound}
+BloodHound is a tool that maps out Active Directory (AD) relationships and 
+permissions, turning them into clear visual graphs. It helps both defenders
+and attackers see potential security risks within AD environments, making 
+it easier to spot vulnerabilities or misconfigurations.
+
+\section{WinPeas}
+Windows Privilege Escalation Scripts.
+
+This script dumps a bunch of information about potentially interesting things to look for on
+the windows machine. It can be found \href{https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS}{here}.
+ 
+
+\section{SMBGhost / EternalDarkness / CVE-2020-0796}
+SMBGhost (CVE-2020-0796), also referenced as EternalDarkness, 
+is a severe vulnerability in Microsoft's Server Message Block (SMB) 
+3.1.1 protocol. This flaw permits unauthenticated remote attackers to 
+execute arbitrary code on vulnerable systems.
+
+This could be important to understand as it is a significant vulnerability in old Windows Server systems.
+TODO: add more potential vulnerabilities, explain this one more.
+
+\begin{itemize}
+    \item \href{https://blog.zecops.com/research/exploiting-smbghost-cve-2020-0796-for-a-local-privilege-escalation-writeup-and-poc/}{ZecOps Blog on SMBGhost} - Writeup and PoC on exploiting SMBGhost (CVE-2020-0796) for local privilege escalation.
+    \item \href{https://github.com/carbonblack/tau-tools/tree/master/remediation/EternalDarkness}{Carbon Black's EternalDarkness Remediation} - Detecting and remediating the EternalDarkness vulnerability.
+    \item \href{https://blogs.vmware.com/security/2020/03/threat-analysis-cve-2020-0796-eternaldarkness-ghostsmb.html}{VMware's Threat Analysis on EternalDarkness} - VMware's analysis of EternalDarkness/GhostSMB.
+    \item \href{https://www.cisa.gov/news-events/alerts/2020/06/05/unpatched-microsoft-systems-vulnerable-cve-2020-0796}{CISA Alert on CVE-2020-0796} - CISA giving resources on EternalDarkness/GhostSMB.    
+\end{itemize}
+
+\section{Malware to look into}
+Here is some random stuff so I don't forget to look into it:
+\begin{itemize}
+    \item \href{https://github.com/0x44F/WinKit}{WinKit} - A collection of useful Windows utilities and configurations.
+    \item \href{https://github.com/D4stiny/spectre}{Spectre} - Tool for generating payload delivery scripts.
+    \item \href{https://github.com/DarkCoderSc?tab=repositories}{DarkCoderSc's repositories} - Contains various hacking and penetration testing tools, notably ones focused on Windows exploitation.
+    \item \href{https://en.wikipedia.org/wiki/DarkComet}{DarkComet} (infected file, do not run on main OS: \href{https://github.com/zxo2004/DarkComet-RAT-5.3.1}{GitHub Link}) - A Remote Access Trojan (RAT) that allows control over infected devices.
+    \item \href{https://github.com/quasar/Quasar}{Quasar} - An open-source RAT for Microsoft Windows operating systems.
+    \item \href{https://github.com/screetsec/TheFatRat}{TheFatRat} - A tool for generating backdoor payloads and bypassing common anti-virus solutions.
+    \item \href{https://github.com/DarkCoderSc/win-brute-logon}{win-brute-logon} - A tool for bruteforcing login credentials on Windows systems.
+    \item \href{https://github.com/Hackplayers/evil-winrm}{evil-winrm} - 
+\end{itemize}
+
+\section{Real Administration Software to try}
+\begin{itemize}
+    \item \href{https://www.islonline.com/us/en/}{ISL Online} - Remote desktop and support software solution.
+    \item \href{https://devolutions.net/remote-desktop-manager/}{Remote Desktop Manager by Devolutions} - Software for managing multiple remote connections efficiently.
+\end{itemize}
+    
+\end{document}
+
