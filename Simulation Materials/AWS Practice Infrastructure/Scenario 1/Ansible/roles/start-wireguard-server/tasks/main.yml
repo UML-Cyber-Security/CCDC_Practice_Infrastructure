@@ -1,0 +1,30 @@
+---
+  - name: Update setup script
+    ansible.builtin.replace:
+      path: /home/ubuntu/start-wireguard.sh
+      regexp: "YOUR_SERVER_IP"
+      replace: "{{ public_ip }}"
+
+  - name: Start wireguard server
+    ansible.builtin.shell: |
+      sh /home/ubuntu/start-wireguard.sh
+
+  - name: Copy over python API
+    ansible.builtin.template:
+      src: wg-easy-api.py
+      dest: /home/ubuntu/wg-easy-api.py
+
+  - name: Copy over cert generator
+    ansible.builtin.copy:
+      src: generate-scenario-certs.py
+      dest: /home/ubuntu/generate-scenario-certs.py
+
+  - name: Generate the certs
+    ansible.builtin.shell: |
+      python3 generate-scenario-certs.py
+
+  - name: Get the certs from the server
+    ansible.builtin.synchronize:
+        src: /home/ubuntu/certs/          # Source directory on the remote host
+        dest: exported-certs              # Destination directory on the local machine
+        mode: pull                        # Indicates copying from remote to local

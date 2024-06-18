@@ -5,3 +5,12 @@
 *.toc
 *.synctex.gz
 *.fdb_latexmk
+*.terraform
+terraform.tfstate
+terraform.tfstate.backup
+.terraform*
+AWS-CCDC-Blackteam.pem
+exported-certs
+blue-team*
+instance_information.csv
+terraform.tfstate

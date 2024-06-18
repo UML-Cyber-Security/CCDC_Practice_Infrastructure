@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pihole-deployment
+  labels:
+    app: pihole
+  namespace: homelab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pihole
+  template:
+    metadata:
+      labels:
+        app: pihole
+    spec:
+      containers:
+      - name: pihole
+        image: pihole/pihole:latest
+        env:
+          - name: TZ
+            value: "US/Eastern"
+          - name: WEBPASSWORD
+            value: password
+          - name: DNSMASQ_USER
+            value: root
+          - name: DNS1
+            value: 1.1.1.1
+          # - name: PIHOLE_UID
+          #   value: "0"
+        volumeMounts:
+        - name: etc
+          mountPath: "/etc/pihole"
+        - name: dnsmasq
+          mountPath: "/etc/dnsmasq.d"
+      volumes:
+        - name: etc
+          persistentVolumeClaim:
+            claimName: pihole-etc-claim
+        - name: dnsmasq
+          persistentVolumeClaim:
+            claimName: pihole-dnsmasq-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pihole-service
+  labels:
+    app: pihole
+  namespace: homelab
+spec:
+  selector:
+    app: pihole
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: 80
+  # name: https
+    #port: 443
+    #protocol: TCP
+    #targetPort: 443
+  - name: dns-u
+    port: 53
+    protocol: UDP
+    targetPort: 53
+  - name: dns-t
+    port: 53
+    protocol: TCP
+    targetPort: 53
+  - name: mon
+    port: 67
+    protocol: UDP
+    targetPort: 67
+  type: LoadBalancer

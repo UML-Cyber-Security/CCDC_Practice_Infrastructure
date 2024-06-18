@@ -1,0 +1,6 @@
+- name: Setup and Start Wireguard server
+  hosts: WireguardServer
+  user: ubuntu
+  gather_facts: no
+  roles:
+    - start-wireguard-server
