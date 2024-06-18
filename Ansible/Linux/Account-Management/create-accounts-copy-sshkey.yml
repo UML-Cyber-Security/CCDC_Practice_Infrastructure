@@ -1,6 +1,6 @@
 # Usage
 # This ansible playbook will create a user, copy over a given ssh key allowing pubkeyauthentication, 
-# ensure the user has escelated priviladges, and sets the password.
+# ensure the user has escalated privileges, and sets the password.
 
 
 # Instructions

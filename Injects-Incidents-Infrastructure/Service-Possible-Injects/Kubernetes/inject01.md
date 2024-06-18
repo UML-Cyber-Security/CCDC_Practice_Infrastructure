@@ -9,7 +9,7 @@ Simple Static Web server hosted on Kubernetes [Easy]
 
 ## Expectations 
 
-- A Deployment with Replicas set to atleast 2 for an apache or nginx image.
+- A Deployment with Replicas set to at least 2 for an apache or nginx image.
 - A Loadbalancer (probably metalLB) that has been properly set up so the webserver is accessible outside.
 - They should provide the IP to reach the website at.
 

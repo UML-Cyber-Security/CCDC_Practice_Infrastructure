@@ -12,7 +12,7 @@ Simple Static Web server hosted on Kubernetes that is accessible via ingress [Ea
 - This is a continuation of inject 1, so everything there should be deployed
 - The web server should now be accessible via a hostname "www.example.com" instead of an IP, they should provide this to us.
   - FYI, without certs at this stage you must put the IP and Hostname into your /etc/hosts file for it to resolve correctly, unless you have local DNS setup.
-  - This can be acheived with something like nginx ingress controller, Traefik, etc
+  - This can be achieved with something like nginx ingress controller, Traefik, etc
 
 ## Dependencies
 

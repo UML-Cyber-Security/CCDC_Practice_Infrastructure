@@ -245,7 +245,7 @@ If you did this on an unsupported platform, it would handle itself the same as a
   - NoExecute
     - When applied to a node with existing pods, any pods not tolerant of the taint will be killed (ejected from that node).
 - The master node automatically has a taint applied, that is why nothing gets placed on it.
-- `Key Concept:` Taints only restrict pods from being placed on them. They do NOT gaurentee that a pod will be placed on a node just because it is tolerant.
+- `Key Concept:` Taints only restrict pods from being placed on them. They do NOT guarantee that a pod will be placed on a node just because it is tolerant.
 
 
 #### Namespaces
@@ -580,10 +580,10 @@ Client certificates for Clients (All authenticate to kube-api server)
 
 Special Cases
 
-- The kube-api server acts as a client when talking to the etcd server. It can use its server certificates for this, or create seperate ones as a client.
+- The kube-api server acts as a client when talking to the etcd server. It can use its server certificates for this, or create separate ones as a client.
 - The kube-api server does the same with the kubelet server and vise versa.
 
-A kubernetes cluster requires atleast 1 certificate authority to verify all the above certificates.
+A kubernetes cluster requires at least 1 certificate authority to verify all the above certificates.
 
 Lets now take a look at generating the certificates. Our first steps will be getting the CA up and running. 
 
@@ -607,7 +607,7 @@ First generate the keys
 
     openssl genrsa -out admin.key 2048
 
-Then generate the Certificate signing request. Notice the /O, this is a existing group inside kubernetes that identifys the user as an admin.
+Then generate the Certificate signing request. Notice the /O, this is a existing group inside kubernetes that identifies the user as an admin.
 
     openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr
 
@@ -786,7 +786,7 @@ If we check the kubelet config @ /etc/systemd/system/kubelet.service we get
         client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
         client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
 
-###### Proccess of Interacting with Certificates API via Kubectl
+###### Process of Interacting with Certificates API via Kubectl
 
 When interacting with kubernetes, you can handle the acceptance and distribution of certificates via the certificates api, compared to having to manually go into the cluster each time and add the certificates. The following is a full example process of this.
 
@@ -951,7 +951,7 @@ In the above example, notice the 3 - next to podSelector, namespaceSelector, and
 
 ![npingressandrules](./Resources/screenshots/networkpolicyandrules.png)
 
-In thios above example, notice it is now only 2, and namespaceSelector is part of the podSelector array. In this scenario, the traffic must match the api-pod label AND be in the prod envirement, OR be coming from the ipBlock range.
+In this above example, notice it is now only 2, and namespaceSelector is part of the podSelector array. In this scenario, the traffic must match the api-pod label AND be in the prod environment, OR be coming from the ipBlock range.
 
 ## Configuration Files
 
@@ -2484,6 +2484,143 @@ Test Ingress, change the hosts values to your DNS name you redirected to earlier
 
 You should then be able to browse to this on the web, however it will give an insecure warning since we havent implemented secure certificates. We can use cert-manager for that.
 
+### Deploying cert-manager
+
+FYI, if you have already deployed metalLB (Or some other LoadBalancer) then cert-manager will automatically be assigned an external IP. Otherwise, you either need to assign a pool or deploy a Loadbalancer. This is out of scope currently.
+
+Prior steps to doing this
+
+- Deploying LoadBalancer 
+- Assigning DNS name to the external IP (For example, via cloudflare I pointed my personal domain to the IP exposed for the nginx ingress.)
+  - For more detail, you want to create an A record with your domain name (www.example.com) and have it point to the external IP.
+  - Then you can create a CNAME wild card (name would be *) and have it point to your domain name which will point any subdomains to www.example.com.
+- Deploying nginx ingress manager (Highly recommended to use kubernetes community guide, not offical )
+
+Tutorial I am [following](https://cert-manager.io/docs/installation/helm/)
+
+Add helm repo
+
+    helm repo add jetstack https://charts.jetstack.io
+
+Update Helm
+
+    helm repo update
+
+Installing the required CRDS with kubectl
+
+    kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.crds.yaml
+
+Installing cert-manager via helm (Instead of above command you can alternatively add the flag --set installCRDs=true)
+
+    helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.3
+
+You can add other flags for the customization like, check the docs for more info.
+
+    --set prometheus.enabled=false \  # Example: disabling prometheus using a Helm parameter
+    --set webhook.timeoutSeconds=4   # Example: changing the webhook timeout using a Helm parameter
+
+Now we must deploy an Issuer. By default, issuers are per single namespace, but you can do a cluster-wide one with ClusterIssuer.
+
+This is the point that things can be very, very different.
+
+##### Cloudflare
+
+Get your api token and create the following secret
+
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: cloudflare-api-token-secret
+    type: Opaque
+    stringData:
+      api-token: <API Token>
+
+Then deploy a local issuer 
+
+    apiVersion: cert-manager.io/v1
+    kind: Issuer
+    metadata:
+      name: example-issuer
+    spec:
+      acme:
+          # The ACME server URL
+        server: https://acme-v02.api.letsencrypt.org/directory
+          # Email address used for ACME registration
+        email: <your@email>
+          # Name of a secret used to store the ACME account private key (Auto-created, name what you want, must match ingress issuer)
+        privateKeySecretRef:
+          name: letsencrypt-staging
+        # Enable the DNS-01 challenge provider
+        solvers:
+        - dns01:
+            cloudflare:
+              apiTokenSecretRef:
+                name: cloudflare-api-token-secret
+                key: api-token
+
+#### Testingg
+
+Here is an example service
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: kuard
+    spec:
+      selector:
+        matchLabels:
+          app: kuard
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: kuard
+        spec:
+          containers:
+          - image: gcr.io/kuar-demo/kuard-amd64:1
+            imagePullPolicy: Always
+            name: kuard
+            ports:
+            - containerPort: 8080
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: kuard
+    spec:
+      ports:
+      - port: 80
+        targetPort: 8080
+        protocol: TCP
+      selector:
+        app: kuard
+
+An example ingress (Change host: to whatever your domain is)
+
+    apiVersion: networking.k8s.io/v1 
+    kind: Ingress
+    metadata:
+      name: kuard
+      annotations:
+        cert-manager.io/issuer: "letsencrypt-staging"
+
+    spec:
+      ingressClassName: nginx
+      tls:
+      - hosts:
+        - example.example.com
+        secretName: quickstart-example-tls
+      rules:
+      - host: example.example.com
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kuard
+                port:
+                  number: 80
 
 
 
@@ -2552,10 +2689,28 @@ Some important issues I ran into.
 - This implementation is EXTREMELY insecure currently, only would be viable with proper firewalling / in a homelab.
   - However, this share is also not storing any sensitive data.
 
+### Deploying Vault Externally and Linking to Kubernetes (WIP)
 
-TODO Deploy postgressql-ha
+#### Installing Vault on Rocky Linux 99
+
+Always check the official [site](https://developer.hashicorp.com/vault) for updates
+
+    sudo yum install -y yum-utils
+    sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    sudo yum -y install vault
+
+### Deploying Vault Internally
+
+TODO Redeploy cluster to accomodate changed IPs
+### Steps to change IP of Kubernetes Host machine
+
+After you have changed the host IP there are steps that must be taken to ensure kubernetes still functions correctly.
+
+First, change your hosts file to reflect new ip
+
+
 ### Deploy Postgressql
-
+TODO Deploy postgressql-ha
 #### In HA Mode
 
 #### Normally

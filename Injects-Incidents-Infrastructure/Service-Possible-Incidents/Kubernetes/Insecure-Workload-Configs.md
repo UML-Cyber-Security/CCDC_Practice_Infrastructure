@@ -2,7 +2,7 @@
 
 ## Description
 
-Manifests have many different configurations and options that can be included when creating them. This is the most common vulnerbility, where best-practices are not followed and insecure configurations are allowed to be included in production level envirements. 
+Manifests have many different configurations and options that can be included when creating them. This is the most common vulnerability, where best-practices are not followed and insecure configurations are allowed to be included in production level environments.
 
 ## General points to keep in mind
 
