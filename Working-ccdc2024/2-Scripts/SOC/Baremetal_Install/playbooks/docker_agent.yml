@@ -1,0 +1,31 @@
+---
+# This playbook makes necessary changes to the  Debian Agents which will help pull docker logs from those agents
+- hosts: Debian_Agents
+  become: true
+  tasks:
+
+    - name: Ensure Docker is present on the remote system
+      ansible.builtin.package:
+        name: docker
+        state: present
+
+    - name: Copying the configuration to agents
+      ansible.builtin.blockinfile:
+        path: /var/ossec/etc/ossec.conf
+        block: |
+               <ossec_config>
+                 <wodle name="docker-listener">
+                   <interval>10m</interval>
+                   <attempts>5</attempts>
+                   <run_on_start>yes</run_on_start>
+                   <disabled>no</disabled>
+                 </wodle>
+               </ossec_config>
+        state: present
+      tags: changeblock
+
+    - name: Restarting wazuh agent
+      ansible.builtin.service:
+        name: wazuh-agent
+        state: restarted
+

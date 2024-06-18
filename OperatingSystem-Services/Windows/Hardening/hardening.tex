@@ -1,0 +1,376 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikzsymbols}
+\usepackage{float}
+\usepackage{epigraph}
+
+\lstset{
+    basicstyle=\ttfamily,
+    backgroundcolor=\color{gray!30},
+}
+
+\renewcommand{\epigraphflush}{flushleft}
+\title{Hardening}
+\begin{document}
+\maketitle
+
+\graphicspath{ {./Images/} }
+\tableofcontents
+
+\section{Introduction}
+\epigraph{I remembered how Albert Camus talks about the concept of resistance. 
+The idea is that if you see that you cannot win, do everything in your power to resist. And that memory gave me the determination I needed.}
+{Ding Liren}
+
+Assume everything is compromised. Even the laptops you are using for the competition! Be paranoid!
+
+Assume the Red Team has thoroughly reviewed all publicly available material, 
+including systems from past years. They've highlighted instances of 
+teams reusing passwords over multiple years, and the red team uses a wordlist of 
+passwords from previous competitions. One read teamer even claimed the capability to 
+enumerate all 12-character passwords in 6 hours (involving renting cloud GPUs). 
+
+Given that the Red Team has 
+the entire night to crack hashes, it's important to use good passwords.
+I make passwords by thinking of random objects and then scattering some symbols \& numbers around.
+The red team's hash-cracking ability is probably especially relevant for windows, 
+as kerberos uses hashes extensively. 
+%TODO: update with more details about kerberos
+
+\section{Active Directory Freebies}
+There are some very quick and easy ways to harden active directory.
+
+\begin{enumerate}
+        \item Disable all of the accounts besides the black team and your own
+        \item Change your password to something random and good
+        \item At some point, you can make a new administrator account with an unusual username. You can keep the old account around as a honeypot if you want
+        \item After disabling accounts, you must kick them off of the machine! Merely disabling the account does not kick the user off of the machine
+        \item You must also view the ssh connections and kick them off. (both ssh and rdp)
+        \item Look at GPO and disable any malicious policies, such as policies that disable microsoft defender.
+\end{enumerate}
+
+\section{Local Account Freebies}
+In addition to active directory, your computer has a local directory of users. These include the Guest user.
+Make sure all of the local accounts are disabled.
+
+You can get the local users with:
+\begin{lstlisting}
+    get-LocalUser
+\end{lstlisting}
+And disable the accounts with: 
+\begin{lstlisting}
+    Disable-LocalUser -Name "Guest"
+\end{lstlisting}
+
+\section{Registry Keys and Autoruns}
+%TODO do this tryhackme room and explain it
+\href{https://tryhackme.com/room/windowsforensics1}{Tryhackme on Windows Forensics}
+Zimmerman registry explorer
+
+%TODO: write a program to scan the windows registry and report any anomalies in the keys.
+Often keys in things like Firefox or AmazonVM thingie will be creatively named by the red team
+so you don't notice them.
+
+\subsection{What is the Windows Registry?}
+The Windows Registry is a database storing Windows OS and application settings. 
+Watch this \href{https://youtu.be/_U78iAem3uo}{video}
+
+\paragraph{Keys and Subkeys}
+These are like folders and subfolders. They can contain other keys (subkeys) and values.
+
+\noindent For instance, HKEY\_LOCAL\_MACHINE\textbackslash SOFTWARE\textbackslash Mozilla might be a key where settings specific to Mozilla software are stored.
+
+\noindent Values:
+These are the actual data entries within a key or subkey.
+Each value has a \textbf{name, a type, and data.}
+
+\paragraph{Value Types}
+\begin{itemize}
+\item REG\_SZ: A string value. It's a readable text value and one of the most common types
+ you'll encounter.
+
+\item REG\_DWORD: A 32-bit number. Often used for flags, settings, or Boolean values. 
+For example, a setting might be 0 (off) or 1 (on).
+
+\item REG\_QWORD: A 64-bit number.
+
+\item REG\_BINARY: Raw binary data.
+
+\item REG\_MULTI\_SZ: Multiple string values, usually in an array. 
+Useful when an application needs to store multiple entries in a single value.
+
+\item REG\_EXPAND\_SZ: A string that includes variables to be replaced when called by an application. 
+For instance, \%UserProfile\% might expand to the directory path of the current user's profile.
+\end{itemize}
+There are other types, but these are the most common.
+
+Image File Execution Options (IFEO) in the Windows Registry allow 
+developers to specify debugging tools to launch when a particular 
+executable starts, but they can be misused by malware to redirect 
+or hijack the execution of legitimate programs
+
+\section{Firewall / Network}
+%TODO: Learn how the windows firewall & networking works
+\subsection{Banning IPs}
+Banning IPs makes me paranoid of accidentally ``red teaming" myself, but it can be a good idea.
+
+I will look into this program called \href{https://github.com/DigitalRuby/IPBan}{IP Ban}.
+
+\section{Red Team Gimmicks}
+\epigraph{I was surprised by it, but I wasn’t surprised that I was surprised. I expected a surprise, I just wasn’t sure which one.}
+{Fabiano Caruana}
+
+The red team loves gimmicks. It adds some fun and lets them be creative. So expect to be surprised.
+
+\subsection{Visitors to the room}
+Assume all visitors are malicious.
+If people walk in the room, cover your password sheets. I kept mine in my pocket and only took it out when I needed it. 
+
+\subsection{The Intern}
+There is an intern, and they will be polite and unassuming. But their goal is to mess with you! Never take your eyes off the intern!
+They can try to plug USBs into your computers, take pictures with your password sheets (don't allow them to take any pictures).
+Apparently the intern and her handler will follow any rules you tell them. So tell them to not take picures, install unwanted programs, plug in devices, etc.
+
+\subsection{Other devices in the room}
+One time the red team got passwords by having a hidden camera in the room and using it to view passwords on the whiteboard. 
+Be careful of physical devices in the room. I think there was speculation that a doll had a camera in it, idk.
+
+\section{Running an Anti Virus}
+Windows Defender is good and easy as it comes preinstalled. Of course you should remove any exclusions.
+
+\paragraph{Allowed Programs} Rules about The CCDC rules say programs/information ``are completely valid for competition use provided there is no 
+fee required to access those resources and access to 
+those resources has not been granted based on a previous membership, purchase, or fee"
+
+\noindent So we can use free antiviruses, or those with a no-card-required free trial.
+
+\paragraph{Possible Antiviruses}
+\begin{itemize}
+\item Kaspersky free
+\item \href{https://www.sophos.com/en-us/free-tools/hitmanpro}{Hitman Pro}
+seems to be a good choice for scanning the file hashes against a large database.
+\item Norton Power Eraser can check for Potentially Unwanted Applications (PUA) and can scan for rootkits.
+\item Kaspersky's TDSSKiller to remove rootkits.
+\end{itemize}
+
+\section{Sysinternals}
+The best antivirus is you. It's not empowering, it's mostly just sad.
+You need to be able to identify malicious processes using Sysinternals tools.
+
+\paragraph{Mark Russinovitch} He has a youtube channel with great presentations on sysinternals (and he made sysinternals!): 
+\begin{itemize}
+\item \href{https://youtu.be/vW8eAqZyWeo}{Mark Russinovich on Malware Hunting with Sysinternals}
+\item \href{https://youtu.be/A_TPZxuTzBU}{License to Kill: Malware Hunting with the Sysinternals Tools }
+\item Russinovich also wrote a book (don't pirate it): Windows Sysinternals Administrator’s Reference
+\end{itemize}
+
+\subsection{Process Explorer}
+Process Explorer provides detailed information about processes, including a hierarchical view of parent 
+and child processes, as well as in-depth details about resources, handles, and DLLs in use.
+It allows you to suspend and kill processes, and can scan the file hashes against VirusTotal.
+
+The red team may give you some low hanging fruit with malware that rings up on VirusTotal.
+But if it is not that simple, always remember that suspicious processes include:
+conhost.exe / command prompts,
+powershell prompts,
+and exe files.
+
+\paragraph{Replacing task manager}
+In process explorer, click ``run as task manager.'' Now Ctrl+Shift+Esc will open Process Explorer (instead of task manager).
+
+\paragraph{Tips from a Professor K video}
+\href{https://youtu.be/y2bNLCWHFNs}{Professor K on Process Explorer}
+
+``Put malware to sleep, and only then kill it. 
+Then they don't know what's happening.
+A lot of malware out there has
+the buddy system. Instead of racing against the buddy system
+and deleting both malicious files before they respawn each other,
+suspend them and then terminate them."
+
+``Also if it is necessary, you don't want to cause irreperable damage to your system."
+
+Things to look for from the Professor K video:
+\begin{enumerate}
+        \item No ``Verified Signer"
+        \item VirusTotal scan
+        \item Strings of the executable
+        \item Process' properties \& the TCP/IP tab
+        \item DLLs of the process
+        \item Handles of the process
+        \item Where the process is launching from
+        \item Can view the autostart location from the registry
+\end{enumerate}
+
+\paragraph{From Mark Russinovich:}
+\begin{enumerate}
+        \item Purple means a process is packed / encrypted
+        \item Have process explorer verify image signatures
+        \item Change your refresh rate to 9 seconds so you can see short lived processes
+\end{enumerate}
+
+\paragraph{From me}
+\begin{enumerate}
+    \item Be wary that just because a program is started by System32 does not mean it is safe. 
+    I experienced this personally when Eduardo used the Covenant malware against me. 
+    It used processes started by System32.
+\end{enumerate}    
+
+\paragraph{Sigcheck command}
+The sigcheck command with these flags recursively scans the C: 
+drive for unsigned executables, verifies their status against VirusTotal.com,
+ and opens the browser to the viruses that are detected.
+\begin{lstlisting}[breaklines=true, columns=fullflexible]
+        sigcheck -e -u -vr -s c:\       
+\end{lstlisting}
+
+\paragraph{listdlls}
+Lists all processes that have loaded unsigned DLLs
+\begin{lstlisting}[breaklines=true, columns=fullflexible]
+        listdlls -u *       
+\end{lstlisting}
+
+\subsection{Autoruns}
+
+\begin{enumerate}
+        \item Show only images that are not signed by microsoft. This will reduce the noise and focus only on the potential malware.
+        \item WMI tab autoruns \href{https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96}{(What is WMI)} WMI-based persistence is less well-known and therefore may be overlooked during manual investigations. 
+        \item Timestamp column. The timestamp indicates when a file was created or last modified.
+\end{enumerate}
+
+To remove the program that is started by the shell, he changes its registry startup from 
+Shell to explorer.exe
+
+\subsection{Process Monitor}
+\epigraph{"When in doubt, run process monitor"}{Mark Russinovich}
+
+%TODO: need to watch videos on process monitor and add stuff about it. I think it is significant.
+
+\subsection{TCPView}
+TCPView provides a real-time graphical representation of the active TCP and UDP endpoints on a system. 
+It displays details about the processes that initiated the connections, 
+the local and remote addresses, as well as the state of each connection. 
+This tool is particularly useful for network diagnostics, security investigations, 
+and understanding the network activity of a system.
+
+You can view active TCP and UDP connections from TCPView, but you must go to
+Process Explorer to kill them.
+
+\section{Securing DNS}
+
+\subsection{Disabling Recursive Lookups}
+"Disabling recursive lookups can help prevent DNS-based DDoS attacks. 
+Recursive DNS queries are when a DNS server processes a domain name 
+request on a domain name for which it is not authoritative 
+(or has not already cached) by querying the root name servers for 
+the IP address of the requested domain name1. A remote attacker could 
+spoof a recursive DNS query with a source address of a network they 
+wish to cause a denial of service for. The attacker spoofs a query 
+with a small payload and causes the DNS server to reply with much 
+more data. This floods the target network with answers to questions 
+it never asked for2. Disabling open recursion, which causes the server 
+to accept DNS 
+requests from any IP address, can reduce DNS attack loopholes" -Bing
+
+\href{https://www.cisa.gov/sites/default/files/publications/DNS-recursion033006.pdf}{CISA on DNS recursion}
+
+\subsection{DNSSEC}
+Domain Name System Security Extensions
+
+Protect against DNS spoofing and cache poisoning
+
+\paragraph{DNSSEC Resources}
+\begin{itemize}
+\item \href{https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en}{ICANN on DNSSEC}
+\item \href{https://www.akadia.com/services/dns_hardening.html}{Akadia DNS Hardening}
+\end{itemize}
+
+\section{Securing Active Directory}
+
+\paragraph{Sean Metcalf}
+A mobster in the AD space. He runs the site \href{https://adsecurity.org/}{adsecurity.org/}
+and I have made a playlist of some useful videos: \href{https://www.youtube.com/playlist?list=PLHkV-wwoQ7s_7vUau-eqiscWoZZNC3EcZ}{playlist}.
+
+\paragraph{Black Hills Information Security Video}
+This video is pretty good. \href{https://youtu.be/SdNPUhzYTUc?si=FNYSbLUqm-2Kurxp}{Active Directory Best Practices That Frustrate Pentesters}
+
+\section{Event Logs}
+%TODO: Do event logs tryhackme
+I am going to do this \href{https://tryhackme.com/room/windowseventlogs}{room} and then get back to you.
+But they are definitely very important!
+
+Event Viewer can be launched by typing eventvwr.msc
+
+Event Viewer has three panes.
+\begin{enumerate}
+\item The pane on the left provides a hierarchical tree listing of the event log providers.
+\item The pane in the middle will display a general overview and summary of the events specific to a selected provider.
+\item The pane on the right is the actions pane.
+\end{enumerate}
+
+\section{Caution with Shortcuts}
+Shortcuts can have extra properties and run other programs when you click them.
+For example, the Firefox shortcut could really run a script that opens firefox and also some
+other malicious program.
+
+\noindent Viewing the properties of a shortcut in the desktop is very straightforward.
+
+\paragraph{Properties of a shortcut in the taskbar}
+To view the properties of a shortcut in the taskbar, 
+\begin{itemize}
+\item Right-click on the shortcut in the taskbar.
+\item If the program is already running or pinned to the taskbar, you may see a ``jumplist" (a list of recent items, tasks, or pinned items related to that application). If you see this jumplist:
+\item Right-click again on the application's name or icon in that jumplist (i.e., the entry at the top).
+\item A context menu will appear. Choose Properties from the context menu.
+\end{itemize}
+
+\section{GPO Policies}
+Group Policy Objects (GPOs) are a way to centrally manage 
+and enforce configuration settings for computers 
+and users within an Active Directory domain.
+
+- What are job objects? How can I use them to set limits on program execution / 
+% https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects
+
+% https://www.blackhillsinfosec.com/active-directory-best-practices-to-frustrate-attackers-webcast-write-up/
+% https://billy-boone.medium.com/group-policy-monitoring-for-cyber-security-59d7953c4da5
+\begin{enumerate}
+    \item Audit logs for login attempts, file access, system configurations
+    \item Account Lockout policy, to prevent brute force attacks. Can I hook it up to an auto-ban as well?
+    \item Restrict USB drives (can't hurt. You never know)
+    \item Restrict command prompt and powershell
+    \item SRP (software restriction policies). Only allows identified applications to run.
+    \item Enforce LDAPS. Domain Controller: LDAP server signing requirements
+    \item Enforce encryption for SMB, RPC, others?
+    \item Setup the firewall from GPO to not have to do it multiple times.
+    \begin{itemize}
+        \item Block SSH (we only use RDP, can reduce attack surface/scripting ability)
+        \item Block WinRM
+        \item Allow RDP
+        \item Allow LDAP on port 389.
+        \item Allow LDAPS on port 636.
+        \item Allow DNS on port 53.
+        \item Allow Kerberos on port 88.
+        \item Allow RDP on port 3389 for specified IP ranges or administrators.
+        \item Allow SMB on port 445.
+        \item Allow NetBIOS (if required) on ports 137, 138, 139.
+        \item Allow NTP (network time protocol) on port 123
+        \item 
+    \end{itemize}
+    \item Task scheduler. Can run antivirus scans on all the computers
+    \item Software Installation. Can automatically install antivirus and sysinternals, for example.
+    \item Set the local admin passwords through a script given by GPO. Or can use LAPS (Local Administrator Password Solution).
+    \item Can send a script to kick off all users who had their accounts disabled
+\end{enumerate}
+
+\section{Volatility Framework}
+Metasploit and other viruses can run only in RAM. 
+We can find them from their network connections, but also from 
+RAM forensics.
+
+% https://www.forensicfocus.com/articles/finding-metasploits-meterpreter-traces-with-memory-forensics/
+
+\end{document}

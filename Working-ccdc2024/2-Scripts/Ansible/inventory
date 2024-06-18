@@ -1,0 +1,12 @@
+[SOC_Server]
+192.168.0.99 ansible_user=uml-admin
+
+[Debian_Agents]
+192.168.0.101 ansible_user=user
+192.168.0.100 ansible_user=user
+192.168.0.88  ansible_user=user
+192.168.0.95  ansible_user=user
+
+[Windows_Agents]
+
+[CentOS_Agents]

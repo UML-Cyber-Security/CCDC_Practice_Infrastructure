@@ -1,0 +1,53 @@
+# Quick install of AD
+Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+Install-ADDSForest -DomainName “test.net”
+
+# Create a new user in an AD
+New-ADUser -Name [Username] -AccountPassword(Read-Host -AsSecureString AccountPassword) -PassThru | Enable-ADAccount
+
+# Remove a user in AD
+Remove-ADUser -Identity [SAM account name]
+
+# Create a new group in an AD 
+New-ADGroup -Name [group name] -GroupCategory Security -GroupScope Global -Path "CN=Users,DC=test,DC=net" -Description [description of your group]
+
+# Remove all users from a group (except Administrator)
+Get-ADGroupMember -Identity "Domain Admins" | where-object -property Name -ne -value "Administrator" | foreach-object {remove-adgroupmember "Domain Admins" $_}
+
+# Disable all users except admins
+Get-ADUser -Filter 'Name -notlike "Admin*"' -SearchBase "DC=test,DC=net" | Disable-ADAccount
+
+# View active connections to the controller
+netstat
+
+# Query to see all users or computers in the AD
+dsquery user
+dsquery computer
+
+# Change passwords for all users under an organizational unit
+$password = "tbM=eYT3u&nEz@^f"
+$ou = Read-Host "Enter Organizational Unit"
+$path = "OU=" + $ou + ",DC=test,DC=net"
+Get-ADUser -Filter * -SearchBase ($path) `
+| Set-ADAccountPassword -reset -newpassword (ConvertTo-SecureString -AsPlainText $password -Force) -PassThru `
+| Set-ADUser -ChangePasswordAtLogon $True
+
+# Change passwords for all users under the Accounts OU
+Get-ADUser -Filter * -SearchBase "OU=Accounts,OU=Blue2,DC=blue2,DC=townofriverbend,DC=org" | Set-ADAccountPassword -reset -newpassword (ConvertTo-SecureString -AsPlainText "newp@ssw0rd" -Force) -PassThru | Set-ADUser -ChangePasswordAtLogon $True
+
+# Change passwords for all users 
+Get-ADGroupMember -Identity "Domain Admins" | where-object -property Name -ne -value "Administrator" | foreach-object {Set-ADAccountPassword -Identity $_.Name -reset -newpassword (ConvertTo-SecureString -AsPlainText "newp@ssw0rd" -Force) -PassThru | Set-ADUser -ChangePasswordAtLogon $True}
+
+#Disable Remote Powershell
+Disable-PSRemoting -Force
+
+#Disable Powershell scripts
+Set-ExecutionPolicy Restricted
+
+# Password auditing using DSInternals module
+# It can detect weak, duplicate, default, non-expiring or empty passwords and find accounts that are violating security best practices.
+Install-module -name DSInternals -RequiredVersion 4.1
+Get-ADReplAccount -All -NamingContext "DC=test,DC=net" -Server WIN-O3DCJHL0UNV | Test-PasswordQuality
+
+#To change the distinguished name of an object
+go to ADUC and rename the user account. CN will be reset to this name.

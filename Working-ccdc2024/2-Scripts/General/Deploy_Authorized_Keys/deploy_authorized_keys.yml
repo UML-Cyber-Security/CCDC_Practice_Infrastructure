@@ -1,0 +1,18 @@
+- hosts: all
+    tasks:
+        - name: Step 1 - Make directory
+            file:
+                path: "~/.ssh"
+                state: directory
+                owner: user
+                # group: user        
+                mode: 0700 
+
+        - name: Step 2 - Copy authorized_keys over
+            copy:
+                src: authorized_keys  
+                dest: "~/.ssh/authorized_keys"
+                # owner: user
+                # group: user        
+                mode: 0644
+

@@ -1,0 +1,91 @@
+version: "3.9"
+
+volumes:
+  mongodb_data: { driver: local }
+  nextcloud:
+  db:
+
+
+networks:
+  gitea_net:
+    external: false
+  ha-access:
+    internal: true
+
+services:
+  gitea_server:
+    image: gitea/gitea:1.18.1
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=mysql
+      - GITEA__database__HOST=db:3306
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+    restart: always
+    networks:
+      - gitea_net
+      - ha-access
+    volumes:
+      - ./gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    depends_on:
+      - gitea_db
+  
+
+  gitea_db:
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=gitea
+      - MYSQL_USER=gitea
+      - MYSQL_PASSWORD=gitea
+      - MYSQL_DATABASE=gitea
+    networks:
+      - gitea_net
+      - ha-access
+    volumes:
+      - ./mysql:/var/lib/mysql
+  haproxy:
+    image: haproxy:latest
+    restart: on-failure
+    volumes:
+      - "/home/manager/Inject14/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+    networks:
+      - ha-access
+    ports:
+      - 80:80
+      - 443:443
+  db:
+    image: mariadb:10.5
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=nextcloud
+      - MYSQL_PASSWORD=nextcloud
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  app:
+    image: nextcloud
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - db
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=nextcloud
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+

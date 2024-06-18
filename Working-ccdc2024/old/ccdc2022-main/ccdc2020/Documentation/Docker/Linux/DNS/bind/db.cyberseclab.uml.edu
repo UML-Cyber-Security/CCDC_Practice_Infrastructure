@@ -1,0 +1,34 @@
+;
+; BIND data file for local loopback interface
+;
+
+$TTL	604800
+@	IN	SOA	ns.cyberseclab.uml.edu. root.cyberseclab.uml.edu. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@		IN	NS	ns.cyberseclab.uml.edu.
+
+$INCLUDE "keys/zsk.key"
+$INCLUDE "keys/ksk.key"
+
+; servers - management
+xoa		IN	A	192.168.7.202
+
+; servers - admin
+vpn		IN	A	192.168.7.10
+ns		IN	A	192.168.7.11
+ad		IN	A	192.168.7.12
+
+; servers - utilities
+gitlab		IN	A	192.168.7.20
+samba		IN	A	192.168.7.21
+
+; servers - learning
+ctf		IN	A	192.168.7.30
+
+; servers - ccdc
+ccdc-score	IN	A	192.168.7.40

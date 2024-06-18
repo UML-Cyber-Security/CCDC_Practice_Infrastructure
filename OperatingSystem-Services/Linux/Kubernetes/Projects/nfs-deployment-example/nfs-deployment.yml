@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-server
+  namespace: storage
+spec:
+  selector:
+    matchLabels:
+      app: nfs-server
+  template:
+    metadata:
+      labels: 
+        app: nfs-server
+    spec:
+      containers:
+      - name: nfs-server
+        image: cpuguy83/nfs-server
+        volumeMounts:
+        - name: nfs-storage
+          mountPath: /exports
+        ports:
+        - name: nfs
+          containerPort: 2049
+        - name: mountd
+          containerPort: 20048
+        - name: rpcbind
+          containerPort: 111
+        securityContext:
+          privileged: true
+      volumes: 
+        - name: nfs-storage
+          persistentVolumeClaim:
+            claimName: nfs-main-claim
+
+---
+# We only need service if we want nfs share accessible outside the cluster (For security reasons I shall use it internally for now.)
+# Below will create loadbalanced access via outside ranged ips.
+
+#apiVersion: apps/v1
+#kind: Service
+#metadata:
+#  name: nfs-server-service
+#  labels:
+#    app: nfs-server
+#  namespace: storage
+#spec:
+#  selector:
+#    app: nfs-server
+#  ports:
+#  - name: nfs
+#    port: 2049
+#    protocol: TCP
+#    targetPort: 2049
+#  - name: mountd
+#    port: 20048
+#    protocol: TCP
+#    targetPort: 20048
+#  - name: rpcbind
+#    port: 111
+#    protocol: TCP
+#    targetPort: 111
+#  type: LoadBalancer
+  
+
+# rancher
+# docker differences
+
+# then move on to ci/cd
+
+# force all traffik via prox5 proxy
+  # can we send some traffick through prox5

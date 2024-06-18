@@ -1,0 +1,10 @@
+[SOC_Server]
+192.168.0.121
+
+[Debian_Agents]
+192.168.0.66
+
+[Windows_Agents]
+
+[CentOS_Agents]
+
