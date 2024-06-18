@@ -6,3 +6,6 @@
 
 For Computer Configuration: `Computer Configuration\Policies\Windows Settings\Security Settings\Public Key Policies`
 For User Configuration: `User Configuration\Policies\Windows Settings\Security Settings\Public Key Policies`
+
+> [!NOTE]
+> Need to finish Auto Enrollment
