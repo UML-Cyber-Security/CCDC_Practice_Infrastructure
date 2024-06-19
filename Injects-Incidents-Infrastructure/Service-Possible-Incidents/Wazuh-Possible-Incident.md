@@ -1,27 +1,15 @@
-## Introduction
-The hope of this document is to provide two very possible vulnerability that SOC can encounter using Wazuh.
-A description and mitigation will be provided for each.
-Apart from vulnerabilities, it will showcase two very possible Inject.
-Predicting possible inject is good practice to keep ahead (possibly) of the competition.
-
 # Wazuh Common Vulnerability And Injects
 
 ## Introduction
-The hope of this document is to provide two very possible vulnerability that SOC can encounter using Wazuh.
+This document provides two possible vulnerabilites that SOC can encounter when using Wazuh. 
 A description and mitigation will be provided for each.
-Apart from vulnerabilities, it will showcase two very possible Inject.
-Predicting possible inject is good practice to keep ahead (possibly) of the competition.
 
 ##  Securing Wazuh API Vulnerability
 
 ### Description
-Having a fairly new infrastructure it is given that there are rough edges to be found.
-At first, we focus on Dashboard creation and agent deployments.
-The Dashboard, is usually protected by limiting its acces such as changing default password to its user.
-One thing not often considered is the Rich and Robust API that Wazuh provides.
-The API can perform to a even greater extend all of the dashboard capabilities.
-It is of paramount importance to secure this API.
-
+During first Wazuh setup, SOC team should focus on Dashboard creation and agent deployment.
+Dashboard is protected from outside access by changing its default passwords. 
+Wazuh API is also important to secure.
 
 ### Mitigation
 One way to fix it is via password changing
@@ -45,8 +33,9 @@ One way to fix it is via password changing
     export JAVA_HOME=/usr/share/wazuh-indexer/jdk
   13) run bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh -cd /usr/share/wazuh-indexer/opensearch-security/ -nhnv -cacert  $CACERT -cert $CERT -key $KEY -p 9200 -icl
 
-If is too many step  it can automatically be done with a python script or an ansible playbook.
-Here is an unstested python script:
+Steps above can be shortened with a python script or ansible playbook. 
+
+Here is a unstested python script:
 ```python
 # Copyright Joan Montas
 # All rights reserved.
@@ -183,7 +172,7 @@ Then preventing the gathering of vulnerability by increasing the "update_interva
 
 ### Mitigation
 #### File Integrity Monitoring
-Due to the sensitive nature of this file, close attention must be placed to them.
+These files should be closely monitored for changes or updates:
 1. Minimize access to those file. Setup rule to who can edit or access
 2. Save backup
 3. Dashboard to notify Wazuh Manager status (restart with timestamp)
