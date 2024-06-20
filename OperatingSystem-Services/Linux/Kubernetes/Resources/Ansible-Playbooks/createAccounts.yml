@@ -1,0 +1,51 @@
+# Usage
+# This ansible playbook will create a user, copy over a given ssh key allowing pubkeyauthentication, 
+# ensure the user has escalated privileges, and sets the password.
+
+
+# Instructions
+# run the below command to get the hash for the password you want to use (Requires whois package)
+# mkpasswd --method=sha-512
+
+# Paste above output into password field below
+# Change user to what you want
+# Change key to what you want
+# Can create key with ssh-keygen -t ed25519
+---
+- name: Copy SSH keys
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Create Black team user
+      user:
+        name: blackteam
+        shell: /bin/bash
+    - name: Copy SSH public key
+      authorized_key:
+        user: "blackteam"
+        key: "{{ lookup('file', './blackteam.pub') }}"
+        state: present
+
+    - name: Ensure necessary groups exist
+      group:
+        name: "{{ item.group }}"
+        state: present
+      loop:
+        - { group: 'wheel', when: "'Rocky' in group_names" }
+        - { group: 'sudo', when: "'k8Cluster' in group_names or 'ubuntu' in group_names" }
+
+    - name: Set the password for blackteam user
+      user:
+        name: blackteam
+        password: "$6$B2xS11R35JBlYNxP$qtjgfM0qSNAkHhty4reV81FZiuI8CUAQAnqzqm1MvRHotzg3eVXxjzfTRPEoor6NquozKrRanwNdR8RB4xF/g/"
+        groups: "{{ item.group }}"
+      loop:
+        - { group: 'wheel', when: "'Rocky' in group_names" }
+        - { group: 'sudo', when: "'k8Cluster' in group_names or 'ubuntu' in group_names" }
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted
