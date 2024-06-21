@@ -1,0 +1,55 @@
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      # Used to provide wildcard domain prefixs to base domain
+      kubernetes.io/tls-acme: "true"
+      # This is clusterissuer you set up with cert-manager
+      cert-manager.io/cluster-issuer: development-issuer
+      # Force https
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      # Force https
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # Disable http
+      kubernetes.io/ingress.allow-http: "false"
+    hosts: 
+      - grafana.nexus-core.dev
+    path: /
+    tls:
+      - secretName: temp-grafana-tls
+        hosts:
+        - grafana.nexus-core.dev
+
+prometheus: 
+  ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        # Used to provide wildcard domain prefixs to base domain
+        kubernetes.io/tls-acme: "true"
+        # This is clusterissuer you set up with cert-manager
+        cert-manager.io/cluster-issuer: development-issuer
+        # Force https
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        # Force https
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        # Disable http
+        kubernetes.io/ingress.allow-http: "false"
+      hosts: 
+        - prometheus.nexus-core.dev
+      path: /
+      tls:
+        - secretName: temp-prometheus-tls
+          hosts:
+          - prometheus.nexus-core.dev
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: longhorn
+          accessModes:
+            - "ReadWriteOnce"
+          resources:
+            requests:
+              storage: 5Gi

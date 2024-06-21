@@ -1,0 +1,127 @@
+# Usage
+# Main purpose of this playbook is to get you to the point in kubeadm where you can just move forward with deploying the cluster.
+# This is designed around having 1 master and x amount of workers.
+# It will take care of the following requirements.
+# - required packages
+# - disabling swap file.
+# - Kernel paremeters, loading kernel paremeters.
+# - Hostname (Dynamic naming, kube-master-1, kube-worker-1, kube-worker-2...kuber-worker-x)
+# - /etc/hosts (For all hosts in hosts.ini)
+# - Installing containerd, kubelet, kubeadm, kubectl
+
+---
+- hosts: all
+  become: yes
+  vars:
+    start_index: 1
+    k8s_release_key_url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key"
+    k8s_signed_by_url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/"
+    k8s_apt_keyring_path: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+    k8s_sources_list_path: "/etc/apt/sources.list.d/kubernetes.list"
+    k8s_package_version: "1.28"
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install required tools
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+
+    - name: Disable Swap File
+      shell: swapoff -a 
+
+    - name: Remove Swap file from /etc/fstab
+      replace:
+        path: /etc/fstab
+        regexp: '.*swap.*'
+        replace: ''
+
+    - name: Create /etc/modules-load.d/k8s.conf for all worker nodes
+      copy:
+        content: |
+          overlay
+          br_netfilter
+        dest: /etc/modules-load.d/k8s.conf
+    
+    - name: Load the modules 
+      shell: sudo modprobe overlay && sudo modprobe br_netfilter
+    
+    - name: Configure kernel parameters for all nodes
+      copy:
+        content: |
+          net.bridge.bridge-nf-call-iptables  = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.ipv4.ip_forward                 = 1
+        dest: /etc/sysctl.d/k8s.conf
+    
+    - name: Apply the changes
+      shell: sudo sysctl --system
+    
+    - name: Set hostname for masters
+      hostname:
+        name: "k8-master-{{ start_index + groups['masters'].index(inventory_hostname) }}"
+      when: "'masters' in group_names"
+
+    - name: Set hostname for workers
+      hostname:
+        name: "k8-worker-{{ start_index + groups['workers'].index(inventory_hostname) }}"
+      when: "'workers' in group_names"
+
+    - name: Backup /etc/hosts file (Incase we are updating, or there are existing entries.)
+      shell: mv /etc/hosts /etc/hosts.bak 
+
+    - name: Add initial entries to /etc/hosts
+      copy:
+        content: |
+          127.0.0.1 localhost
+          127.0.1.1 localhost
+
+          # The following lines are desirable for IPv6 capable hosts
+          ::1     ip6-localhost ip6-loopback
+          fe00::0 ip6-localnet
+          ff00::0 ip6-mcastprefix
+          ff02::1 ip6-allnodes
+          ff02::2 ip6-allrouters
+
+          # Custom
+        dest: /etc/hosts
+    
+    - name: Update 127.0.1.1 entry in /etc/hosts
+      replace:
+        path: /etc/hosts
+        regexp: '.*127.0.1.1.*'
+        replace: '127.0.1.1 {{ ansible_hostname }}'
+    
+    - name: Add entries to /etc/hosts for all hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ hostvars[item]['inventory_hostname'] }} {{ hostvars[item]['ansible_hostname'] }}" 
+        create: yes
+      loop: "{{ groups['all'] }}"
+      loop_control:
+        loop_var: item
+
+    - name: Install stuff
+      shell: |
+        sudo apt-get update
+        sudo install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+        sudo chmod a+r /etc/apt/keyrings/docker.gpg
+        echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update
+        sudo apt update && sudo apt install -y containerd.io
+        containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
+        sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+        sudo systemctl restart containerd && sudo systemctl enable containerd
+        sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl gpg
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        sudo apt update && sudo apt install -y kubelet kubeadm kubectl && sudo apt-mark hold kubelet kubeadm kubectl
+
+    - name: Reboot
+      reboot:

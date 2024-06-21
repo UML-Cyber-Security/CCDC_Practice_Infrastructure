@@ -1,0 +1,3 @@
+# Used by gitlab for ssh connections
+tcp:
+  22: "gitlab/mygitlab-gitlab-shell:22"

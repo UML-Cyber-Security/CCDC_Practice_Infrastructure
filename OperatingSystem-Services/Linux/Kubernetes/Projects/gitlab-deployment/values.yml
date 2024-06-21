@@ -1,0 +1,81 @@
+global:
+  ingress:
+    # Globally turn of cert-manager configurations so self-signed arent created.
+    configureCertmanager: false
+    # This is the ingress controller class.
+    class: nginx
+    annotations:
+      # Used to provide wildcard domain prefixs to base domain
+      kubernetes.io/tls-acme: true
+      # This is clusterissuer you set up with cert-manager
+      cert-manager.io/cluster-issuer: development-issuer
+      # Force https
+      nginx.ingress.kubernetes.io/ssl-redirect: true
+      # Force https
+      nginx.ingress.kubernetes.io/force-ssl-redirect: true
+      # Disable http
+      kubernetes.io/ingress.allow-http: false
+    tls:
+      # Globally enable tls for bottom services
+      enabled: true
+    #service:
+    #  type: loadBalancer
+    #  loadBalancerIP: 10.35.40.120
+  # Documented [here](https://docs.gitlab.com/charts/advanced/external-db/index.html)
+  psql:
+    # This is the service name for the rw server from postgresql
+    host: gitlab-rw
+    password:
+      # Documented [here](https://github.com/cloudnative-pg/cloudnative-pg/blob/main/docs/src/applications.md)
+      secret:
+        gitlab-app
+      key:
+        password
+  hosts:
+    # Domain that cert-manager will verify against. 
+    domain: example.com
+    https: true
+
+# These are for cert-manager / ingress. They are auto generated to whatever you name them here, just make sure they are unique from other existing ones.
+# Documentation is [here](https://docs.gitlab.com/charts/installation/tls.html)
+# Option 1: External and External
+gitlab:
+  webservice:
+    ingress:
+      tls:
+        secretName: temp-gitlab-tls
+
+  kas:
+    ingress:
+      tls:
+        secretName: temp-kas-tls
+
+registry:
+  ingress:
+    tls:
+      secretName: temp-registry-tls
+
+minio:
+  ingress:
+    tls:
+      secretName: temp-minio-tls
+
+
+# Disable cert-manager from being deployed, we have our own
+certmanager:
+  install: false
+
+# Disable nginx-ingress from being deployed, we have our own
+nginx-ingress:
+  enabled: false
+
+# Disable prometheus from being deployed, we have our own
+prometheus:
+  install: false
+
+#redis:
+#  install: false
+
+# Disable postgresql from being deployed, we have our own
+postgresql:
+  install: false

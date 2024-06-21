@@ -1,0 +1,23 @@
+# Usage
+# This playbook will simply copy your ssh key to hosts.
+
+# Instructions
+# Make sure the lookup path to your public key is correct.
+
+---
+- name: Copy SSH keys
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Copy SSH public key
+      authorized_key:
+        user: "alex"
+        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+        state: present
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted

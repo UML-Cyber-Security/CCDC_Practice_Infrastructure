@@ -1,5 +1,7 @@
 Disclaimer -> Majority of screenshots sourced from [here](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/)
 
+[toc]
+
 ## Terminology
 
 ### Main Architecture
@@ -131,8 +133,6 @@ As a general overview of the above functionality, see the below diagrams.
     - Used when accessing a Node 
     - http://node-ip:port 
 
----
-
 #### Node
 
 ![nodeExample](./Resources/screenshots/nodeexample.png)
@@ -154,8 +154,6 @@ Three major components
   - You have a web server in one container on node a, and you have a db running in one container in 
     node b. The `kube-proxy` handles this communication.
 
----
-
 #### Replica Set
 
 ![replicasetExample](./Resources/screenshots/replicasetexample.png)
@@ -167,8 +165,6 @@ Three major components
 - If you were to define 3 replicas in a replica set, and had 3 nodes already existing with a matching label, then it would deploy NO new pods.
 - When scaling pods, always update via the yaml file, and just run replace command to push it.
 
----
-
 #### Deployment
 
 ![deploymentExample](./Resources/screenshots/deploymentexample.png)
@@ -179,9 +175,6 @@ Three major components
   - Rolling updates 
   - Rollbacks 
   - Ability to pause and resume environment to change requirements in-between. (underlying app version, resource allocation, etc.)
-
-
----
 
 #### Services
 
@@ -228,9 +221,6 @@ Instead of having to set up a vm + nginx or some type of proxy manager to handle
 
 If you did this on an unsupported platform, it would handle itself the same as a NodePort.
 
----
-
-
 #### Labels, Selectors and Annotations
 
 - Labels are attached as a key:value pair.
@@ -244,7 +234,6 @@ If you did this on an unsupported platform, it would handle itself the same as a
 - Annotations are just that, they are way to add some extra information.
   - For example, I may add that the current buildVersion is 1.3.
 
----
 
 #### Taints and Tolerations
 
@@ -256,9 +245,7 @@ If you did this on an unsupported platform, it would handle itself the same as a
   - NoExecute
     - When applied to a node with existing pods, any pods not tolerant of the taint will be killed (ejected from that node).
 - The master node automatically has a taint applied, that is why nothing gets placed on it.
-- `Key Concept:` Taints only restrict pods from being placed on them. They do NOT gaurentee that a pod will be placed on a node just because it is tolerant.
-  
----
+- `Key Concept:` Taints only restrict pods from being placed on them. They do NOT guarantee that a pod will be placed on a node just because it is tolerant.
 
 
 #### Namespaces
@@ -500,7 +487,7 @@ The first thing you need to do is secure the Host machine itself. At a bare mini
 
 ##### API-Server Security
 
-Basic Authentication
+###### Basic Authentication (Not recommended ever)
 
 - Can create csv file with password,username,userid in the following format
   - password123,user,u0100
@@ -511,11 +498,460 @@ Basic Authentication
 - You could then check the authentication to the api server with the following command
   - curl -v -k https://master-node-ip:6443/api/v1/pods -u "user1:password123"
 
----
+
+Full walkthrough for Kubeadm
+
+Create a user/password file like this
+
+    # User File Contents
+    password123,user1,u0001
+    password123,user2,u0002
+
+Edit the kube-apiserver static pod manifest located at
+
+    /etc/kubernetes/manifests/kube-apiserver.yaml
+
+
+You are going to want to add the volumeMount and volume respectively for where you are storing the auth file.
+
+        volumeMounts:
+        - mountPath: /tmp/users
+          name: usr-details
+          readOnly: true
+    volumes:
+    - hostPath:
+        path: /tmp/users
+        type: DirectoryOrCreate
+      name: usr-details
+
+Under containers -> - command you are going to want to also add the following option which is the path to your auth file.
+
+    - --basic-auth-file=/tmp/users/user-details.csv
+
+Finally, you would need to create the necessary roles and role bindings for these users you are listing
+
+    ---
+    kind: Role
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      namespace: default
+      name: pod-reader
+    rules:
+    - apiGroups: [""] # "" indicates the core API group
+      resources: ["pods"]
+      verbs: ["get", "watch", "list"]
+    
+    ---
+    # This role binding allows "jane" to read pods in the "default" namespace.
+    kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: read-pods
+      namespace: default
+    subjects:
+    - kind: User
+      name: user1 # Name is case sensitive
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: Role #this must be Role or ClusterRole
+      name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to
+      apiGroup: rbac.authorization.k8s.io
+
+You can test the authentication with,
+
+    curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
 
 
 
+###### TLS in Kubernetes Manually
 
+Server certificates for Servers
+
+- Kube-API Server
+- ETCD Server
+- Kubelet Server
+
+Client certificates for Clients (All authenticate to kube-api server)
+
+- admin
+- kube-scheduler
+- kube-controller-manager
+- kube-proxy
+
+Special Cases
+
+- The kube-api server acts as a client when talking to the etcd server. It can use its server certificates for this, or create separate ones as a client.
+- The kube-api server does the same with the kubelet server and vise versa.
+
+A kubernetes cluster requires at least 1 certificate authority to verify all the above certificates.
+
+Lets now take a look at generating the certificates. Our first steps will be getting the CA up and running. 
+
+**Keep in mind this section is for a kubernetes cluster that was deployed "the hard way" , not using kubeadm. When deploying a cluster with kubeadm, the following process is automated and done during the initiation phase.**
+
+First generate the keys
+
+    openssl genrsa -out ca.key 2048
+
+Then generate the Certificate signing request
+
+    openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr
+
+Sign the certificate (Self signed by CA)
+
+    openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+
+__Lets move on to the client certificates. Lets start with the admin certificate.__
+
+First generate the keys
+
+    openssl genrsa -out admin.key 2048
+
+Then generate the Certificate signing request. Notice the /O, this is a existing group inside kubernetes that identifies the user as an admin.
+
+    openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
+
+
+
+__Lets do the kube-scheduler client certificate__
+
+First generate the keys
+
+    openssl genrsa -out scheduler.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key scheduler.key -subj "/CN=system:kube-scheduler" -out scheduler.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in scheduler.csr -CA ca.crt -CAkey ca.key -out scheduler.crt
+
+__Lets do the kube-controller-manager client certificate__
+
+First generate the keys
+
+    openssl genrsa -out controller-manager.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key controller-manager.key -subj "/CN=system:kube-controller-manager" -out controller-manager.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in controller-manager.csr -CA ca.crt -CAkey ca.key -out controller-manager.crt
+
+
+__Lets do the kube-proxy client certificate__
+
+First generate the keys
+
+    openssl genrsa -out kube-proxy.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key kube-proxy.key -subj "/CN=system:kube-proxy" -out kube-proxy.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in kube-proxy.csr -CA ca.crt -CAkey ca.key -out kube-proxy.crt
+
+
+Okay, how do we use these certificates? Lets take the admin one for example. There are two ways we can use it. Either directly calling the REST API on the cml, or including it into kube-config on the client.
+
+Via cml
+
+    curl https://kube-apiserver:6443/api/v1/pods --key admin.key --cert admin.crt --cacert ca.crt
+
+Via kube-config.yaml, you can check yours with kubectl config view, and edit the file directly at ~/.kube/config
+
+    apiVersion: v1
+    clusters:
+    - cluster:
+        certificate-authority-data: ca.crt
+        server: https://xxxxxx:6443
+      name: kubernetes
+    ...
+    kind: Config
+    users:
+    - name: kubernetes-admin
+      user:
+        client-certificate-data: admin.crt
+        client-key-data: admin.key
+
+As a general rule of thumb, the CA certificate must be specified for every client and server so it can correctly authenticate itself.
+
+__Lets now do the server ones starting with the kube-api server certificate__
+
+First generate the keys
+
+    openssl genrsa -out apiserver.key 2048
+
+We must also create an openssl config file -> openssl.cnf , to account for the other names people refer to the apiserver as.
+
+    [req]
+    req_extensions = v3_req
+    distinguished_name = req_distinguished_name
+    [ v3_req ]
+    basicConstraints = CA:FALSE
+    keyUsage = nonRepudiation,
+    subjectAltName = @alt_names
+    [ alt_names ]
+    DNS.1 = kubernetes
+    DNS.2 = kubernetes.default
+    DNS.3 = kubernetes.default.svc
+    DNS.4 = kubernetes.default.svc.cluster.local
+    IP.1 = clusterIP
+    IP.2 = clusterIP
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key apiserver.key -subj "/CN=kube-apiserver" -out apiserver.csr -config openssl.cnf
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in apiserver.csr -CA ca.crt -CAkey ca.key -out apiserver.crt
+
+__Lets do the kubelet client certificates__
+
+For the kubelet clients, each node needs its own certificate in the naming scheme node01 - nodexxxx etc. You must also edit each kubelet-config.yaml file for each node to add the clientCAFile (ca cert) and the tlsCertFile (client cert) and tlsPrivateKeyFile (client key).
+
+First generate the keys
+
+    openssl genrsa -out node01.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key node01.key -subj "/CN=node01" -out node01.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in node01.csr -CA ca.crt -CAkey ca.key -out node01.crt
+
+You would also need to create a certificate on each node to communicate with the kube-api server. (The above is for the kube-client server.) These would need the following with the naming scheme system:node:node01 and be in group SYSTEM:NODES
+
+First generate the keys
+
+    openssl genrsa -out node-node01.key 2048
+
+Then generate the Certificate signing request and pass the above config to it.
+
+    openssl req -new -key node-node01.key -subj "/CN=system:node:node01/O=system:nodes" -out node-node01.csr
+
+Sign the certificate (Signed by CA, so it is now valid inside cluster)
+
+    openssl x509 -req -in node-node01.csr -CA ca.crt -CAkey ca.key -out node-node01.crt
+
+The kube-api server now has 3 certificates
+
+- apiserver.crt / apiserver.key
+- apiserver-kubelet-client.crt / apiserver-kubelet-client.key
+- apiserver-etcd-client.crt / apiserver-etcd-client.key
+
+Where do these get passed in? 
+
+
+Well, if we check the kubeapi config @ /etc/systemd/system/kube-apiserver.service , we get
+
+    ...
+      ...
+      # The CA file
+      - --client-ca-file=/etc/kubernetes/pki/ca.crt 
+      ...
+      # APISERVER-etcd-client certificates
+      - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
+      - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+      - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
+      - --etcd-servers=https://127.0.0.1:2379
+      # APISERVER-kubelet-client certificates
+      - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
+      - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
+      ...
+      # APISERVER certificates
+      - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
+      - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+    ...
+
+
+If we check the kubelet config @ /etc/systemd/system/kubelet.service we get
+
+    ...
+    users:
+    - name: system:node:k8-master-1
+      user:
+        client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
+        client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
+
+###### Process of Interacting with Certificates API via Kubectl
+
+When interacting with kubernetes, you can handle the acceptance and distribution of certificates via the certificates api, compared to having to manually go into the cluster each time and add the certificates. The following is a full example process of this.
+
+This whole process is mostly handled by the controller-manager. It also has two options where you can specify the clusters signing cert file and signing key file, under `/etc/kubernetes/manifests/kube-controller-manager.yaml`
+
+Create some temporary fields to, can remove as needed. 
+
+```bash
+export VAULT_K8S_NAMESPACE="vault" \
+export VAULT_HELM_RELEASE_NAME="vault" \
+export VAULT_SERVICE_NAME="vault-internal" \
+export K8S_CLUSTER_NAME="cluster.local" \
+export WORKDIR=/tmp/vault
+```
+
+Generate private key (Locally)
+
+    openssl genrsa -out ${WORKDIR}/vault.key 2048
+
+Create CSR (Certificate Signing Request) config file. This is required when there can be multiple domains associated with your certificate, like in the example below it can be .namespace, .servicename, etc.
+
+```bash
+cat > ${WORKDIR}/vault-csr.conf <<EOF
+[req]
+default_bits = 2048
+prompt = no
+encrypt_key = yes
+default_md = sha256
+distinguished_name = kubelet_serving
+req_extensions = v3_req
+[ kubelet_serving ]
+O = system:nodes
+CN = system:node:*.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = *.${VAULT_SERVICE_NAME}
+DNS.2 = *.${VAULT_SERVICE_NAME}.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}
+DNS.3 = *.${VAULT_K8S_NAMESPACE}
+IP.1 = 127.0.0.1
+EOF
+```There was a formatting error, skip this line when copying. (include the EOF in the above line though)
+```
+Generate CSR (Certificate Signing Request) from above config and private key. You can do this without the config if not required.
+
+    openssl req -new -key ${WORKDIR}/vault.key -out ${WORKDIR}/vault.csr -config ${WORKDIR}/vault-csr.conf
+
+Create CSR (Certificate Signing Request) Yaml file to send to Kubernetes. This is what is important. 
+
+```bash
+cat > ${WORKDIR}/csr.yaml <<EOF
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: vault.svc
+spec:
+  signerName: kubernetes.io/kubelet-serving
+  expirationSeconds: 8640000
+  request: $(cat ${WORKDIR}/vault.csr|base64|tr -d '\n')
+  usages:
+  - digital signature
+  - key encipherment
+  - server auth
+EOF
+```
+
+The above in its normal yaml format.
+
+```yaml
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: vault.svc
+spec:
+  signerName: kubernetes.io/kubelet-serving
+  expirationSeconds: 8640000
+  # You could also manually supply this, by base64 decoding the .csr file and putting the contents here. This is just easier.
+  request: $(cat ${WORKDIR}/vault.csr|base64|tr -d '\n')
+  usages:
+  - digital signature
+  - key encipherment
+  - server auth
+```
+
+Send to cluster
+
+    kubectl create -f ${WORKDIR}/csr.yaml
+
+Approve CSR with Cluster
+
+    kubectl certificate approve vault.svc
+
+Confirm certificate signed
+
+    kubectl get csr
+
+####### Store cert + key in Kubernetes secret store
+
+Retreive cert from kubernetes to local and store in crt file.
+
+    kubectl get csr vault.svc -o jsonpath='{.status.certificate}' | openssl base64 -d -A -out ${WORKDIR}/vault.crt
+
+Retreive kube CA certificate from kubernetes to local
+
+```bash
+kubectl config view \
+--raw \
+--minify \
+--flatten \
+-o jsonpath='{.clusters[].cluster.certificate-authority-data}' \
+| base64 -d > ${WORKDIR}/vault.ca
+```
+
+##### Network policies
+
+###### Kubernetes Networking Policies
+
+By default, Kubernetes is designed as an Allow all mesh, where everything can talk to everything. 
+
+Within and without kubernetes there is `Ingress` and `Egress`. These are decided from the perspective of the object, where incoming is ingress and outgoing is egress.
+
+This example explained it well for me, you have a web server hosted on kubernetes.
+
+- The user requests something from the web server on port 80.
+- The web server in turn communicates with the API on port 5000.
+- The API has to communicate with the etcd on port 3306.
+
+This is visualized as the following,
+
+![ingress-egress](./Resources/screenshots/networkpolicyingressegress.png)
+
+A few points to make this image more clear.
+
+- From the web servers perspective (blue on the left), it has ingress on port 80 from the user, out egress on port 5000 to the API.
+- From the apis perspective, it has ingress from the web server on port 5000, and egress on port 3306 to etcd
+- From etcd perspective, it has ingress on port 3306 from the api, and egress on 3306 TO the api.
+
+If we were to convert these into rules, we would be left with the following,
+
+![policyrules](./Resources/screenshots/networkpolicyrules.png)
+
+Lets run with this idea, what if we dont want the website to access the etcd directly, but be forced to communicate via the api to reach it. To accomplish this, we would create an ingress network policy for the etcd pod that only allows ingress from the api. When you create the policy, it goes from allow all to only that rule, so you do not have to block by default. 
+
+Also, you do not have to worry about returning traffic. If you allow ingress from somewhere, egress related to that ingress is automatically allowed out. It is the same as normal networking where you typically allow connected, established. 
+
+However, it is extremely important to realize the following difference, although my communication is allowed back if I allow ingress from the API pod, unrelated communication is NOT allowed unless specifically stated. For example, if the etcd pod was trying to make an API call unrelated to the current communication, it would not be allowed without the proper egress rule.
+
+OKAY! Lets recap.
+
+- We can now block and allow certain traffic to and from pods by using selectors and labels.
+
+But, what if we have pods in other namespaces like dev, test and prod, and we only want the pod to be matched (and allowed traffic) in our current namespace. EASY! See below examples on network policies, but you would just add a namespaceSelector field. I am pointing this out here so you realize that other namespaces could have the same labels and end up unintentionally being allowed. You could also use this namespace selector to only allow communication inside a namespace without restricting the pod.
+
+The final case to consider, what about an IP outside of the kubernetes cluster? Simple again, just use an ipBlock object. This is where another extremely `important` detail comes up.
+
+![npingressorrules](./Resources/screenshots/networkpolicyorrules.png)
+
+In the above example, notice the 3 - next to podSelector, namespaceSelector, and ipBlock. Since these are all seperated, they are all OR rules. If any of the three match traffic is allowed, now compare that to below. 
+
+![npingressandrules](./Resources/screenshots/networkpolicyandrules.png)
+
+In this above example, notice it is now only 2, and namespaceSelector is part of the podSelector array. In this scenario, the traffic must match the api-pod label AND be in the prod environment, OR be coming from the ipBlock range.
 
 ## Configuration Files
 
@@ -550,7 +986,7 @@ Basic Authentication
                 values:
                 - Large 
 
---- 
+ 
 
     apiVersion: 
     kind:
@@ -644,7 +1080,7 @@ You can also only check for the key with
           port: 8080 
           targetPort: 27017
 
----
+
 
 Lets break this up. 
 
@@ -661,7 +1097,7 @@ Lets break this up.
 - The `name` is the name of the deployment 
 - The `labels` here are optional.
 
----
+
 
     spec:
       replicas: 3 # Deploy 3
@@ -675,7 +1111,7 @@ Lets break this up.
 - `matchLabels` is saying all pods that match this label (id,key pair) belong to the deployment above.
   - Important to note. `app: mongo` is a value/key pair. It can be anything, but it is best practice to use app as the id.
 
----
+
 
     template: # Blueprint (configuration) for the pods 
         metadata:
@@ -699,7 +1135,7 @@ is also checked for the service access.
 - `ports` Important, reference the docker image you copied for this. It will most likely be under a section 
 "Connect to x from another docker container."
 
----
+
 BUT WAIT..HOW DO I LOAD ENV VARIABLES LISTED ON DOCKER HUB??
 
           env:
@@ -732,7 +1168,7 @@ BUT WAIT..HOW DO I LOAD ENV VARIABLES LISTED ON DOCKER HUB??
         password: bW9uZ29wYXNz
 
 
----
+
 
 This is the service parts.
 
@@ -747,7 +1183,7 @@ and act as load balancers.
 - `metadata` required. 
 - `name` name of service, endpoint used for access. Defined in our `mongo-config.yaml` under `mongo-url`. Must be same.
 
----
+
 
     spec:
       selector:
@@ -767,7 +1203,7 @@ port you will access it at. Can change to what we want, best practice to set to 
 - `targetPort` This is the containerPort of deployment. Should always be the same. The service forwards requests to 
 the application within the pod via this port.
 
---- 
+ 
 The above is for an `INTERNAL SERVICE`. If you want an `EXTERNAL SERVICE` you need to add the elemnts below,
 
     spec:
@@ -785,7 +1221,7 @@ is represented by `NodePort`.
 - `nodePort` Opens a port on the nodes IP `NodeIP:NodePort`
   - IMPORTANT -> Must be between `30000-32767`
 
----
+
 
 #### Pod Example
     
@@ -1004,27 +1440,145 @@ This is equivilent to
     kubectl taint nodes node1 app=blue:NoSchedule
 
 
-#### Namespacee 
+#### Namespace
 
     apiVersion: v1 
     kind: Namespace 
     metadata:
       name: dev 
 
-#### ResourceQuotaa 
+#### ResourceQuota
  
-    apiVersion: v1 
-    kind: ResourceQuota
+ ```yaml
+apiVersion: v1 
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: dev 
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 5Gi 
+    limits.cpu: "10"
+    limits.memory: 10Gi 
+```
+
+#### NetworkPolicy
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-policy
+spec:
+  podSelector:
+    matchLabels:
+      # This is the label for the pod we are applying this rule too (in this case etcd)
+      role: db
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          # this is the label for where the ingress is allowed to come from (the api server(pod))
+          name: api-pod
+      # This is specifying the namespace you want to allow. It is also AND'd with the above. Add an - if you want it as an OR.
+      namespaceSelector:
+        matchLabels:
+          name: prod
+    - ipBlock:
+        # You can also allow external IP coming in.
+        cidr: 192.168.3.10/32
+    ports:
+    - protocol: TCP
+      port: 3306
+  egress:
+  # Changes to to when it is egress. This allows etcd to communicate with the outside IP
+  - to:
+    - ipBlock:
+        cidr: 192.168.3.10/32
+    ports:
+    - protocol: TCP
+      port: 80
+```
+
+#### LimitRange
+
+```yaml
+apiVerison: v1
+kind: LimitRange
+metadata:
+  name: cpu-resource-constraint
+spec:
+  limits:
+  - default:
+    cpu: 500m
+  defaultRequest:
+    cpu: 500m
+  max:
+    cpu: "1"
+  min:
+    cpu: 100m
+  type: Container
+```
+
+```yaml
+apiVerison: v1
+kind: LimitRange
+metadata:
+  name: memory-resource-constraint
+spec:
+  limits:
+  - default:
+    memory: 500Mi
+  defaultRequest:
+    memory: 500Mi
+  max:
+    memory: "1Gi"
+  min:
+    memory: 100Mi
+  type: Container
+```
+
+#### Resource Quota
+
+
+
+#### Persistent Volume (PV)
+
+    apiVersion: v1
+    kind: PersistentVolume
     metadata:
-      name: compute-quota
-      namespace: dev 
+      name: nfs-main-volume
+      labels:
+        type: local
     spec:
-      hard:
-        pods: "10"
-        requests.cpu: "4"
-        requests.memory: 5Gi 
-        limits.cpu: "10"
-        limits.memory: 10Gi 
+      persistentVolumeReclaimPolicy: Retain
+      claimRef:
+        name: nfs-main-claim
+      storageClassName: manual
+      capacity:
+        storage: 200Mi
+      accessModes:
+        - ReadWriteMany
+      hostPath:
+        path: "/data/nfs"
+
+#### Persistent Volume Claim (PVC)
+
+    kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: claim-log-1
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Mi
 
 ### Update configuration / Rollout Control
 
@@ -1384,7 +1938,7 @@ Also, note this great [video](https://www.youtube.com/watch?v=iwlNCePWiw4)
 I am following this [guide](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/) to install kubeadm.
 
 
----
+
 First disable Swap file. 
 
 **For Ubuntu**
@@ -1407,7 +1961,7 @@ Permanently disable swap file
     check its off  
     sudo swapon --show
 
----
+
 Now, ensure MAC address and UUID are unique for each node.
 
 **For Ubuntu**
@@ -1424,7 +1978,7 @@ Check UUID
 
     sudo cat /sys/class/dmi/id/product_uuid
 
----
+
 Finally, I am going to setup the hostnames.
 
     Master -> k8s-master.lab.local 
@@ -1488,7 +2042,7 @@ Apply sysctl params without reboot
 
     sudo sysctl --system
 
----
+
 **This is back to being on all**
 
 Install a container runtime, some options include docker engine, containerd, CRI-O. We will use containerd.
@@ -1529,7 +2083,7 @@ Restart services
 
     sudo systemctl restart containerd && sudo systemctl enable containerd
 
----
+
 
 Install kubeadm, kubelet and kubectl 
 
@@ -1547,11 +2101,11 @@ Install
 
     sudo apt update && sudo apt install -y kubelet kubeadm kubectl && sudo apt-mark hold kubelet kubeadm kubectl
 
---- 
+ 
 
-**Deploying the cluster**
+#### Deploying the cluster
 
-**Give it a good old reboot before this.**
+**Give it a good old reboot before this.** -- (If you used ansible dependencies install, start here.)
 
 ON THE `CONTROL PLANE` 
 
@@ -1586,7 +2140,7 @@ Side-note, I got an error about not being able to retrieve from port 8433. This 
     cp: overwrite '/home/alex/.kube/config'? 
     You must type y, you cant just press enter.
 
-Okay, cool! Lets join the `Worker Nodes`
+#### Joining Worker Nodes
 
 If you already have the join node output copied, skip the next 3 commands.
 
@@ -1602,7 +2156,7 @@ To get the hash, you can run this.
 
     openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
 
-Once you have all this you can join the node with 
+Once you have all this you can join the node with (Make sure to use sudo)
 
     sudo kubeadm join --token <token> <control-plane-host>:<control-plane-port> --discovery-token-ca-cert-hash sha256:<hash>
 
@@ -1616,8 +2170,25 @@ Test your creation
 
 You will notice it says `NotReady` for all 3, this is because we do not have a `CNI (Container Network Interface)` setup for the cluster. As a quick info sess, CNI handles the Pod-to-Pod communication. Read more [here](https://kubernetes.io/docs/concepts/services-networking/). 
 
-I am going to use `Calico` as my `Network Addon`. You can see a list of other available ones [here](https://kubernetes.io/docs/concepts/cluster-kubeadm join 10.35.40.211:6443 --token oem3vy.6s7s91618qsyfkke \
-	--discovery-token-ca-cert-hash sha256:dd731e63f10ec6114b48f75a761cf833b8a3703fe53031829b685eed6bef1030 administration/addons/#networking-and-network-policy). The one I am using is for `50 Nodes or Less`
+Install one of the below CNIS, then come back here.
+
+(Optional, not recommended) Remove the taints on control plane so you can schedule pods on it.
+
+    kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+    kubectl taint nodes --all node-role.kubernetes.io/master-
+
+(Optional, not recommended) You will see errors, all you should look for is,
+
+    node/<your-hostname> untainted
+
+Now, check the nodes in your cluster, all should be good ..
+
+    kubectl get nodes -o wide
+
+#### Calico CNI
+
+I am going to use `Calico` as my `Network Addon`. You can see a list of other available ones [here](https://kubernetes.io/docs/concepts/cluster-administration/addons/). The one I am using is for `50 Nodes or Less`
+
 The following instructions are from `Calico` install [site](https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart). Reference them for future changes. Okay, lets start.
 
 Install Tigera Calico operator and custom resource definitions (BTW this is a `Namespace` kind.)
@@ -1648,6 +2219,28 @@ Check all the pods that are `Calico pods` are running with this. (Just keep it o
 Now, check the nodes in your cluster, all should be good ..
 
     kubectl get nodes -o wide
+
+#### Flannel CNI
+
+The following instructions are from `Flannel` install [site](https://github.com/flannel-io/flannel). Reference them for future changes.
+
+Grab the manifest first, we need to change the podCIDR to whatever we set above
+
+    wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
+Search for the term `10.244.0.0/16` and change it to whatever you did. It should look like below
+
+     net-conf.json: |
+    {
+      "Network": "10.244.0.0/16",
+      "Backend": {
+        "Type": "vxlan"
+      }
+    }
+
+Finally just apply the manifest
+
+    kubectl apply -f kube-flannel.yml
 
 ### Installing metallb (Loadbalancer)
 
@@ -1750,7 +2343,7 @@ Then apply it,
 
     kubectl apply -f web-app-deployment.yml
 
-And test it.Get the EXTERNAL-IP of the service and then curl it.
+And test it. Get the EXTERNAL-IP of the service and then curl it.
     
     kubectl get svc web-app
     curl <EXTERNAL-IP> 
@@ -1783,7 +2376,7 @@ You can check the setable values
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 
 
-#### From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/))
+#### From Nginx [Official Site](https://docs.nginx.com/nginx-ingress-controller/)
 
 
 ##### Option A - Helm Via OCI Registry
@@ -2114,4 +2707,24 @@ TODO Redeploy cluster to accomodate changed IPs
 After you have changed the host IP there are steps that must be taken to ensure kubernetes still functions correctly.
 
 First, change your hosts file to reflect new ip
+
+
+### Deploy Postgressql
+TODO Deploy postgressql-ha
+#### In HA Mode
+
+#### Normally
+
+
+TODO Deploy gitlab
+### Deploy gitlab
+
+
+
+TODO Deploy semaphore
+### Deploy semaphore
+
+Will most likely depend on postgressql
+
+[here](https://docs.semui.co/)
 

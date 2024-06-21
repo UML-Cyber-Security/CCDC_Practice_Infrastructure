@@ -1,0 +1,84 @@
+global:
+  enabled: true
+  tlsDisable: false
+injector:
+  enabled: true
+server:
+  dataStorage:
+    enabled: true 
+    size: 4Gi
+    mountPath: "/vault/data"
+    storageClass: longhorn
+    accessMode: ReadWriteOnce
+  extraEnvironmentVars:
+    VAULT_CACERT: /vault/userconfig/vault-ha-tls/vault.ca
+    VAULT_TLSCERT: /vault/userconfig/vault-ha-tls/vault.crt
+    VAULT_TLSKEY: /vault/userconfig/vault-ha-tls/vault.key
+  volumes:
+    - name: userconfig-vault-ha-tls
+      secret:
+        defaultMode: 420
+        secretName: vault-ha-tls
+  volumeMounts:
+    - mountPath: /vault/userconfig/vault-ha-tls
+      name: userconfig-vault-ha-tls
+      readOnly: true
+  standalone:
+    enabled: false
+  affinity: ""
+  ha:
+    enabled: true
+    replicas: 2
+    raft:
+        enabled: true
+        setNodeId: true
+        config: |
+          ui = true
+          listener "tcp" {
+              tls_disable = 0
+              address = "[::]:8200"
+              cluster_address = "[::]:8201"
+              tls_cert_file = "/vault/userconfig/vault-ha-tls/vault.crt"
+              tls_key_file  = "/vault/userconfig/vault-ha-tls/vault.key"
+              tls_client_ca_file = "/vault/userconfig/vault-ha-tls/vault.ca"
+              # For prometheous operator access
+              unauthenticated_metrics_access = "true"
+        
+          }
+          storage "raft" {
+              path = "/vault/data"
+          }
+          disable_mlock = true
+          service_registration "kubernetes" {}
+
+          # For prometheous operator access
+          telemetry {
+            prometheus_retention_time = "30s"
+            disable_hostname = true
+          }
+
+serverTelemetry:
+  serviceMonitor:
+    enabled: true
+  prometheousRules:
+    enabled: true
+    rules:
+        - alert: vault-HighResponseTime
+          annotations:
+            message: The response time of Vault is over 500ms on average over the last 5 minutes.
+          expr: vault_core_handle_request{quantile="0.5", namespace="mynamespace"} > 500
+          for: 5m
+          labels:
+            severity: warning
+        - alert: vault-HighResponseTime
+          annotations:
+            message: The response time of Vault is over 1s on average over the last 5 minutes.
+          expr: vault_core_handle_request{quantile="0.5", namespace="mynamespace"} > 1000
+          for: 5m
+          labels:
+            severity: critical
+
+ui:
+  enabled: true
+  serviceType: "LoadBalancer"
+  loadBalancerIP: 10.35.40.122
