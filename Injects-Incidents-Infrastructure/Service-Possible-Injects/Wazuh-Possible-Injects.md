@@ -1,8 +1,8 @@
 ## Introduction
-The hope of this document is to provide two very possible vulnerability that SOC can encounter using Wazuh.
+The hope of this document is to provide two very possible vulnerabilities that SOC can encounter using Wazuh.
 A description and mitigation will be provided for each.
-Apart from vulnerabilities, it will showcase two very possible Inject.
-Predicting possible inject is good practice to keep ahead (possibly) of the competition.
+Apart from vulnerabilities, it will showcase two very possible Injects that SOC can recieve.
+Predicting possible injects is good practice to stay ahead of the competition.
 
 ## Common Attack Tool Execution Inject I
 
@@ -37,7 +37,7 @@ Create a custom alert to notify execution of software such as netcat or other su
         ```bash
             foo@bar:/var/ossec/etc/rules#
         ```
-        Inser the following rule (modify accordingly)
+        Insert the following rule (modify accordingly)
         ```yml
             <group name="ossec,">
                 <rule id="100050" level="0">
@@ -65,7 +65,7 @@ Create a custom alert to notify execution of software such as netcat or other su
 ## Possible Inject II
 
 ### Description
-Given a list of New Hire, Install Wazuh to secure their system
+Given a list of New Hires, Install Wazuh to secure their system
 
 ### Step
 1. Configure proper access as an example:
