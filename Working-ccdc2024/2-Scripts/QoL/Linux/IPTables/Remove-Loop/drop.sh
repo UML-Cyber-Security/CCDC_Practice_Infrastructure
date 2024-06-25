@@ -1,1 +1,0 @@
-# This script will remove a drop rule if it is the first in iptables.

@@ -21,6 +21,6 @@
 
       * Note: When First creating an Account you will get a tour!
 
-            <img src="Images/TCloud5.png" width=800>
+        <img src="Images/TCloud5.png" width=800>
 
 4. Now you have access to Taiga!
