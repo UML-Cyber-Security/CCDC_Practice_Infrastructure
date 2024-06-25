@@ -1,8 +1,0 @@
-#!/bin/bash
-
-# located in /usr/bin
-# called in /home/submit/.bash_logout
-
-cat /home/submit/.bash_history >> /root/submit_hist
-echo "Log out: $(date "+%Y-%m-%d  %H:%M:%S")" >> /root/submit_hist
-echo "" > /home/submit/.bash_history
