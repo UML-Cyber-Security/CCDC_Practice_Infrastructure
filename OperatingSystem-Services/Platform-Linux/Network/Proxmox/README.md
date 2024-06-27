@@ -1,4 +1,4 @@
-# Proxmox 
+# Proxmox
 This Directory contains information regarding the configuration of Proxmox instances to support the Practice Infrastructure.
 
 ## Network Setup
@@ -9,7 +9,7 @@ Based on what I have read:
 1. Our best bet is to create **Bridged Networks** that have no gateway or interface specified.
    * This allows us to create **INTERNAL** Networks removing the  ability for devices to bypass the firewall
 2. These Internal Networks can be attached to 1 of the interfaces created on the PFSense VM.
-3. We will need 4 of them   
+3. We will need 4 of them
    * One for the DMZ Network
    * One for the Linux Network
    * One for the Windows Network
@@ -20,7 +20,7 @@ Based on what I have read:
 Refer to the [PFSense Documentation](./../PFSense/1-Initial_Setup.md) document for more details on a single machine setup.
 Refer to the [SDN Documentation](./SDN.md) when implementing a **Highly Available** or Multi-System setup.
 
-## VM Creation 
+## VM Creation
 First we need to make sure the PFSense, Linux and Windows ISOs are available. We can do that with the following steps in each Documentation, However we provide general guidance in this document below.
 1. Refer to [PFSense Documentation](./../PFSense/1-Initial_Setup.md)
 2. Refer to [Linux Documentation](./../../Linux/README.md) This is also provided in the [Proxmox Documentation](./../../Proxmox/README.md)

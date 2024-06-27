@@ -11,12 +11,12 @@ This service may depend on the Internal DNS services, and the local Firewall's c
 * Configure SSL with Certificate from Windows CA (If set up, and external DNS is used)
   * At least Rotate it
 * Add Entries for services if they do not already exist
-## First 30 
-* Create round-robin entries for each service proxied, one with the DNS entry and one with the IP  
+## First 30
+* Create round-robin entries for each service proxied, one with the DNS entry and one with the IP
 * Configure SSL with Certificate from Windows CA (If set up, and external DNS is used)
 
 
 ## Stretch Goals
-* High Availability? 
+* High Availability?
   * If possible set up an alternate NGinx service
-  * Use DNS to do a poor man's round robin 
+  * Use DNS to do a poor man's round robin

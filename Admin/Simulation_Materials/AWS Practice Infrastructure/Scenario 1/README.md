@@ -33,11 +33,11 @@ One configuration you may want to change is the `CR-VPN-Pub-IP` variable located
     ```
 
 2. Wait for roughly 2 minutes while the machines (particular the Wireguard VPN server) start. This will allow the SSH server on the Wireguard machine to start and accept our connection.
-3. Now that this is done, you can now run the `gather-credentials.py` Python script with 
+3. Now that this is done, you can now run the `gather-credentials.py` Python script with
    ```
    python gather-credentials.py
    ```
-    You'll be given two files named 'instance_information.csv' and 'blackteam-inventory.yml'. These two files are crucial to the scenario. The first will hold the login information to the machines that they have. Most importantly, it will hold the private IP addresses for the team to use to begin their simulation. This can be given to the students directly. 
+    You'll be given two files named 'instance_information.csv' and 'blackteam-inventory.yml'. These two files are crucial to the scenario. The first will hold the login information to the machines that they have. Most importantly, it will hold the private IP addresses for the team to use to begin their simulation. This can be given to the students directly.
 
     The other file is needed to setup the Wireguard VPN server. Copy this to the `../Ansible/` directory and replace the existing blackteam-inventory.yml file.
 
@@ -73,14 +73,14 @@ You'll notice if you try to login for the first time that you get an error stati
 
 ### Solution part 1: Enable PasswordAuthentication
 
-The most common method to fix this is to look at the `/etc/ssh/sshd_config` file and see if `PasswordAuthentication` is set uncommented and set to `yes`. 
+The most common method to fix this is to look at the `/etc/ssh/sshd_config` file and see if `PasswordAuthentication` is set uncommented and set to `yes`.
 
 Restart the service with `sudo systemctl restart sshd`
 
 
 ### Solution part 2: Extra AMI-based default SSH configurations
 
-This didn't work and I see that original error message stating that password-authentication is not allowed. 
+This didn't work and I see that original error message stating that password-authentication is not allowed.
 
 Now, we need to look into the configuration file to figure out why password authentication isn't allowed. Again, inside of `/etc/ssh/sshd_config`, you'll see the line
 
@@ -106,7 +106,7 @@ Let's try it out.
 
 ...
 
-It looks like it worked. And... to no success. Now what? 
+It looks like it worked. And... to no success. Now what?
 
 Lets look at the logs of the SSH service using `sudo systemctl status ssh`
 

@@ -8,11 +8,11 @@ The extension I used is simply called authenticator on chrome extension store
 
 ## On AWS Console
 
-Next we need to setup it up on the AWS console. 
+Next we need to setup it up on the AWS console.
 
-To do this we first need to go to IAM. 
+To do this we first need to go to IAM.
 
-Once we are on IAM, click on the user that we want MFA for. 
+Once we are on IAM, click on the user that we want MFA for.
 
 After we are on that user, go to the security Credentials tab.
 
@@ -20,7 +20,7 @@ Click on the Assign MFA device button
 
 Put a device name, for practice I just put test laptop.
 
-Then click on the see Secret Key button. 
+Then click on the see Secret Key button.
 
 ![Imafe](/Images/ShowSecretKeyEG.png)
 

@@ -1,9 +1,9 @@
 # Removing Nodes
-Author(s): 
+Author(s):
     Me
 
 When migrating machines, it is useful to remove the old nodes.
-Proxmox expects a quorum for certain activities, like making a new VM. 
+Proxmox expects a quorum for certain activities, like making a new VM.
 
 You can view the nodes with the command `pvecm nodes`
 
