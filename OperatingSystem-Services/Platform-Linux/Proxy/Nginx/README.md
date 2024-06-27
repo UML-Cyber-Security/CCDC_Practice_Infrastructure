@@ -1,5 +1,5 @@
 # Nginx
-Due to the desire for PATH based forwarding we are exploring the use of the NGINX proxy. This contains the following **Manual** steps to install and configure NGINX for a infrastructure. As the requirements change it is inevitable that the configuration, that is the proxy pass directives will change! 
+Due to the desire for PATH based forwarding we are exploring the use of the NGINX proxy. This contains the following **Manual** steps to install and configure NGINX for a infrastructure. As the requirements change it is inevitable that the configuration, that is the proxy pass directives will change!
 
 This **DID NOT** work as intended, so this can be used as a learning experience and base for later uses of NGINX.
  ## Install
@@ -12,11 +12,11 @@ This **DID NOT** work as intended, so this can be used as a learning experience 
     apt install nginx -y
     ```
 ## Configure 
-1. Create/Open a new configuration in the ```conf.d``` directory. It **MUST** end in ```.conf``` as the main NGINX config has the following line ```include /etc/nginx/conf.d/*.conf;``` 
+1. Create/Open a new configuration in the ```conf.d``` directory. It **MUST** end in ```.conf``` as the main NGINX config has the following line ```include /etc/nginx/conf.d/*.conf;```
     ```sh
     vim /etc/nginx/conf.d/www.someURL.conf
     ```
-2. Create a Server to redirect HTTP requests to HTTPS 
+2. Create a Server to redirect HTTP requests to HTTPS
     ```conf
     # Server for redirecting HTTP requests to HTTPS
     server {
@@ -27,7 +27,7 @@ This **DID NOT** work as intended, so this can be used as a learning experience 
 
     }
     ```
-3. Create a Server to handle HTTPS requests 
+3. Create a Server to handle HTTPS requests
     ```conf
     # Server for handling HTTPS requests, and path based routing
     server{
@@ -39,7 +39,7 @@ This **DID NOT** work as intended, so this can be used as a learning experience 
             proxy_send_timeout 500s;
 
             # Set Server Name
-            server_name SomeServer AltName;          
+            server_name SomeServer AltName;
 
             # Include SSL Configurations
             include snippets/ssl-params.conf
@@ -50,7 +50,7 @@ This **DID NOT** work as intended, so this can be used as a learning experience 
             ssl_certificate_key /etc/ssl/private/nginx.key;
     }
     ```
-    * Include the NGINX Certtificate or Create one 
+    * Include the NGINX Certificate or Create one
       * Create a self signed with the following command ```sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx.key -out /etc/ssl/certs/nginx.crt```
 4. Create a Diffie Hellman Group with OpenSSL
     ```
@@ -84,7 +84,6 @@ This **DID NOT** work as intended, so this can be used as a learning experience 
         sub_filter_once off;
         proxy_pass https://10.0.1.15;
     }
-        
     ```
 7. Remove the Sites Available **DEFAULT** Site
     ```
