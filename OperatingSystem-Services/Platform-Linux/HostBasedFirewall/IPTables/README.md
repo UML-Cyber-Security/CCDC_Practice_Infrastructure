@@ -300,6 +300,49 @@ $ iptables -P <chain> [ACCEPT|DROP|REJECT]
 
 This command sets the target our default policy will use, this can be any one of the valid targets in IPTables. generally we use *ACCEPT* to allow the packet through and *DROP* to reject the packets without notifying the sender we have done so (We will not appear on scans as much).
 
+## Advanced IPTables Operations
+### Adding User Chains
+There are a few reasons to create a user defined chain, the first is to create a unit of reusable rules that you can apply as a target for a rule in one of the default chains in the table. Generally I use this to create a logging chain that I can make a target.
+
+We can create new **USER DEFINED** chains using the **-N** flag
+```sh
+$ sudo iptables -N <chain>
+```
+
+We can remove a user defined chain using the **-X** flag
+```sh
+$ sudo iptables -X <chain>
+```
+
+We can jump to a user-defined chain with the `-j` flag we have commonly used for the *ACCEPT*ing and *DROP*ing of packets.
+```sh
+$ iptables -t <TABLE> [-A|-I|-D] <Chain> <Rule> -j <USER-CHAIN-NAME>
+```
+
+We can return to the calling chain with the *RETURN* target in a user chain.
+```
+$ iptables -t <TABLE> [-A|-I|-D] <Chain> <Rule> -j RETURN
+```
+> [!NOTE]
+> This is useful since we can perform an early return.
+
+### Debugging
+There are a variety of tools that we can use to debug a firewall.
+
+`iptables`: We can use the list and verbose function of IPTables to see the number of packets (and bytes) that a rule has applied to. This can be usefull to see if a ACCEPT rule is being applied properly. Or to see if a DROP/REJECT rule is causing issues. (We can also see if a defualt policy is catching it, and what chain is blocking the traffic)
+
+`ss`: This is a usefull command line untility for finding out what process may be doing, as we can see the port and IP a packet is being sent t0. We can also see if it has been established or if only a SYN has been sent. If we see only a SYN and no established connection we may need to whitelist the port of the destination or source. This would be in the OUTPUT chain of the machine we are using **ss** on. The machine the packet is being sent to would need to whitelist our IP or the port the packet is being sent from in the INPUT chain. 
+
+`netstat` -- Just use `ss`..
+
+Since as we mentioned *IPtables* Is really just a frontend using NFTables we can use the following command to trace all packet and the rules being applied. We should redirect this to a file and stop it after a bit.
+```sh
+xtables-monitor --trace
+
+
+# redirect it to a file
+xtables-monitor --trace > trace-file.txt
+```
 
 ## Refs
 [[1] iptables(8) - Linux man page](https://linux.die.net/man/8/iptables)
