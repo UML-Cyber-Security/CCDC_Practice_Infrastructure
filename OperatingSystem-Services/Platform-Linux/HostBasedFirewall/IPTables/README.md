@@ -32,6 +32,29 @@ The basics of IPTables are inherently tied to the structure of IPTables itself, 
 This section will not discuss the flow of a packet through IPtables, if that is done it will be in a later section since that is a bit more than the basics. In this section we will discuss the basic structures and concepts within iptables.
 #### Tables
 A table consists of a series of chains, in IPtables there a some default chains contained in each of the tables, you can also find user or service created chains on most systems. These tables group together *chains* that are used for the same logical purpose, just as those chains logically group together rules. These tables do not have much of an effect outside of grouping together chains.
+
+Below are the tables we can find in IPtables, and some general information on the use of these tables.
+* raw
+* filter
+* nat
+* mangle
+* security
+
+The **raw** table is used to configure packets to make them exempt from tracking, this is done using the NOTRACK target in IPTabels making it so ip_conntrack is not called. This is generally the first set of chains a packet will encounter and is generally use to configure if the state of connection is not tracked or not.
+
+The **filter** table is the one we often are the most concerned with. When using `iptables` commands this is the default table we interact with and as the name implies it filters packets and does the actions we traditionally associate with a firewall. You can of course place those actions in other tables, though in most cases this is ill-advised.
+
+The **nat** table is used for *Network Address Translation (NAT)* operations (NAT allows us to hide multiple machines behind a singular IP). This is generally used for outgoing connections, we will see this with Docker. Only the first packet in a stream will hit this table when creating outbound traffic, the rest have the same actions as the first in the flow applied.
+
+The **mangle** table special since it is used to perform packet alterations. There are a number of modification we can make to the packet, for example.
+* You can change the Type Of Service (TOS) field
+* You can change the Time To Live field (TTL)
+* MARK sets special mark values on the packet
+* SECMARK can set security context fields on the packet(used in SE LINUX)
+* CONNSECMARK will copy the SECMARK on a single packet to the whole connection
+
+The **security** table is used for Mandatory Access Controls, generally for *SELinux* constructs. This may not be present on all systems.
+
 #### Chains
 A chain consists of a series of rules that are applied at a specific point in the packet's journey through the *host-based firewall*. A chain can be thought of as a doubly linked list, where rules are grouped together starting at the head and moving down towards the tail. The packet will be checked against the rules sequentially starting at the head of the list, and moving towards the tail. Once a rule is matched against the packet, the *TARGET* is applied and we will stop searching through the chain for additional matches. This means if we place a more general rule, such as a *Catch-All* at the head of the list even if there are more specific rules deeper in the chain we will never compare against them as they stop at the *Catch-All*.
 #### Rules
@@ -40,7 +63,7 @@ Rules in IPtables consist of a series of conditions, these can include the proto
 * `DROP`: Reject the packet without notifying the sender.
 * `REJECT`: Reject the packet and notify the sender.
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > Iptables stops evaluating rules once it has successfully matched the conditions in the rule to a packet. Since our rules are evaluated sequentially starting at the beginning of a chain we need to carefully plan out the order our rules are placed to prevent earlier more general rules from being applied before more specific and granular rules if they are placed deeper in the chain.
 ### IPTables Basic Syntax
 When using the `iptables` command we will use a command with the following general syntax, of course this may vary depending on what you would like to do!
@@ -80,6 +103,73 @@ We can also *flush* all the rules contained within a *table* or *chain* using th
 $ iptables -t <table> -F <chain>
 ```
 This command will remove all the rules contained within a given chain, we can also omit a chain name which will instead flush all rules from all chains in the table. It should be obvious this may be damaging if your services use those chains to route traffic, such as VPNs or Orchestration programs like K8s.
+#### Building Rules
+We can filter traffic using the interface as condition to check. This is done using the little **-i** flag in the rule definition for incoming traffic, the **-o** flag would be used for outgoing traffic. 
+``` sh
+# This rule allows use of the loopback interface  
+# We specify the interface with the -i lo sequence to allow incoming traffic on the interface
+$ sudo iptables -I INPUT -i lo -j ACCEPT
+# We specify the interface with the -o sequence to allow for outbound traffic
+$ sudo iptables -I OUTPUT -o lo -j ACCEPT
+```
+
+We can filter traffic based on the protocol and port number specified. This uses the **-p** flag, **--sport**, and **--dport** flags where the **sport** and **dport** flags are used to filter source and destination port values. Valid arguments for the **-p** flag include **all**, **tcp**, **udp**, **udplite**, **icmp**, **sctp**, and  **icmpv6**. The default argument unless one is specified with -p is **all**.
+*Notice that flags using more than one character use two "-"s* 
+```sh
+# This is a rule that allows tcp communication to port 22 (SSH generally)
+$ sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+```
+
+We can filter traffic based on the source address without the use of **modules**. This is done using the **-s** flag. This can be a network name or hostname. Specifying anything that has to be resolved with an external DNS query is a bad idea for obvious reasons. We can specify a network mask can also be provided in the form of CIDR notation or a number specifying the number of 1's from the left. (24 == 255.255.255.0)
+
+```sh
+# Accept only tcp packets to port 22 from the 192.168.1.0/24 network
+$ sudo iptables -A INPUT -p tcp --dport 22 -s 192.168.1.0/24 -j ACCEPT
+```
+
+We can filter traffic by destination using the **-d** flag. The same conditions and rules apply to this flag as the **-s** source flag above.
+```sh
+## If the destination is X.X.X.X/Y and it is over tcp to port 80 it will be accepted (outbound)
+$ sudo iptables -A OUTPUT -p tcp --dport 80 -d X.X.X.X/Y -j ACCEPT
+```
+You will have seen a **-j** flag previously, this is the jump flag and it defines what the should be done once the conditions in the rule are met. The target of the jump can be a **USER CREATED**, one of the built in targets. The following are the built in targets and what they do.
+  * **ACCEPT** - Let the packet through 
+  * **DROP** - Drop the packet (No response)
+  * **REJECT** - Drop the packet (send response)
+  * **QUEUE** - Send packet to user space 
+  * **RETURN** - Stop processing in this chain and resume processing in the calling chain
+
+We can jump to a **USER CREATED** chain using the **-g** goto flag, as long as the user chain is a part of the table this rule is in.
+```sh
+## If the destination is X.X.X.X/Y and it is over tcp to port 80 it will be accepted (outbound)
+$ sudo iptables -A INPUT -s X.X.X.X/Y -g <USER_CHAIN>
+```
+#### Modules
+There are a number of built in modules that can be used to increase the granularity of the rules that we are defining. There are quite a lot of them that can be found on various [man pages](https://manpages.ubuntu.com/manpages/xenial/man8/iptables-extensions.8.html).
+
+To use a module you set the module using the **-m** flag, then you can use the flags and options defined by that module.
+
+Some useful modules include [conntrack](https://manpages.ubuntu.com/manpages/xenial/man8/iptables-extensions.8.html#:~:text=before%20the%20comparison\).-,conntrack,-This%20module%2C%20when) which allows you to look at the state of the connection, and use that as a condition to be met in the rule.
+
+We are most likely going to use the **--ctstate** (Connection State) flag this can analyze the packet for the following states
+  * `NEW`
+  * `ESTABLISHED`
+  * `RELATED` - New connection related to an established one
+  * `UNTRACKED` - From explicit untracking with -j CT --notrack in the raw table
+  * `INVALID`
+  * (Two others that likely will not be used)
+```sh
+# Accept all incoming connections that are already established (Outgoing connections made first)
+$ sudo iptables -A INPUT -m conntrack -ctstate ESTABLISHED -j ACCEPT
+```
+
+We could also use the [iprange](https://manpages.ubuntu.com/manpages/xenial/man8/iptables-extensions.8.html#:~:text=ipv6%2Dicmp%20%2Dh-,iprange,-This%20matches%20on) module to accept IPs in an explicit range. This uses the **--src-range** and **--dst-range** flags.
+
+```sh
+# Accept connections from a source range
+$ sudo iptables -A INPUT -m iprange --src-range 192.168.1.100-192.168.1.110 --dst-range 192.168.2.100-192.168.2.200 -j ACCEPT
+```
+
 #### Examining IPTables
 ```sh
 $ iptables -t <TABLE> -L
@@ -144,6 +234,9 @@ We can see in this case the default chains in the *filter* table are present in 
 
 We can use additional flags such as `--line-number` to print the index associated with the rule often used to delete specific rules or insert rules at a specific location, and we can also use the `-v` flag to print out additional information that is useful when debugging our firewall rules. This generally is the number of packets a rule has been triggered by.
 
+> [!TIP]
+> You can add the `-n` flag to no resolve IP addresses to domains using a reverse DNS lookup. This is useful to prevent long lookup times.
+
 ```sh
 $ iptables -t filter -L --line-number -v
 Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
@@ -206,3 +299,13 @@ $ iptables -P <chain> [ACCEPT|DROP|REJECT]
 ```
 
 This command sets the target our default policy will use, this can be any one of the valid targets in IPTables. generally we use *ACCEPT* to allow the packet through and *DROP* to reject the packets without notifying the sender we have done so (We will not appear on scans as much).
+
+
+## Refs
+[[1] iptables(8) - Linux man page](https://linux.die.net/man/8/iptables)
+
+[[2] A Deep Dive into Iptables and Netfilter Architecture](https://www.digitalocean.com/community/tutorials/a-deep-dive-into-iptables-and-netfilter-architecture)
+
+[[3] Understanding IPTables, NAT, Conntrack and Similar Tools (With Resources to Help)](https://aembit.io/blog/understanding-iptables-nat-conntrack-and-similar-tools-with-resources-to-help/#:~:text=The%20NAT%20functionality%20in%20iptables,NAT%20rules%20defined%20in%20iptables.)
+
+[[4] UML-CCDC2024 IPTables Docs](https://github.com/UML-Cyber-Security/ccdc2024/blob/main/3-Docs_References/OS-Linux/Firewall/README.md)
