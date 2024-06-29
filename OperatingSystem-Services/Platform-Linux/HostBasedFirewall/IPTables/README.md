@@ -49,9 +49,9 @@ The **nat** table is used for *Network Address Translation (NAT)* operations (NA
 The **mangle** table special since it is used to perform packet alterations. There are a number of modification we can make to the packet, for example.
 * You can change the Type Of Service (TOS) field
 * You can change the Time To Live field (TTL)
-* MARK sets special mark values on the packet
-* SECMARK can set security context fields on the packet(used in SE LINUX)
-* CONNSECMARK will copy the SECMARK on a single packet to the whole connection
+* `MARK` sets special mark values on the packet
+* `SECMARK` can set security context fields on the packet(used in SE LINUX)
+* `CONNSECMARK` will copy the `SECMARK` on a single packet to the whole connection
 
 The **security** table is used for Mandatory Access Controls, generally for *SELinux* constructs. This may not be present on all systems.
 
@@ -155,7 +155,7 @@ We are most likely going to use the **--ctstate** (Connection State) flag this c
   * `NEW`
   * `ESTABLISHED`
   * `RELATED` - New connection related to an established one
-  * `UNTRACKED` - From explicit untracking with -j CT --notrack in the raw table
+  * `UNTRACKED` - From explicit un-tracking with -j CT --notrack in the raw table
   * `INVALID`
   * (Two others that likely will not be used)
 ```sh
@@ -329,9 +329,9 @@ $ iptables -t <TABLE> [-A|-I|-D] <Chain> <Rule> -j RETURN
 ### Debugging
 There are a variety of tools that we can use to debug a firewall.
 
-`iptables`: We can use the list and verbose function of IPTables to see the number of packets (and bytes) that a rule has applied to. This can be usefull to see if a ACCEPT rule is being applied properly. Or to see if a DROP/REJECT rule is causing issues. (We can also see if a defualt policy is catching it, and what chain is blocking the traffic)
+`iptables`: We can use the list and verbose function of IPTables to see the number of packets (and bytes) that a rule has applied to. This can be useful to see if a ACCEPT rule is being applied properly. Or to see if a DROP/REJECT rule is causing issues. (We can also see if a default policy is catching it, and what chain is blocking the traffic)
 
-`ss`: This is a usefull command line untility for finding out what process may be doing, as we can see the port and IP a packet is being sent t0. We can also see if it has been established or if only a SYN has been sent. If we see only a SYN and no established connection we may need to whitelist the port of the destination or source. This would be in the OUTPUT chain of the machine we are using **ss** on. The machine the packet is being sent to would need to whitelist our IP or the port the packet is being sent from in the INPUT chain. 
+`ss`: This is a useful command line utility for finding out what process may be doing, as we can see the port and IP a packet is being sent t0. We can also see if it has been established or if only a SYN has been sent. If we see only a SYN and no established connection we may need to whitelist the port of the destination or source. This would be in the OUTPUT chain of the machine we are using **ss** on. The machine the packet is being sent to would need to whitelist our IP or the port the packet is being sent from in the INPUT chain. 
 
 `netstat` -- Just use `ss`..
 
