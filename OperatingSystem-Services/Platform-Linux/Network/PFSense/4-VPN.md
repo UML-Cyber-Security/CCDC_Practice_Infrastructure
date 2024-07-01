@@ -1,8 +1,8 @@
 # VPN
-This section details the setup of a VPN Server on the PFSense Router. This will cover both OpenVPN and Wireguard. 
+This section details the setup of a VPN Server on the PFSense Router. This will cover both OpenVPN and Wireguard.
 
-## Package manager 
-If the VPM service you want on the system is not there already you can open the *package manager* for PFSense. 
+## Package manager
+If the VPM service you want on the system is not there already you can open the *package manager* for PFSense.
 1. Open the PFSense browser and ckick on system
     ![PM](Images/VP1.png)
 2. Click on the Package Manager tab, select avalable packages

@@ -32,8 +32,8 @@ What port is available on the Ansible Machine
 - Check how Wazuh is installed (Docker/Baremetal)
 - List all running process (psaux > file.txt)
 - List all open ports (sudo netstat -tuln, ss -tuln, lsof -i -P -n | grep LISTEN, or nmap)
-- List out strucutre (sudo tree / > file.txt)
-- Brief check of any vulnerabilites (shadow, group, authkeys)
+- List out structure (sudo tree / > file.txt)
+- Brief check of any vulnerabilities (shadow, group, authkeys)
 - List out all installed Programs on machine (dpkg --list > file.txt) !Might be other package installer, has service version!
 - IF BORED, list out hashes of all binary's (cd /bin, for FILE in*; do md5sum $FILE; done > file.txt)
 
@@ -86,7 +86,6 @@ Get DNS Server Address
 - CSI?
 - Ingress?
 - Balancer?
-- 
 
 
 ### Windows
