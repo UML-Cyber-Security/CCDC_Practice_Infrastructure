@@ -1,17 +1,14 @@
 #Installing Promox + Infrastructure Specific Details
 
-Author: 
-    Luke 
+Author:
+    Luke
     Chisom (Ask me anything, don't bother Luke)
 
 ## Table of Contents
-* [Steps](#steps) 
+* [Steps](#steps)
 * [References](#references)
 
-
-
 ## Steps
-
 1. Install the latest (or of your choice) version of Proxmox in the form of an *.iso* file from the following site
     https://www.proxmox.com/en/downloads
 
@@ -30,8 +27,8 @@ Author:
 
 6. Set up the Promox instance's credentials
 
-### Note: - Error Msg. 
-    Once you hit install if you have an error in which one of the packages doesn't install you will have to reinstall the *iso* as it didn't get mounted on the bootable USB correctly or didn't install correctly from the website. 
+### Note: - Error Msg.
+    Once you hit install if you have an error in which one of the packages doesn't install you will have to reinstall the *iso* as it didn't get mounted on the bootable USB correctly or didn't install correctly from the website.
 
 ## References
 1. https://etcher.balena.io/ - Site to download Etcher

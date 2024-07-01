@@ -25,19 +25,17 @@ The [Initial_Setup](./1-Initial_Setup.md) document covers the following topics.
 5. Configure the Instance on First Boot
 6. Configure the Instance to allow Web-Interface Access from WAN (TEMP Measure)
 7. Configure the Interfaces
-8. Configure DHCP 
+8. Configure DHCP
 9. Configure Routes
-10. Configure DNS 
+10. Configure DNS
 11. Configure Other
 
 ## Exposing Services Setup
 The configuration of PFSense Routers to expose internal serveces to the internet is described in the [Expose_Services](./2-Expose_Services.md) document.
 
-The [Expose_Services](./2-Expose_Services.md) document covers the following topics.
-1. 
+The [Expose_Services](./2-Expose_Services.md) document covers necessary information required to expose internal services to the public interface.
 
-## Security 
+## Security
 The configuration of PFSense Routers to increase security is described in the [Security_Configurations](./3-Security_Configuration.md) document
 
-The [Security_Configurations](./3-Security_Configuration.md) document covers the following topics.
-1. 
+The [Security_Configurations](./3-Security_Configuration.md) document covers the required information to increase security of the PFSense router.

@@ -24,8 +24,8 @@ add the line `%minecraft ALL=(ALL:ALL) ALL` to the file and quit.
 
 ---
 
-### Harden SSH 
-if you haven't already, type `ssh-keygen` on the laptop, not the infrastructure. 
+### Harden SSH
+if you haven't already, type `ssh-keygen` on the laptop, not the infrastructure.
 
 copy your public `.pub` key in your `~/.ssh` directory.
 
@@ -33,7 +33,7 @@ Back on the infrastructure:
 
 sign into the blue3 account `su blue3`
 
-paste your key into the ~/.ssh/authorized_keys file 
+paste your key into the ~/.ssh/authorized_keys file
 
 paste your key into the shared document for the team.
 
@@ -44,7 +44,7 @@ PasswordAuthentication no
 PermitRootLogin no
 ```
 
-Try to access the machine on another terminal 
+Try to access the machine on another terminal
 
 DO NOT CLOSE YOUR CURRENT SESSION!!!
 
@@ -91,7 +91,7 @@ Mark the /etc/passwd file and change the shell to NULL
 
 #### If this was a mistake, return the user back to normal:
 
-`sudo passwd -u <username>` 
+`sudo passwd -u <username>`
 
 `sudo usermod -c "Blue Cleared" -s /bin/bash <username>`
 
@@ -119,7 +119,7 @@ Mark the /etc/passwd file and change the shell to NULL
 # FreeIPA SPECIFIC STEPS
 # OS:_______ IP:________ Hostname:____________
 
-### Write the OS, IP, and Hostname Above 
+### Write the OS, IP, and Hostname Above
 `cat /etc/os-release`, `ip addr`, `hostnamectl`.
 
 if the hostname doesn't have 3 fields (first.second.third), make it have 3.

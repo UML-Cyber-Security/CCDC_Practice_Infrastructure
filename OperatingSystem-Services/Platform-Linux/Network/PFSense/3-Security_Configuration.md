@@ -16,7 +16,7 @@ This document will contain further details on the Security configuration done to
 - [Packages](#packages)
 
 ## Exposing Services
-Please Refer to the [Exposing_Services](./2-Expose_Services.md) document for more details on how this was done for the DMZ Router, and other possible options. 
+Please Refer to the [Exposing_Services](./2-Expose_Services.md) document for more details on how this was done for the DMZ Router, and other possible options.
 
 ## Initial Firewall Config DMZ
 ### WAN (External)
