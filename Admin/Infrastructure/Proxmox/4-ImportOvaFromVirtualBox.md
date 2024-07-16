@@ -1,7 +1,7 @@
 # Import OVA file from VirtualBox
 *Author:* Chris Morales
 
-*Summary:* This guide covers how to manually import an `.ova` file exported from VirtualBox into Proxmox. There is no native support for this feature and so manual effort is required. 
+*Summary:* This guide covers how to manually import an `.ova` file exported from VirtualBox into Proxmox. There is no native support for this feature and so manual effort is required.
 
 ## Download the OVA file onto Proxmox
 You can do this directly from the Proxmox Server (**host** machine) or on a separate computer and transfer over the files using some file transfer program like SCP **onto the Promox Server**.

@@ -1,6 +1,6 @@
 # FreeIPA Documentation
-### [Installation](#installation) | [Commands](#commands) | [Migration](#migration) | [Conceptual Info](#conceptual-info) | [Removal](#removal) | [Possible Injects](#possible-injects) | [Links](#links) 
----  
+### [Installation](#installation) | [Commands](#commands) | [Migration](#migration) | [Conceptual Info](#conceptual-info) | [Removal](#removal) | [Possible Injects](#possible-injects) | [Links](#links)
+---
 <br/><br/>
 
 
@@ -8,11 +8,11 @@
 
 ## Server (Do this on RHEL)
 
-### Change Hostname so it has 3 fields (ex first.second.third) 
+### Change Hostname so it has 3 fields (ex first.second.third)
 `hostnamectl set-hostname <freeipa.zodu.com>`
 
 
-### Add firewall rules to open needed ports 
+### Add firewall rules to open needed ports
 ```bash
 firewall-cmd --add-service=freeipa-ldap --add-service=freeipa-ldaps
 
@@ -45,7 +45,7 @@ This will ask a lot of questions, heres a guide:
 
 ### RHEL:
 
-### Change Hostname so it has 3 fields (ex first.second.third) 
+### Change Hostname so it has 3 fields (ex first.second.third)
 `hostnamectl set-hostname <service.zodu.com>`
 
 
@@ -53,7 +53,7 @@ This will ask a lot of questions, heres a guide:
 example line: `192.168.2.127 freeipa.zodu.com`
 
 
-### Add firewall rules to open needed ports 
+### Add firewall rules to open needed ports
 ```bash
 sudo firewall-cmd --add-service=freeipa-ldap --add-service=freeipa-ldaps
 
@@ -75,18 +75,18 @@ sudo ipa-client-install
 
 ### Ubuntu:
 
-### Change Hostname so it has 3 fields (ex first.second.third) 
+### Change Hostname so it has 3 fields (ex first.second.third)
 `hostnamectl set-hostname <service.zodu.com>`
 
 ### Add server to /etc/hosts
 example line: `192.168.2.127 freeipa.zodu.com`
 
-### Add firewall rules to open needed ports 
+### Add firewall rules to open needed ports
 ```bash
 
 ufw add 22 # also do this for 80, 88, 443, 389, 464
 
-ufw enable 
+ufw enable
 ```
 
 ### Install the FreeIPA Server
@@ -126,7 +126,7 @@ Also see [Command List](https://freeipa.readthedocs.io/en/latest/api/commands.ht
 
 ### `man ipa` gives more information on other commands
 
-### `ipa-backup` creates a backup of the FreeIPA Server in `/var/lib/ipa/backup/`. 
+### `ipa-backup` creates a backup of the FreeIPA Server in `/var/lib/ipa/backup/`.
 
 Must be run as root. More Information in the [Link Section](#backup-and-restore-red-hat-backing-up-and-restoring-identity-management ).
 
@@ -134,7 +134,7 @@ Must be run as root. More Information in the [Link Section](#backup-and-restore-
 >
 > `--data` does a data only backup. A full Server backup is done by default.
 >
-> `--logs` includes logs into the backup. 
+> `--logs` includes logs into the backup.
 
 ### `ipa-restore <Directory_Name> ` restores from backup in `/var/lib/ipa/backup`.
 > Arguments:
@@ -143,7 +143,7 @@ Must be run as root. More Information in the [Link Section](#backup-and-restore-
 >
 > `--data` does a data only restore. A full Server restore is done by default if the backup allows.
 >
-> `--no-logs` does not includes logs into the restoration if the backup has logs. 
+> `--no-logs` does not includes logs into the restoration if the backup has logs.
 
 <br/><br/>
 
@@ -158,7 +158,7 @@ Important Note: New Machine must have the same host as the original machine.
 
 More Information [here](#installation).
 
-### 2b. Move the Backup File To the New machine. 
+### 2b. Move the Backup File To the New machine.
 `scp /var/lib/ipa/backup <user@NewMachine>:/var/lib/ipa/backup/`.
 
 ### 3. Restore the Backup on the new machine.
@@ -197,7 +197,7 @@ ipa group-add <groupname> -desc "a description of the group"
 # Add Users to a group if needed
 ipa group-add-member <groupname> --users={username1, username2}
 
-# Add a Policy to a group if needed 
+# Add a Policy to a group if needed
 # (leave groupname empty to make it global)
 ipa pwpolicy-add <groupname> -minlength=9 -minclasses=3
 
@@ -236,10 +236,10 @@ net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.<interface>.disable_ipv6 = 1
 # replace <interface> with the network interface (ex: ens18)
 
-# Edit the /etc/hosts file to have the ADs 
+# Edit the /etc/hosts file to have the ADs
 example line: 192.168.3.111 ad.zodu.com
 
-# Install the needed package 
+# Install the needed package
 sudo yum install -y "*ipa-server" "*ipa-server-trust-ad" ipa-server-dns bind bind-dyndb-ldap
 
 # Install the needed tools to make a trust
@@ -356,24 +356,24 @@ Now you should be able to authenticate in Gitlab through FreeIPA
 # Links
  ### Backup and restore [Red Hat Backing Up and Restoring Identity Management](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/linux_domain_identity_authentication_and_policy_guide/backup-restore)
 
- ### Migrating IPA [Examples of using migrate-ds](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/linux_domain_identity_authentication_and_policy_guide/using-migrate-ds) 
+ ### Migrating IPA [Examples of using migrate-ds](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/linux_domain_identity_authentication_and_policy_guide/using-migrate-ds)
  Note: this is not used for FreeIPA to FreeIPA, but for other LDAP providers moving to FreeIPA.
 
 ### Windows Active Directory Integration Info: [AD Integration](https://computingforgeeks.com/establish-trust-between-ipa-and-active-directory/)
 
 ### Gitlab Integration Info: [Gitlab Integration](https://dev.to/kenmoini/ldap-on-gitlab-with-red-hat-identity-management-freeipa-3f5l), [Gitlab Docs](https://docs.gitlab.com/ee/administration/auth/ldap/?tab=Helm+chart+%28Kubernetes%29)
 
-### Centralized one stop logging information: [Centralized Logs](https://www.freeipa.org/page/Centralized_Logging) 
+### Centralized one stop logging information: [Centralized Logs](https://www.freeipa.org/page/Centralized_Logging)
 
-### FreeIPA behind a proxy (HTTP) or DMZ: [IPA with proxy](https://www.adelton.com/freeipa/freeipa-behind-proxy-with-different-name) 
+### FreeIPA behind a proxy (HTTP) or DMZ: [IPA with proxy](https://www.adelton.com/freeipa/freeipa-behind-proxy-with-different-name)
 
-### FreeIPA possible Vulnerabilities: [IPA Vulnerabilities](https://book.hacktricks.xyz/linux-hardening/freeipa-pentesting) 
+### FreeIPA possible Vulnerabilities: [IPA Vulnerabilities](https://book.hacktricks.xyz/linux-hardening/freeipa-pentesting)
 
 ### Disabling Anonymous Unauthenticated Binds: [Anonymous Binds](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/), [Anonymous Bind Disable](html/linux_domain_identity_authentication_and_policy_guide/disabling-anon-binds)
 
-### Live FreeIPA Web Environment Demo: [IPA Web GUI DEMO](https://www.freeipa.org/page/Demo) 
+### Live FreeIPA Web Environment Demo: [IPA Web GUI DEMO](https://www.freeipa.org/page/Demo)
 
-### Potential IP Table Configuration: [IPA IP Tables](https://adam.younglogic.com/2013/03/iptables-rules-for-freeipa/) 
+### Potential IP Table Configuration: [IPA IP Tables](https://adam.younglogic.com/2013/03/iptables-rules-for-freeipa/)
 
 ### ALL IPA COMMAND LINE COMMANDS: [IPA COMMANDS](https://freeipa.readthedocs.io/en/latest/api/commands.html)
 

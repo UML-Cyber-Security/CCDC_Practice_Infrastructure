@@ -13,7 +13,7 @@ This document described the setup and configuration of Software Defined Networks
 ### Modify Apt Source List
 Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enterprise repository, and remove the enterprise repositories.
 
-1. Update and install packages 
+1. Update and install packages
     ```
     apt update && \
     apt install libpve-network-perl ifupdown2
@@ -25,7 +25,7 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
 3. Wait some time, possibly restart devices
     * For me, the SDN field did not appear until 2 days later, when the machine may or may not have all been restarted
 ### SDN
-1. Access the *Datacenter* page from the the web interface 
+1. Access the *Datacenter* page from the the web interface
 
     <img src="Images/SD1.png" width=800>
 
@@ -37,7 +37,7 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
 
     <img src="Images/SD3.png" width=800>
 
-4. Create a VXLan Zone 
+4. Create a VXLan Zone
    *  <a href="https://pve.proxmox.com/pve-docs/chapter-pvesdn.html">Per Proxmox's SND documentation</a>: "A zone defines a virtually separated network", we need this in order to virtually connect the Proxmox hosts, allowing for the "Seamless" communication between nodes on the various networks. If we wish to utilize this properly VXLans are required, as they create an overlay network between the systems allowing for their communication!
 
     <img src="Images/SD4.png" width=800>
@@ -84,9 +84,9 @@ Please refer to [Proxmox Readme](./../../Proxmox/README.md) to add the non-enter
     <img src="Images/SD9.png" width=800>
 
 3. Modify PFSense instances to use the MTU of 1450 on the LAN and OTP Interfaces
-    
+
     <img src="Images/SD11.png" width=800>
 
-4. For the Internal Routers set the MTU of WAN to 1450 
+4. For the Internal Routers set the MTU of WAN to 1450
 
     <img src="Images/SD12.png" width=800>

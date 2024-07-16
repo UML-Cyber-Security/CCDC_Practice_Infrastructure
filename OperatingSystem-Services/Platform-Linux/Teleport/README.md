@@ -14,15 +14,9 @@ This is a document detailing the installation, setup and use of **Teleport**. Th
   - [Add Windows RDP Web](#add-windows-rdp-web)
 - [Dissable Session Recordings](#dissable-session-recordings)
 - [User Management](#user-management)
-- [Container Based Teleport](#container-based-teleport)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-  - [Startup](#startup)
-    - [Manual](#manual)
-    - [Docker Compose](#docker-compose)
 - [Error Fixing](#error-fixing)
 
-## Host Based 
+## Host Based
 Please follow the instructions located at the official <a href="https://goteleport.com/docs/installation/">Teleport documentation</a>. This will give a more detailed explication of the commands provided below (Except for Docker, they dont tell us much there).
 
 We have the option of installing Teleport on the System, or as a Container.
@@ -33,7 +27,7 @@ This is taken from the <a href="https://goteleport.com/docs/installation/">Telep
 
 Run the following commands (On Debian based systems)
 ```sh
-# Add the GPG Key 
+# Add the GPG Key
 sudo curl https://apt.releases.teleport.dev/gpg \
 -o /usr/share/keyrings/teleport-archive-keyring.asc
 
@@ -55,7 +49,7 @@ An alternative method we can use is described at [Getting Started](https://gotel
 # Download and run the script
 curl https://goteleport.com/static/install.sh | bash -s 13.1.1
 ```
-### Server Access 
+### Server Access
 This is taken from the guides listed at <a href="https://goteleport.com/docs/server-access/introduction/">Server Teleport Access Guides</a>
 
 First follow the instructions at [Getting Started](https://goteleport.com/docs/get-started/).
@@ -63,13 +57,13 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
 1. Configure DNS, (If we can, since this is internal we will be port forwarding... so make sure the certificate matches the outer-router IP)
     * If this were an outward facing system, we would use lets-encrypt or some other CA service
 2. Install (Should already be done)
-3. Use the Private network method. 
+3. Use the Private network method.
     * [Generate a certificate](https://goteleport.com/docs/management/admin/self-signed-certs/) (We can use self signed) For this we will use *openssl* to generate a self signed certificate and key pair. **If you would like to make te certificate trusted see [Linux Trusted Cert](#linux-trusted-cert-store)**
         ```
             # make a directory to store this info (Configure permissions correctly)
             sudo mkdir -p /var/lib/teleport-info
 
-            sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /var/lib/teleport-info/privkey.pem -out /var/lib/teleport-info/fullchain.pem 
+            sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /var/lib/teleport-info/privkey.pem -out /var/lib/teleport-info/fullchain.pem
         ```
         * The *sudo* is needed as the teleport private key file is protected, now that we are using our own directory, we will not need it. But I have kept it, to prevent future issues.
         * Fill out the information as desired the **ONLY** field that matters is the common name  which should be the URL that resolves to the ip hosting teleport, or the IP address directly. An **example** is shown below. As we are using HAProxy to provide SSL to the client, the IP or DNS name used should be the **INTERNAL ONE**.
@@ -87,15 +81,15 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
     --key-file=/var/lib/teleport-info/privkey.pem
     ```
     * Replace the IP there, with your IP or a Domain name that will resolve.
-    * May need to remove an existing file 
+    * May need to remove an existing file
         ```
         rm -f /etc/teleport.yaml
         ```
 5. Start Teleport
-    * Command Provided 
+    * Command Provided
         ```
         sudo teleport start --config="/etc/teleport.yaml"
-        # Then Enable 
+        # Then Enable
         sudo systemctl enable teleport
         ```
     * Enable and Start Teleport
@@ -103,7 +97,7 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
         sudo systemctl enable teleport && \
         sudo systemctl start teleport
         ```
-6. Run ```sudo tctl status``` we should see output like the following 
+6. Run ```sudo tctl status``` we should see output like the following
     <img src="Images/tctl-status1.png" width=800>
 7. Create an administrator, use the following command. If we do not want MFA **Refer to** [Disable MFA](#disable-mfa) before going further.
     ```
@@ -127,22 +121,22 @@ First follow the instructions at [Getting Started](https://goteleport.com/docs/g
 
     <img src="Images/get-started3.png" width=800>
 
-12. Goto the dashboard 
+12. Goto the dashboard
 
     <img src="Images/get-started4.png" width=800>
 
-13. We should see the Sever as listed below 
+13. We should see the Sever as listed below
 
     <img src="Images/get-started5.png" width=800>
 
 #### Disable MFA
 The following is based on the official [teleport documentation](https://goteleport.com/docs/reference/authentication/)
 
-1. Open ```/etc/teleport.yaml``` in a text editor. You should see something like the following 
+1. Open ```/etc/teleport.yaml``` in a text editor. You should see something like the following
 
     <img src="Images/MFA1.png" width=500>
 
-2. Look for the auth service section 
+2. Look for the auth service section
     ```
     auth_service:
     enabled: "yes"
@@ -150,7 +144,7 @@ The following is based on the official [teleport documentation](https://gotelepo
     cluster_name: Practice_Infra
     proxy_listener_mode: multiplex
     ```
-3. Modify the above section so it looks like the following 
+3. Modify the above section so it looks like the following
     ```
     auth_service:
     enabled: "yes"
@@ -165,7 +159,7 @@ The following is based on the official [teleport documentation](https://gotelepo
 ### Linux Trusted Cert Store
 1. Generate the Certificate with a SAN
     ```
-    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /var/lib/teleport-info/privkey.pem  -addext "subjectAltName = DNS:<DNS_URL>, IP:<IP>" -out /var/lib/teleport-info/fullchain.pem 
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /var/lib/teleport-info/privkey.pem  -addext "subjectAltName = DNS:<DNS_URL>, IP:<IP>" -out /var/lib/teleport-info/fullchain.pem
     ```
 2. Copy certificate over that is used by the teleport server. This can be through the use of ```scp``` or something
     * You can copy it directly to the necessary location
@@ -182,26 +176,26 @@ The following is based on the official [teleport documentation](https://gotelepo
     ```
     mv servercert.crt /usr/local/share/ca-certificates/servercert.crt
     ```
-    * Ensure the file ends in .crt! 
+    * Ensure the file ends in .crt!
         ![CA-Update](Images/LTS.png)
 4. Run the following command to update the trusted certificate store
     * Debian Systems
         ```
         sudo update-ca-certificates
         ```
-   * RHEL Systems 
+   * RHEL Systems
         ```
         sudo update-ca-trust
         ```
-   * You may want to test that it was loaded properly, by curling the Teleport server 
+   * You may want to test that it was loaded properly, by curling the Teleport server
         ```
         curl https://<IP>
         ```
-5. Originally I had a validation error. This was possibly due to the lack of a SAN, or that I forgot to run the ```update-ca-certificates``` command. After setting up teleport with the ```--insecure``` flag I transitioned to this trusted method, and it worked. 
+5. Originally I had a validation error. This was possibly due to the lack of a SAN, or that I forgot to run the ```update-ca-certificates``` command. After setting up teleport with the ```--insecure``` flag I transitioned to this trusted method, and it worked.
 6. If you are running Teleport with the ```--insecure``` flag, you can now remove it
    1. Remove the  ```--insecure``` flag
         ```
-        vim /lib/systemd/system/teleport.service 
+        vim /lib/systemd/system/teleport.service
         ```
    2. Reload the daemon
         ```
@@ -212,7 +206,7 @@ The following is based on the official [teleport documentation](https://gotelepo
         systemctl restart teleport
         ```
 
-The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/docs/security-trust-store). The ```update-ca-certificates``` command updates the ```/etc/ssl/certs/ca-certificates.crt``` file which is a list of all trusted root certificates. It reads in the new certificates from ```/usr/local/share/ca-certificates/*```. In RHEL systems a similar thing is done to update root [certificates](https://www.redhat.com/sysadmin/configure-ca-trust-list). 
+The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/docs/security-trust-store). The ```update-ca-certificates``` command updates the ```/etc/ssl/certs/ca-certificates.crt``` file which is a list of all trusted root certificates. It reads in the new certificates from ```/usr/local/share/ca-certificates/*```. In RHEL systems a similar thing is done to update root [certificates](https://www.redhat.com/sysadmin/configure-ca-trust-list).
 ### Adding Nodes CLI Method -- Not Recommended
 1. Enter into **Teleport Server**
 2. Install Teleport (**This should already be done if the previous steps have been done**)
@@ -225,7 +219,7 @@ The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/doc
     # Generate a join token, and save it to a file (with redirection!)
     tctl tokens add --type=node --format=text > token.file
     ```
-4. Transfer the generated *token.file* to the target machine 
+4. Transfer the generated *token.file* to the target machine
 5. Install Teleport on the **TARGET MACHINE**
     ```
     # Download run script
@@ -246,22 +240,22 @@ The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/doc
     ```
 ### Adding Nodes Web Interface (Linux)
 
-1. Login to the Teleport web-interface 
+1. Login to the Teleport web-interface
 2. Click Add Server as shown below
 
     <img src="Images/node-web1.png" width=800>
 
-3. Click on the Distribution you would like to add 
+3. Click on the Distribution you would like to add
 
     <img src="Images/node-web2.png" width=800>
 
 4. Follow the provided instructions (run the command on the host we want to add)
 
     <img src="Images/node-web3.png" width=800>
-    
-    * Add a ```--insecure``` flag to curl if using self signed certs with teleport.  
+
+    * Add a ```--insecure``` flag to curl if using self signed certs with teleport.
     * May need to modify the URL to match the INTERNAL IP and to use port 443
-5. See the section 
+5. See the section
 6. Modify the ```/lib/systemd/system/teleport.service```, look at the output of ```systemctl status teleport``` if this is not the location to find it. It should look like the following. **See** [The Alt Section](#look-into-alternate-way-to-make-it-trusted) if using an actual CA.
     ```
     [Unit]
@@ -302,7 +296,7 @@ The Linux system has a [Trusted Certificate Store](https://ubuntu.com/server/doc
 
 ## Add Teleport Certificate to Windows
 https://learn.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate
-### Add Windows RDP  Console 
+### Add Windows RDP  Console
 https://goteleport.com/docs/desktop-access/active-directory-manual/#allow-remote-rdp-connections -- Manual
 https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 
@@ -329,7 +323,7 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
     -AccountPassword $SecureStringPassword `
     -Enabled $true
     ```
-3. In the **SAME POWERSHELL WINDOW**, run the following 
+3. In the **SAME POWERSHELL WINDOW**, run the following
     ```
     # Save your domain's distinguished name to a variable.
     $DomainDN=$((Get-ADDomain).DistinguishedName)
@@ -351,15 +345,15 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
     # Gives Teleport the ability to write the cACertificate property in the NTAuthCertificates container.
     dsacls "CN=NTAuthCertificates,CN=Public Key Services,CN=Services,CN=Configuration,$DomainDN" /I:T /G "$($SamAccountName):WP;cACertificate;"
     ```
-4. Run the following command ```Get-AdUser -Identity $SamAccountName | Select SID```. Save this information for later. Below is some example output. 
+4. Run the following command ```Get-AdUser -Identity $SamAccountName | Select SID```. Save this information for later. Below is some example output.
 
     <img src="Images/W1.png" width=800>
 
-5. Run the following command 
+5. Run the following command
     ```
     $GPOName="Block teleport-svc Interactive Login"
     ```
-6. Run the following command 
+6. Run the following command
     ```
     New-GPO -Name $GPOName | New-GPLink -Target $((Get-ADDomain).DistinguishedName)
     ```
@@ -394,12 +388,12 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 
     <img src="Images/W9.png" width=800>
 
-14. Download the Windows Certificate 
+14. Download the Windows Certificate
     * Trusted
         ```curl -o user-ca.cer https://10.0.1.15:443/webapi/auth/export?type=windows```
     * Untrusted
       * I just accessed it on a wen browser and saved it.
-      1. Set powershell to ignore invalid certificates        
+      1. Set powershell to ignore invalid certificates
         ```
         add-type @"
             using System.Net;
@@ -413,7 +407,7 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
             }
         "@
         ```
-      2.  Then run 
+      2.  Then run
         ```
         [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
         ```
@@ -426,7 +420,7 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
     $GPOName="Teleport Access Policy"
      New-GPO -Name $GPOName | New-GPLink -Target $((Get-ADDomain).DistinguishedName)
     ```
-16. As previously open the Group Policy Management program and navigate to the policy 
+16. As previously open the Group Policy Management program and navigate to the policy
     ```
     $FOREST > Domains > $DOMAIN > Group Policy Objects
     ```
@@ -448,11 +442,11 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 19. As a Domain administrator, publish the certificate to the domain.
     * Verify with the following command - look for Domain Admin
         ```
-        net user administrator /domain 
+        net user administrator /domain
         ```
 
         <img src="Images/W13.png" width=300>
-    
+
     * Then run the following command
     ```
     certutil –dspublish –f <PathToCertFile.cer> RootCA
@@ -460,24 +454,24 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 
     <img src="Images/W14.png" width=300>
 
-20. Publish the cert to the NTAuth server, this will be done automatically hereafter 
+20. Publish the cert to the NTAuth server, this will be done automatically hereafter
     ```
     certutil –dspublish –f <PathToCertFile.cer> NTAuthCA
     ```
 
     <img src="Images/W15.png" width=300>
 
-21. Force the retrevial of the certificate 
+21. Force the retrieval of the certificate
     ```
     certutil -pulse
     ```
-22. Teleport emulates a Smart Card. We need to enable Smart Card based authentication 
-    * Still editing the Teleport Group Access Policy 
+22. Teleport emulates a Smart Card. We need to enable Smart Card based authentication
+    * Still editing the Teleport Group Access Policy
         ```
         Computer Configuration > Policies > Windows Settings > Security Settings > System Services
         ```
         <img src="Images/W16.png" width=800>
-    * Click The System Services 
+    * Click The System Services
 
 23. Find the **Smart Card** entry and fill it out as shown below
 
@@ -508,7 +502,7 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 
     <img src="Images/W21.png" width=800>
 
-31. Right click "Always prompt..." as shown below 
+31. Right click "Always prompt..." as shown below
 
     <img src="Images/W22.png" width=800>
 
@@ -516,23 +510,23 @@ https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 
     <img src="Images/W23.png" width=800>
 
-33. Navigate to Firewall Settings 
+33. Navigate to Firewall Settings
     ```
     Computer Configuration > Policies > Windows Settings > Security Settings > Windows Firewall with Advanced Security (x2)
     ```
 
     <img src="Images/W24.png" width=800>
 
-34. Configure 
-    1.  Right click the empty window of inbound rules 
+34. Configure
+    1.  Right click the empty window of inbound rules
 
         <img src="Images/W25.png" width=800>
 
-    2.  Select RDP which is under predefined 
+    2.  Select RDP which is under predefined
 
         <img src="Images/W26.png" width=800>
 
-    3.  Only select the rule for User Mode (TCP-in) -- Uncheck the others 
+    3.  Only select the rule for User Mode (TCP-in) -- Uncheck the others
 
         <img src="Images/W27.png" width=800>
 
@@ -554,7 +548,7 @@ try automatic one later.
 
 https://goteleport.com/docs/desktop-access/getting-started/ -- Non-Manual
 
-1. Login to the Teleport web-interface 
+1. Login to the Teleport web-interface
 2. Click Add Server as shown below
 
     <img src="Images/node-web1.png" width=800>
@@ -571,10 +565,10 @@ We may want to dissable session recordings to preserve our limited disk space. T
     nano /etc/teleport.yml
     ```
 
-## User Management 
+## User Management
 This is primarily going to be done through the CLI, and I assume often.
 1. Open a terminal on the teleport machine
-2. Run ```tctl users ls``` to list all the users 
+2. Run ```tctl users ls``` to list all the users
 3. Delete any non-critical or required users using ```tctl users rm <name>```
 4. Add trusted users using ```tctl users add <name> <options>```
     * Account name
@@ -612,13 +606,13 @@ This is primarily going to be done through the CLI, and I assume often.
 
 
 
-
-## Container Based Teleport 
+<!--
+## Container Based Teleport
 
 WORK IN PROGRESS
 
-### Installation 
-We should refer to the [Official Teleport Docs](https://goteleport.com/docs/installation/#running-teleport-on-docker) for more information. 
+### Installation
+We should refer to the [Official Teleport Docs](https://goteleport.com/docs/installation/#running-teleport-on-docker) for more information.
 
 This is quite simple we use **Docker Pull** and the repository that Teleport tells us to do so.
 ```
@@ -632,18 +626,16 @@ The configuration file may require some additional key-pair values from the [Off
 
 We can use the files generated by the [System Install](#server-access) if they exist (and we are migrating)
 
-1. Make necessary directories for **Docker Volumes** if they do not already exist 
+1. Make necessary directories for **Docker Volumes** if they do not already exist
     ```
     mkdir -p ~/teleport/config ~/teleport/data
     ```
-2. Configure Files 
-3. Create Keys 
-4. 
-5. 
+2. Configure Files
+3. Create Keys
 ### Startup
 #### Manual
 
-#### Docker Compose
+#### Docker Compose -->
 
 ## Error Fixing
 1. If Teleport cannot locate the repository, run a ```nslookup``` command, this will cache the results allowing for work to continue 

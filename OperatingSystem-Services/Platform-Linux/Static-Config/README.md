@@ -1,7 +1,11 @@
-# Static Configurations 
+# Static Configurations <!-- omit in toc -->
+- [IP Addresses](#ip-addresses)
+  - [Redhat](#redhat)
+  - [Debian Based](#debian-based)
+- [Interface Manipulation](#interface-manipulation)
 
 
-## IP Addresses 
+## IP Addresses
 This is a section that pertains to the setting, and modification of **static** (manually) configured IP addresses.
 
 ### Redhat
@@ -10,10 +14,10 @@ This section covers a method we can use to manually configure the IP assigned to
 **NMTUI**
 1. Run `nmtui` as a sudo user
 2. Select *Edit a connection*, and hit enter
-   
+
   ![Alt text](Images/NMTUI-1.png)
 
-3. Select the network interface you would like to edit and hit enter 
+1. Select the network interface you would like to edit and hit enter
 
   ![Alt text](Images/NMTUI-2.png)
 
@@ -44,17 +48,17 @@ This section covers a method we can use to manually configure the IP assigned to
   ![Alt text](Images/NMTUI-8.png)
 
 10. Restart network manager
-  * Restart service 
+  * Restart service
     ```
-    # Ubuntu 
+    # Ubuntu
       sudo systemctl restart network-manager
-    
+
     # RHEL
       sudo systemctl restart NetworkManager
     ```
-  * Restart the machine 
+  * Restart the machine
     ```
-      sudo restart 
+      sudo restart
     ```
 **NMCLI**
 1. Open a terminal on the target machine.
@@ -85,19 +89,19 @@ This section covers a method we can use to manually configure the IP assigned to
   IPADDR="<IP>"
   NETMASK="<MASK> i.e 255.255.255.0"
   GATEWAY="<IP>"
-  DEVICE="ens19 (DEV NAME)" 
+  DEVICE="ens19 (DEV NAME)"
   NAME="ens19 (DEV NAME)"
   ONBOOT="yes"
-  DNS1="<IP>" 
+  DNS1="<IP>"
   ```
   * No (parens), just for a comment
 3. Reboot and run nmtui on the device (Ensures it is configured)
   ```
   nmtui edit <dev>
   ```
-4. This will result in a similar configuration to the following 
+4. This will result in a similar configuration to the following
   ![Alt text](Images/RH1.png)
-### Debian Based 
+### Debian Based
 
 1. Open a terminal on the target machine
 2. navigate to the ```/etc/netplan/``` directory
@@ -111,7 +115,7 @@ This section covers a method we can use to manually configure the IP assigned to
     ```
    * Using vim makes Alex happy (can anything?)
    * Must be a yaml file, name probably does not matter much (01 may be)
-4. Add the following boilerplate 
+4. Add the following boilerplate
     ```
     network:
       version: 2
@@ -145,7 +149,7 @@ This section covers a method we can use to manually configure the IP assigned to
             - to: default
               via: <IP>
     ```
-8. Configure DNS 
+8. Configure DNS
     ```
     network:
       version: 2
@@ -177,13 +181,13 @@ network:
       addresses: [8.8.8.8]
   version: 2
 ```
-## INterface Manipulation
+## Interface Manipulation
 
 1. Bring it down
   ```
   ip link set dev <interface> down
   ```
-2. Bring it up 
+2. Bring it up
   ```
   ip link set dev <interface> up
   ```

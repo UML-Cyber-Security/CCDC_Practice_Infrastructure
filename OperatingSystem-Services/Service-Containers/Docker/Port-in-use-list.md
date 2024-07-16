@@ -1,13 +1,9 @@
-# List of Ports Used by Ubuntu Machines
-
-- [List of Ports Used by Ubuntu Machines](#list-of-ports-used-by-ubuntu-machines)
-  - [UbuntuMachine1](#ubuntumachine1)
-  - [UbuntuMachine2](#ubuntumachine2)
-  - [UbuntuMachine3](#ubuntumachine3)
-  - [UbuntuManager](#ubuntumanager)
+# List of Ports Used by Ubuntu Machines  <!-- omit-from-toc --> <!-- omit in toc -->
+- [UbuntuMachine1](#ubuntumachine1)
+- [UbuntuMachine2](#ubuntumachine2)
+- [UbuntuMachine3](#ubuntumachine3)
+- [UbuntuManager](#ubuntumanager)
 - [Reference table:](#reference-table)
-
-
 
 ## UbuntuMachine1
 -----------------------------------------------
@@ -101,7 +97,7 @@
 
 
 
-# Reference table:
+## Reference table:
 
 avahi-demon - Tells devices which devices are what based on their local ip address. Also is in charge of connecting local Ip adressess to services on the machine, somewhat similar to a local DNS.
 

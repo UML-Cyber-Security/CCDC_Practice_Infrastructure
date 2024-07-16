@@ -1,10 +1,10 @@
 # Changing Host Names
 
-Author(s): 
-    Chisom (Ask me anything, don't bother Luke), 
+Author(s):
+    Chisom (Ask me anything, don't bother Luke),
     Luke
 
-## Preliminary Note: 
+## Preliminary Note:
 It's recommended to change the *host names* of the Proxmox machines before manipulating them, such as adding VMs or adding/creating a Proxmox cluster.
 
 If machines are already in use see [Extra](#extra) at the bottom of the document.
@@ -20,9 +20,9 @@ If machines are already in use see [Extra](#extra) at the bottom of the document
 	nano /etc/hostname
 	```
 4. Reboot the Proxmox machine
-	 ```sh 
+	 ```sh
 	reboot
-	``` 
+	```
 
 ## Extra:
 This may work. https://forum.proxmox.com/threads/proxmox-node-name-change.14327/#post-156444

@@ -10,7 +10,7 @@ This is a repository detailing the setup and configuration of the HAProxy system
     - [Reference](#reference)
 
 ## Setup VM
-The Setup of the VM is as follows 
+The Setup of the VM is as follows
 1. Create a Linux Server VM. This should have 1 CP and 2 - 4 GB of RAM.
 2. Attach the VM to the DMZ Interface.
 3. Start the VM, configure as any other normal device
@@ -24,7 +24,7 @@ The Setup of the VM is as follows
 1. Generate a X509 Cert and key using Open SSL (We are using a self signed certificate). Store this in a well known location 
         ```
         sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/haproxy.pem -out /etc/ssl/certs/haproxy_cert.pem
-        ```  
+        ```
    * The common name in this certificate should be the **IP or Domain name if we have external DNS resolution of the WAN interface** 
 2. HAProxy uses a combined CERT + PEM format when enabiling SSL in a frontend, we can create this file with the following command 
         ```
@@ -34,7 +34,7 @@ The Setup of the VM is as follows
         ```
    * You may want to store this file in a more secure area!
 3. Open ```/etc/haproxy/haproxy.cfg```, there may be some default configurations. If not we can add them as shown below
-        ```cfg   
+        ```cfg
         global
                 log /dev/log    local0
                 log /dev/log    local1 notice
@@ -73,11 +73,11 @@ The Setup of the VM is as follows
                 errorfile 503 /etc/haproxy/errors/503.http
                 errorfile 504 /etc/haproxy/errors/504.http
         ```
-   * You may want to increase the timeouts in the default section as shown in the image below 
+   * You may want to increase the timeouts in the default section as shown in the image below
         ![Increase Time](Images/HA-Time.png)
-4. We will want to create a frontend for both HTTP and HTTPS. At the bottom of the file add 
+4. We will want to create a frontend for both HTTP and HTTPS. At the bottom of the file add
         ```
-        # Define a Frontend 
+        # Define a Frontend
         frontend fe_<name>
                 # Explicit HTTP (app) layer proxy
                 mode http
@@ -120,16 +120,16 @@ The Setup of the VM is as follows
                 mode http
                 # Ip Hard coded, change if you change the DMZ Router Interface IP
                 server <IP/DNS>
-        
-        # More Backends can be created in the manner 
-        # backend <name> 
+
+        # More Backends can be created in the manner
+        # backend <name>
                 mode http
                 server <IP/DNS>
         ```
 
 ## PFSense Modifcations
 1. Create Forwards for each frontend in the DMZ Firewall as described in the [Expose_Services](./../../Network/PFSense/2-Expose_Services.md) Doc.
-        
+
     <img src="Images/F1.png" width=800>
 
 2. We will (From the **INTERNAL ROUTERS**) Modify the allowed HTTP_REFER values, this is because of the error you will see below. We need to do this from a SSH tunnel as we cannot use the proxy access until this has been done.
@@ -141,7 +141,7 @@ The Setup of the VM is as follows
     <img src="Images/F3.png" width=800>
 
 4. Disable HTTP_REFER
-    
+
     <img src="Images/F4.png" width=800>
 
 ## Example Final Config
@@ -218,7 +218,7 @@ frontend Windows
         # Unless already HTTPS (ssl) redirect to HTTPS
         http-request redirect scheme https unless { ssl_fc }
 
-        use_backend be_Windows 
+        use_backend be_Windows
 
 frontend Teleport
         # Explicit HTTP (app) layer proxy
@@ -250,12 +250,12 @@ backend be_Linux
         server Linux-R <DNS>:443 ssl verify none
 
 backend be_Windows
-        mode http 
+        mode http
         # Ip Hard coded, change if you change the DMZ Rotuer Interface IP
         server Windows-R <DNS>:443 ssl verify none
 
 ```
-### Reference  
+### Reference
 * Path Based Routing https://www.haproxy.com/blog/path-based-routing-with-haproxy
   * I used this for Path stripping, so this can be simplified using the if { path /a } || { path_beg /a/ } over the ACLs
   * Some troubles with this. Changed it to be a simpler method as the Path on PFSense and other sites would change on each request
