@@ -101,6 +101,8 @@ If we are not deleting a rule, we then include the necessary flags to define the
 We can also *flush* all the rules contained within a *table* or *chain* using the following command.
 ```
 $ iptables -t <table> -F <chain>
+- t: "table" specify table to be modified
+- f: "flush" removes rules
 ```
 This command will remove all the rules contained within a given chain, we can also omit a chain name which will instead flush all rules from all chains in the table. It should be obvious this may be damaging if your services use those chains to route traffic, such as VPNs or Orchestration programs like K8s.
 #### Building Rules
