@@ -1,4 +1,6 @@
 # Setting Up Ubuntu minimal desktop vms in Proxmox <!-- omit in toc -->
+Author: Chisom Ukaegbu
+---
 
 - [Setting Up Vm in Proxmox](#setting-up-vm-in-proxmox)
 - [Using Using Preconfigured template](#using-using-preconfigured-template)
@@ -104,3 +106,4 @@ The following are instructions to install the minimal Ubuntu desktop version
 ## Extra + Questions
 Check Taiga & Important links doc
 or Ask Chisom
+
