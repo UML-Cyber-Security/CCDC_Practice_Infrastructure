@@ -3,6 +3,8 @@ Any information regarding the setup and use of the infrastructure, or any relate
 
 A style guide for this repository is provided in the [Markdown_Style](./Markdown_Style.md) file. It is likely not followed but it also contains some useful programs, and software when interacting with GitHub and Markdown.
 
+This repository contains notes on various services and platforms in the [OperatingSystem-Services](./OperatingSystem-Services/) directory, some in-progress or completed projects using those technologies are contained in the [Projects](./Projects/) directory. Notes for the administration of our resources, mainly the creation of practice events, tasks, and infrastructure related tasks are contained in the [Admin](./Admin/) directory. The expected workflows are contained in the [Task-Management-Workflow](./Task-Management-Workflow/) directory, and limited event notes are contained in [Event-Notes](./Event-Notes/).
+
 ## Table of Contents (README) <!-- omit from toc -->
 - [Table of Contents (TOPICS)](#table-of-contents-topics)
 - [OpenProject](#openproject)
