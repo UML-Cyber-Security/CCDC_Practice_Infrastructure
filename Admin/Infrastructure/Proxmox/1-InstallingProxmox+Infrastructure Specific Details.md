@@ -1,8 +1,8 @@
 #Installing Promox + Infrastructure Specific Details
 
-Author:
+*Author(s):*
     Luke
-    Chisom (Ask me anything, don't bother Luke)
+    Chisom 
 
 ## Table of Contents
 * [Steps](#steps)
