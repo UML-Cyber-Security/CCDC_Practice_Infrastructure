@@ -1,0 +1,56 @@
+##
+# Usage: Initial SSH configuration of Target Linux Machines.
+#
+# The goal of this script is to provide a secure initial configuration and one that is "Safe" i.e maintains
+# uptime and access to the target system. A number of the suggestions are over the top, but are from Wazuh...
+#
+# Initially written by a Tired Matthew Harper
+# Based on:
+# * https://github.com/UML-Cyber-Security/ccdc2024/blob/main/2-Scripts/SOC/AnsibleMisc_WazuhSurricataSSH/03sshHardening/hardenSSH.yml -- not where it should have been :(
+# * https://github.com/UML-Cyber-Security/ccdc2024/blob/main/2-Scripts/Ansible/Linux/Account-Management/pubkey-enforcement-copy-sshkeys.yml
+# * https://github.com/UML-Cyber-Security/ccdc2024/tree/main/2-Scripts/Linux/Files-Services-Configs/SSH
+#
+# NOTE: Will create a backup file named sshd_config.bak
+##
+
+---
+- name: SSH-Inital-Harden
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  tasks: 
+    - name: Backup-SSHD-File
+      ansible.builtin.copy:
+        src: /etc/ssh/sshd_conf
+        dest: /etc/ssh/sshd_conf.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Create-SSHD-Backup-Directory
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_conf_bak.d
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Backup-SSD-Directory
+      ansible.builtin.copy:
+        src: /etc/ssh/sshd_conf.d
+        dest: /etc/ssh/sshd_conf_bak.d
+        owner: root
+        group: root
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Configure-Root-Login
+      ansible.builtin.replace:
+        path: /etc/ssh/sshd_conf
+        regexp: '.*PermitRootLogin.*'
+        replace: 'PermitRootLogin no'
+
+    - name: Configure-Root-Login
+      ansible.builtin.replace:
+        path: /etc/ssh/sshd_conf
+        regexp: '.*PermitRootLogin.*'
+        replace: 'PermitRootLogin no'
+...
