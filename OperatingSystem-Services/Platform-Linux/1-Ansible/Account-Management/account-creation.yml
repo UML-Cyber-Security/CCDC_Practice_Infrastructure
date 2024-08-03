@@ -1,0 +1,108 @@
+##
+# Usage: Generate New User and Group
+#
+# The goal of this script is to create a new group and user account.  The account will have an authorized key
+# file setup and password.
+#
+# Initially written by a Tired Matthew Harper
+# Based on: Files in the OLD directory
+#
+# NOTE: The Password must be hashed. We can generate a password with the `mkpasswd` command from the `whois` package
+##
+
+---
+- name: Account-Group-Creation
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    new_user: blueteam2
+    passwd: $y$j9T$QPB0r8sLvi.LM7coxvYKU1$CQTOEClgM5M0oyshyIX2RIXGBTdU8q6X5HcfBF0pRP0
+    key_path: ./auth_keys
+  tasks:
+    - name: Backup-passwd-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/passwd
+        dest: /etc/passwd.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Backup-shadow-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/shadow
+        dest: /etc/shadow.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r
+
+    - name: Backup-group-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/group
+        dest: /etc/group.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Group-Creation
+      ansible.builtin.group:
+        name: Minecraft-User
+        state: present
+    # Per the generous chatGPT
+    - name: Check if sudo group exists
+      command: getent group sudo
+      register: sudo_group_result
+      ignore_errors: yes
+
+    - name: Check if wheel group exists
+      command: getent group wheel
+      register: wheel_group_result
+      ignore_errors: yes
+
+    - name: Determine target group (sudo)
+      set_fact:
+        target_group: "{{ 'sudo' }}"
+      when: sudo_group_result.rc == 0
+
+    - name: Determine target group (wheel)
+      set_fact:
+        target_group: "{{ 'wheel' }}"
+      when: wheel_group_result.rc == 0 and sudo_group_result.rc != 0
+
+    - name: Determine target None)
+      set_fact:
+        target_group: "{{ 'none' }}"
+      when: wheel_group_result.rc != 0 and sudo_group_result.rc != 0
+
+    # End GPT Block...
+    - name: Fail if no target group found
+      fail:
+        msg: "Neither sudo nor wheel group exists."
+      when: target_group == "none"
+
+    - name: Account-Creation
+      ansible.builtin.user:
+        name: "{{ new_user }}"
+        password: "{{ passwd }}"
+        create_home: yes
+        groups: Minecraft-User, {{ target_group }}
+        shell: /bin/bash
+
+    - name: Create-SSH-Directory
+      ansible.builtin.file:
+        path: /home/{{new_user}}/.ssh
+        state: directory
+        owner: "{{new_user}}"
+        group: "{{new_user}}"
+        mode: u=rwx,g=,o=
+
+    - name: Copy-Authorized-Keys
+      ansible.builtin.copy:
+        remote_src: false
+        src: "{{ key_path }}"
+        dest: /home/{{ new_user }}/.ssh/authorized_keys
+        owner: "{{ new_user }}"
+        group: "{{ new_user }}"
+        mode: u=rw,g=rw,o=rw
