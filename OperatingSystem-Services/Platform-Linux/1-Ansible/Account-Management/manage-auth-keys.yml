@@ -24,9 +24,10 @@
     - name: Find all directories in /home
       ansible.builtin.command: "ls /home/"
       register: home_dirs
-    - name: debug
+
+    - name: debug-output
       debug:
-        var: home_dirs
+        var: home_dirs.stdout_lines
 
     - name: backup-auth-keys
       ansible.builtin.copy:

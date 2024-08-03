@@ -38,3 +38,18 @@
         owner: root
         group: root
         mode: u=rw,g=r
+
+    - name: Find all directories in /home
+      ansible.builtin.command: "ls /home/"
+      register: home_dirs
+
+    - name: debug-output
+      debug:
+        var: home_dirs.stdout_lines
+
+    - name: lock-users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password_lock: true
+      loop: "{{ home_dirs.stdout_lines }}"
+      when: item not in whitelist
