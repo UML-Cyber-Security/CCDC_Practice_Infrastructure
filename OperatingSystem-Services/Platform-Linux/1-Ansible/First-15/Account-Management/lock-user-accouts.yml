@@ -1,0 +1,55 @@
+##
+# Usage: Backup all user authorized keys (Except Whitelist)
+#
+# The goal of this script is to create a new group and user account.  The account will have an authorized key
+# file setup and password.
+#
+# Initially written by a Tired Matthew Harper
+# Based on: Files in the OLD directory
+#
+# NOTE: The Password must be hashed. We can generate a password with the `mkpasswd` command from the `whois` package
+##
+
+---
+- name: Mange-Auth-Keys
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    managing_user: blueteam # This is the user we will make the owner of the backups
+    whitelist:
+      - blackteam
+      - blueteam
+      - insertansibleuser
+  tasks:
+    - name: Backup-passwd-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/passwd
+        dest: /etc/passwd_lock.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Backup-shadow-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/shadow
+        dest: /etc/shadow_lock.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r
+
+    - name: Find all directories in /home
+      ansible.builtin.command: "ls /home/"
+      register: home_dirs
+
+    - name: debug-output
+      debug:
+        var: home_dirs.stdout_lines
+
+    - name: lock-users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password_lock: true
+      loop: "{{ home_dirs.stdout_lines }}"
+      when: item not in whitelist

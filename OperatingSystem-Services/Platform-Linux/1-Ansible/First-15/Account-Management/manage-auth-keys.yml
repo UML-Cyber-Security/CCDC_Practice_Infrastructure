@@ -1,0 +1,54 @@
+##
+# Usage: Backup all user authorized keys (Except Whitelist)
+#
+# The goal of this script is to create a new group and user account.  The account will have an authorized key
+# file setup and password.
+#
+# Initially written by a Tired Matthew Harper
+# Based on: Files in the OLD directory
+#
+# NOTE: The Password must be hashed. We can generate a password with the `mkpasswd` command from the `whois` package
+##
+
+---
+- name: Mange-Auth-Keys
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    managing_user: blueteam # This is the user we will make the owner of the backups
+    whitelist:
+      - blackteam
+      - blueteam
+      - insertansibleuser
+  tasks:
+    - name: Find all directories in /home
+      ansible.builtin.command: "ls /home/"
+      register: home_dirs
+
+    - name: debug-output
+      debug:
+        var: home_dirs.stdout_lines
+
+    - name: backup-auth-keys
+      ansible.builtin.copy:
+        src: /home/{{ item }}/.ssh/authorized_keys
+        dest: /home/{{ item }}/.ssh/authorized_keys.bak
+        remote_src: true
+        owner: "{{ managing_user }}"
+        group: "{{ managing_user }}"
+      with_items: "{{ home_dirs.stdout_lines }}"
+
+    - name: backup-auth-keys-root
+      ansible.builtin.copy:
+        src: /root/.ssh/authorized_keys
+        dest: /root/.ssh/authorized_keys.bak
+        remote_src: true
+        owner: root
+        group: root
+
+    - name: clear-user-auth-keys
+      ansible.builtin.copy:
+        dest: /home/{{ item }}/.ssh/authorized_keys
+        content: ''
+      loop: "{{ home_dirs.stdout_lines }}"
+      when: item not in whitelist
