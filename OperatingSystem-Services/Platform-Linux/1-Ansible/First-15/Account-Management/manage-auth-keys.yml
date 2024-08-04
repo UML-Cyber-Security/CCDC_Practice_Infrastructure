@@ -25,10 +25,6 @@
       ansible.builtin.command: "ls /home/"
       register: home_dirs
 
-    - name: debug-output
-      debug:
-        var: home_dirs.stdout_lines
-
     - name: backup-auth-keys
       ansible.builtin.copy:
         src: /home/{{ item }}/.ssh/authorized_keys
