@@ -11,6 +11,9 @@
   vars:
     allow_state: touch # Modify this to absent to remove allow files.
   tasks:
+    - name: Target-Host-Facts
+      ansible.builtin.setup:
+
     - name: Find-Usr-Homes
       ansible.builtin.command: "ls /home/"
       register: home_dirs
@@ -105,3 +108,60 @@
       with_items:
         - pam.d
         - pam.conf
+
+    - name: Create-Cron-Dir
+      ansible.builtin.file:
+        path: /backups/cron
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Redhat-Cron
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/spool/cron/
+        dest: /backups/cron
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Debian-Cron
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/spool/cron/crontabs
+        dest: /backups/cron
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Other-Cron
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/spool/cron/crontabs
+        dest: /backups/cron
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      when: not ansible_facts['os_family'] == 'Debian' and not ansible_facts['os_family'] == 'RedHat'
+
+    - name: Create-Log-Dir
+      ansible.builtin.file:
+        path: /backups/log
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Other-Cron
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/log
+        dest: /backups/log
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+# May want to add Firewall backups later
