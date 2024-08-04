@@ -55,7 +55,7 @@
       with_items:
         - "{{ home_dirs.stdout_lines }}"
 
-    - name: Backup-User-Bash-Histories
+    - name: Backup-User-Shell-Histories
       ansible.builtin.copy:
         src: "{{ item.path }}"
         dest: /backups/users/{{ item.pw_name }}/{{ item.path.split('/')[-1] }}
@@ -155,7 +155,7 @@
         group: root
         mode: u=rwx,g=,o=
 
-    - name: Other-Cron
+    - name: Logs-Backups
       ansible.builtin.copy:
         remote_src: true
         src: /var/log
@@ -163,5 +163,26 @@
         owner: root
         group: root
         mode: u=rwx,g=,o=
+
+    - name: Backup-Pass-Group-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /backups/{{ item }}
+        dest: /backups/{{ item }}
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      with_items:
+        - passwd
+        - group
+
+    - name: Backup-shadow-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/shadow
+        dest: /backups/shadow
+        owner: root
+        group: root
+        mode: u=rw,g=r
 
 # May want to add Firewall backups later

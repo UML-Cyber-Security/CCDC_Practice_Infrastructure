@@ -12,6 +12,7 @@
     tmp_target: /tmp/linpeas.out
     tmp_sh: /tmp/lpsh.sh
     linpeas_url: https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh
+    local_JSON_cmd: python3 PEASS-NG-Parsers/peas2json.py
   tasks:
 
     - name: Gather-System-Package-Facts
@@ -51,7 +52,7 @@
     - name: Fetch-Remote
       ansible.builtin.fetch:
         src: "{{ tmp_target }}"
-        dest: "./Enumerated_Systems/{{inventory_hostname}}/linpeas.out"
+        dest: "./Enumerated_Systems/"
         flat: false
 
     - name: Clean-Remote
@@ -61,3 +62,6 @@
       with_items:
         - "{{ tmp_target }}"
         - "{{ tmp_sh }}"
+
+    # - name: Convert-JSON
+    #   local_action: shell touch test.txt #ansible.builtin.command {{ local_JSON_cmd }} ./Enumerated_Systems/{{ item }}/tmp/linpeas.out ./Enumerated_Systems/{{ item }}/linpeas.json 

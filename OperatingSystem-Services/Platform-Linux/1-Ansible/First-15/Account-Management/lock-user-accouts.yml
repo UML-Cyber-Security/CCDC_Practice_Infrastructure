@@ -11,7 +11,7 @@
 ##
 
 ---
-- name: Mange-Auth-Keys
+- name: Lock-User-Accounts
   hosts: infra # Need to Coordinate This
   become: true # Need to be sudo
   vars:

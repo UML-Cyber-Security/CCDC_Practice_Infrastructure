@@ -19,14 +19,17 @@
     passwd: $y$j9T$QPB0r8sLvi.LM7coxvYKU1$CQTOEClgM5M0oyshyIX2RIXGBTdU8q6X5HcfBF0pRP0
     key_path: ./auth_keys
   tasks:
-    - name: Backup-passwd-File
+    - name: Backup-Pass-Group-File
       ansible.builtin.copy:
         remote_src: true
-        src: /etc/passwd
-        dest: /etc/passwd.bak
+        src: /etc/{{ item }}
+        dest: /etc/{{ item }}.bak
         owner: root
         group: root
         mode: u=rw,g=r,o=r
+      with_items:
+        - passwd
+        - group
 
     - name: Backup-shadow-File
       ansible.builtin.copy:
@@ -37,14 +40,7 @@
         group: root
         mode: u=rw,g=r
 
-    - name: Backup-group-File
-      ansible.builtin.copy:
-        remote_src: true
-        src: /etc/group
-        dest: /etc/group.bak
-        owner: root
-        group: root
-        mode: u=rw,g=r,o=r
+
 
     - name: Group-Creation
       ansible.builtin.group:

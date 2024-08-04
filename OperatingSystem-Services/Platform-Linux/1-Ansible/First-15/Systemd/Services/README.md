@@ -1,7 +1,8 @@
-# Disable and Stop rsync it is considered insecure
-systemctl --now disable rsync 
-# Disable and Stop nis (If it is there) --> Not needed with purge?
-systemctl --now disable nis 
+## Systemctl Services
+This playbook will explicitly disable and mask dangerous services that are unused.
 
-cockpit 
+## Possible targets
+* rsync
+* nis
+* cockpit
 
