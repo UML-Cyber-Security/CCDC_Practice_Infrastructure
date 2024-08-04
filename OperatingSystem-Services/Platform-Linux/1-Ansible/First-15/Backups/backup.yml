@@ -1,0 +1,107 @@
+##
+# Usage: Setup Cron Restrictions
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Backup-Interesting-Files
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    allow_state: touch # Modify this to absent to remove allow files.
+  tasks:
+    - name: Find-Usr-Homes
+      ansible.builtin.command: "ls /home/"
+      register: home_dirs
+
+    - name: Create-Backup-Directory
+      ansible.builtin.file:
+        path: /backups
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Find-History-Files
+      ansible.builtin.find:
+        paths: /home
+        recurse: yes
+        depth: 2
+        hidden: true
+        use_regex: true
+        pattern: '.*_history, .*history'
+        file_type: file
+      register: history_files
+
+    - name: Create-History-Backup-Directory
+      ansible.builtin.file:
+        path: /backups/user-histories
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Create-History-User-Directory
+      ansible.builtin.file:
+        path: /backups/users/{{ item }}
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      with_items:
+        - "{{ home_dirs.stdout_lines }}"
+
+    - name: Backup-User-Bash-Histories
+      ansible.builtin.copy:
+        src: "{{ item.path }}"
+        dest: /backups/users/{{ item.pw_name }}/{{ item.path.split('/')[-1] }}
+        remote_src: true
+      with_items: "{{ history_files.files }}"
+
+    - name: backup-auth-keys
+      ansible.builtin.copy:
+        src: /home/{{ item }}/.ssh/authorized_keys
+        dest: /backups/users/{{ item }}/authorized_keys
+        remote_src: true
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      with_items: "{{ home_dirs.stdout_lines }}"
+
+    - name: Create-SSHD-Backup-Dir
+      ansible.builtin.file:
+        path: /backups/ssh
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Backup-SSD-Directory
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/ssh/
+        dest: /backups/ssh
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Create-PAM-Backup-Dir
+      ansible.builtin.file:
+        path: /backups/pam/pam.d
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Backup-PAM-Directory
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/{{ item }}
+        dest: /backups/pam/{{ item }}
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      with_items:
+        - pam.d
+        - pam.conf
