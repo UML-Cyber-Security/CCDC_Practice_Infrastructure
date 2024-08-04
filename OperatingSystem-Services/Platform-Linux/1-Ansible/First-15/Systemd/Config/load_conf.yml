@@ -1,0 +1,26 @@
+##
+# Load a config for sysctl
+#
+# Usage: Setup Basic System Configurations
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: System-Ctl-Configuration
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    conf_file_trgt: /etc/sysctl.d/ccdc25.conf
+    conf_name: ./Configs/safe_conf.conf # Change to unsafe if you want
+  tasks:
+    - name: Configure-Passwd-Group
+      ansible.builtin.copy:
+        src: "{{ conf_name }}"
+        dest: "{{ conf_file_trgt }}"
+        remote_src: false
+        owner: root
+        group: root
+        mode: '644'
+    - name: Load-Config
+      ansible.builtin.command: sysctl -p {{ conf_file_trgt }}
+      ignore_errors: yes
