@@ -71,7 +71,7 @@
         target_group: "{{ 'wheel' }}"
       when: wheel_group_result.rc == 0 and sudo_group_result.rc != 0
 
-    - name: Determine target None)
+    - name: Determine target (None)
       set_fact:
         target_group: "{{ 'none' }}"
       when: wheel_group_result.rc != 0 and sudo_group_result.rc != 0

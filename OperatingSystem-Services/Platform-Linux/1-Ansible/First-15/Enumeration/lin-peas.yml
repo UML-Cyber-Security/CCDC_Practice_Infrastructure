@@ -1,13 +1,11 @@
 ##
-# Usage: Download a 
-#
-# The goal of this script is to download common packages we require, and uninstall packages that would be dangerous to have on the system.
+# Usage: Download and run Linpeas. Save the output to the system running it. It will remove the output and linpeas from the target system.
 #
 # Initially written by a Tired Matthew Harper
 ##
 
 ---
-- name: Package-Management
+- name: Linpeas Enumeration
   hosts: infra # Need to Coordinate This
   become: true # Need to be sudo
   vars: 
