@@ -1,5 +1,6 @@
 # Removing Nodes
-Author(s):  
+**Author(s):** 
+*Unknown* 
 
 When migrating machines, it is useful to remove the old nodes.
 Proxmox expects a quorum for certain activities, like making a new VM.
