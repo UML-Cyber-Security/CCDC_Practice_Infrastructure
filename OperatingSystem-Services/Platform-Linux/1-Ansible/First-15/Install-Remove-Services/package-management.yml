@@ -1,0 +1,53 @@
+##
+# Usage: Download and Remove Common Packages
+#
+# The goal of this script is to download common packages we require, and uninstall packages that would be dangerous to have on the system.
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Package-Management
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  tasks: 
+    - name: Target-Host-Facts
+      ansible.builtin.setup:
+
+    - name: Install-Packages-Debian
+      ansible.builtin.apt:
+        name: python3, sudo, libpam-google-authenticator
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Remove-Packages-Debian
+      ansible.builtin.apt:
+        name: ftp, autofs,telnet,nis,talk,rsh-client
+        state: absent
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install-Packages-Rhel
+      ansible.builtin.yum:
+        name: python3, sudo, libpam-google-authenticator
+        state: present
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Remove-Packages-Rhel
+      ansible.builtin.yum:
+        name: ftp, autofs,telnet,nis,talk,rsh-client
+        state: absent
+      when: ansible_facts['os_family'] == 'RedHat'
+
+   - name: Install-Packages-Alpine
+      ansible.builtin.apk:
+        name: python3, py3-pip
+        state: present
+      when: ansible_facts['os_family'] == 'Alpine'
+
+    - name: Remove-Packages-Alpine
+      ansible.builtin.apk:
+        name: ftp, autofs,telnet,nis,talk,rsh-client
+        state: absent
+      when: ansible_facts['os_family'] == 'Alpine'
+
+# Todo -- ARCH-- Probably test it on an easier to setup version like Manjaro

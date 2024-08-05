@@ -1,0 +1,37 @@
+##
+# Usage: Remove packages that may be breaking, thing that can be used by the red team.
+#
+# The goal of this script is to remove packages that can be used by the red team, curl, wget and netcat for example. (Add More!)
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Package-Management
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    state_install: present # change to present to undo!
+  tasks: 
+    - name: Target-Host-Facts
+      ansible.builtin.setup:
+
+    - name: Manage-Packages-Debian
+      ansible.builtin.apt:
+        name: curl, wget, netcat
+        state: "{{ state_install }}"
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Manage-Packages-Rhel
+      ansible.builtin.yum:
+        name: curl, wget,netcat
+        state: "{{ state_install }}"
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Manage-Packages-Alpine
+      ansible.builtin.apk:
+        name: curl,wget,netcat-openbsd
+        state: "{{ state_install }}"
+      when: ansible_facts['os_family'] == 'Alpine'
+
+# Todo -- ARCH-- Probably test it on an easier to setup version like Manjaro

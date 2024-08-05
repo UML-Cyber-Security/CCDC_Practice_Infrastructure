@@ -1,0 +1,46 @@
+##
+# Usage: Setup Cron Restrictions
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Cron-Management
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    allow_state: touch # Modify this to absent to remove allow files.
+  tasks:
+    - name: Target-Host-Facts
+      ansible.builtin.setup:
+
+    - name: Create-Allows
+      ansible.builtin.file:
+        path: /etc/{{ item }}.allow
+        owner: root
+        group: root
+        mode: '770'
+        state: "{{ allow_state }}"
+      with_items:
+        - cron
+        - at
+
+    - name: Remove-Denies
+      ansible.builtin.file:
+        path: /etc/{{ item }}.deny
+        state: absent
+      with_items:
+        - cron
+        - at
+
+    - name: Restart-Cron-RHEL
+      ansible.builtin.systemd:
+        name: crond
+        state: restarted
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Restart-Cron-RHEL
+      ansible.builtin.systemd:
+        name: crond
+        state: restarted
+      when: ansible_facts['os_family'] == 'Alpine'
