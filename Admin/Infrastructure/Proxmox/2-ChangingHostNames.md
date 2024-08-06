@@ -1,7 +1,7 @@
 # Changing Host Names
 
 **Author(s):**
-    *Chisom* 
+    *Chisom*,
 	*Luke*
 
 ## Preliminary Note:

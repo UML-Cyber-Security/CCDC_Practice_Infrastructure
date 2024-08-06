@@ -1,7 +1,7 @@
 #Installing Promox + Infrastructure Specific Details
 
 **Author(s):**
-    *Luke*
+    *Luke*,
     *Chisom*
 
 ## Table of Contents
