@@ -1,8 +1,8 @@
 # Changing Host Names
 
-Author(s):
-    Chisom (Ask me anything, don't bother Luke),
-    Luke
+**Author(s):**
+    *Chisom*,
+	*Luke*
 
 ## Preliminary Note:
 It's recommended to change the *host names* of the Proxmox machines before manipulating them, such as adding VMs or adding/creating a Proxmox cluster.
