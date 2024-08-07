@@ -6,7 +6,7 @@
 ##
 
 ---
-- name: System-Ctl-Configuration
+- name: Auditd-Configuration
   hosts: infra # Need to Coordinate This
   become: true # Need to be sudo
   vars:
