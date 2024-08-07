@@ -1,5 +1,5 @@
 ##
-# Usage: Logs Authorized Key File locations and the authorized keys themselves
+# Usage: Logs files that have been modified within a period of time.
 #
 # Initially written by a Tired Matthew Harper
 ##
