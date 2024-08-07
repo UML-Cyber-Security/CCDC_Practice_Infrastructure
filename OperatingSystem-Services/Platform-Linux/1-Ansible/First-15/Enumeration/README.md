@@ -2,6 +2,7 @@
 
 This directory will contain playbooks used to enumerate and gather information from each of the target machines. We use this to quickly run commands on each of the target systems, and centralize the information in files so we can quickly examine it.
 
+* Auth Keys: Enumerate all authorized key files on system.
 * Cron: Enumerate all crontab files on the system, and store them in a concatenated file format so we can look at them.
 * File-Mods: Enumerate files that have been edited in a give time period (set to last hour).
 * Host Network: Enumerates some commone network configuration files, and prints information about the current interfaces.
@@ -10,6 +11,9 @@ This directory will contain playbooks used to enumerate and gather information f
 * Services: Prints services that execute a binary or script.
 * Sudoers: Print dangerous sudo configurations.
 * Users-Info: Prints users and group information of the system.
+## Authorized Keys
+This playbook prints the locations authorized key files can be located, and enumerates the common locations, and those keys located in a user's home directory. We should make the playbook more dynamic extracting locations from the `sshd_conf` file and `sshd_conf.d` directory.
+
 ## Cron
 This playbook enumerates through the `/etc/cron.d`, `/etc/crontab` and `/var/spool/cron/crontab` directories and files to gather all of the cronjobs that have been scheduled. This need to be expanded to work on systems tha place user-generated crontab files in locations other than the `/vat/spool/cron` directory.
 
