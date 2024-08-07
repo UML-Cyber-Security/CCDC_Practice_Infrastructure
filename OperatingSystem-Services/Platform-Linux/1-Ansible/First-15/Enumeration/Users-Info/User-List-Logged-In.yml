@@ -17,7 +17,7 @@
   tasks:
     - name: Gather-Active-User-Info
       ansible.builtin.shell: |
-        echo -"[!] Currently Logged in Users (w) [!]"
+        echo "[!] Currently Logged in Users (w) [!]"
         w
         echo "\n[!] Currently Logged in Users (who) [!]"
         who
@@ -30,7 +30,7 @@
 
     - name: Gather-User-Info-SH
       ansible.builtin.shell: |
-        echo -"[!] listing Users With Shell {{ item }} [!]"
+        echo "[!] listing Users With Shell {{ item }} [!]"
         grep {{ item }} /etc/passwd | cut -d':' -f1
       register: shell_info
       with_items:
@@ -53,7 +53,7 @@
 
     - name: Gather-User-Info-GP
       ansible.builtin.shell: |
-        echo -"[!] listing Users in Group {{ item }} [!]"
+        echo "[!] listing Users in Group {{ item }} [!]"
         grep {{ item }} /etc/group |cut -d: -f4 | tr ',' '\n'
       register: group_info
       with_items:

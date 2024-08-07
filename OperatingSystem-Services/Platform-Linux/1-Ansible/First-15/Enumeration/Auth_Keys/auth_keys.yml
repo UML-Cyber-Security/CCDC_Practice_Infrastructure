@@ -15,13 +15,14 @@
   tasks:
     - name: Gather-SSH-AuthKey-Info
       ansible.builtin.shell: |
-        echo -"[!] AUTHORIZED KEY FILES [!]"
+        echo "[!] AUTHORIZED KEY FILES [!]"
         cat /etc/ssh/sshd_config | grep -i AuthorizedKeysFile
         echo "\n[!] USER AUTHORIZED KEYS [!]"
         head -n {{ key_num_lines }} /home/*/.ssh/authorized_keys*
         echo "\n[!] ROOT AUTHORIZED KEYS [!]"
         head -n {{ key_num_lines }} /root/.ssh/authorized_keys*
       register: auth_out
+      ignore_errors : true
 
     - name: Save-Remote
       ansible.builtin.copy:
