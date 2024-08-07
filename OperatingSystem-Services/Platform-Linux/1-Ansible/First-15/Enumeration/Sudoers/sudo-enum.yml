@@ -11,7 +11,6 @@
   vars: 
     remote_tmp_target: /tmp/sudo_danger.out
     local_tmp_target: ../Enumerated_Systems/
-    age: -1h
   tasks:
     - name: Locate-Danger-Sudo
       ansible.builtin.shell: |

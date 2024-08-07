@@ -13,7 +13,6 @@
     remote_tmp_target_sh: /tmp/user-sh.out
     remote_tmp_target_group: /tmp/user-group.out
     local_tmp_target: ../Enumerated_Systems/
-    key_num_lines: 30
   tasks:
     - name: Gather-Active-User-Info
       ansible.builtin.shell: |

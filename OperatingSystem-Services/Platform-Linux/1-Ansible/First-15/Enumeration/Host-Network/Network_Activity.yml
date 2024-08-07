@@ -13,7 +13,6 @@
     remote_tmp_target_network_established: /tmp/host-network-conn.out
     remote_tmp_target_network_raw: /tmp/host-network-raw.out
     local_tmp_target: ../Enumerated_Systems/
-    key_num_lines: 30
   tasks:
     - name: Gather-Listening-Ports
       ansible.builtin.shell: |

@@ -12,7 +12,6 @@
     remote_tmp_target_network_state: /tmp/host-network-listen.out
     remote_tmp_target_network_config: /tmp/host-network-conn.out
     local_tmp_target: ../Enumerated_Systems/
-    key_num_lines: 30
   tasks:
     - name: Gather-Network-Info
       ansible.builtin.shell: |

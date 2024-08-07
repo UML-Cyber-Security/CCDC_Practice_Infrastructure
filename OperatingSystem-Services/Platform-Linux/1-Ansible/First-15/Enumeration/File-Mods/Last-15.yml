@@ -5,7 +5,7 @@
 ##
 
 ---
-- name: SSH Key Enumeration
+- name: Last-15-Files
   hosts: infra # Need to Coordinate This
   become: true # Need to be sudo
   vars: 
@@ -13,7 +13,7 @@
     local_tmp_target: ../Enumerated_Systems/
     age: -1h
   tasks:
-    - name: Recursively find /tmp files older than 2 days
+    - name: Find-Files-Modified
       ansible.builtin.find:
         paths: "{{ item }}"
         age: "{{ age }}"
@@ -25,7 +25,7 @@
         - /sbin
         - /etc
 
-    - name: Concatenate-Output-SH
+    - name: Concatenate-Output-Path
       ansible.builtin.set_fact:
         combined_output_last_edit: "{{ (edited_files.results | map(attribute='files') | sum(start=[]) | map(attribute='path') | join('\n'))  }}"
 
