@@ -16,7 +16,7 @@
 
     - name: Install-Packages-Debian
       ansible.builtin.apt:
-        name: python3, sudo, libpam-google-authenticator
+        name: python3, sudo, libpam-google-authenticator, auditd, audispd-plugins
         state: present
       when: ansible_facts['os_family'] == 'Debian'
 
@@ -28,7 +28,7 @@
 
     - name: Install-Packages-Rhel
       ansible.builtin.yum:
-        name: python3, sudo, libpam-google-authenticator
+        name: python3, sudo, libpam-google-authenticator, audit, audit-libs
         state: present
       when: ansible_facts['os_family'] == 'RedHat'
 
@@ -40,7 +40,7 @@
 
    - name: Install-Packages-Alpine
       ansible.builtin.apk:
-        name: python3, py3-pip
+        name: python3, py3-pip, audit
         state: present
       when: ansible_facts['os_family'] == 'Alpine'
 
