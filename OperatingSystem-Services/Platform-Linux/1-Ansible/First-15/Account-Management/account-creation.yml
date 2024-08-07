@@ -40,12 +40,20 @@
         group: root
         mode: u=rw,g=r
 
-
-
     - name: Group-Creation
       ansible.builtin.group:
         name: Minecraft-User
         state: present
+
+    - name: Add-Sudoer-File
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%Minecraft-User'
+        line: '%Minecraft-User ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
+      become: yes
+
     # Per the generous chatGPT
     - name: Check if sudo group exists
       command: getent group sudo
