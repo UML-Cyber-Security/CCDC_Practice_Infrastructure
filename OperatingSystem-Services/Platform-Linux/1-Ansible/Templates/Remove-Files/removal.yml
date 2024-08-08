@@ -13,7 +13,7 @@
       - /home/blueteam/test.txt
     Will_Force: false
   tasks:
-    - name: Create-Backup-Directory
+    - name: Remove-Files
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent

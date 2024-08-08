@@ -5,7 +5,6 @@
 # file setup and password.
 #
 # Initially written by a Tired Matthew Harper
-# Based on: Files in the OLD directory
 #
 # NOTE: The Password must be hashed. We can generate a password with the `mkpasswd` command from the `whois` package
 ##

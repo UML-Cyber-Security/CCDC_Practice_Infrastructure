@@ -16,7 +16,7 @@
     Is_Masked: true # Modify this mask or unmask services
     State: stopped
   tasks:
-    - name: Disable-Services
+    - name: Manage-Services
       ansible.builtin.systemd:
         name: "{{ item }}"
         state: "{{ State }}"
