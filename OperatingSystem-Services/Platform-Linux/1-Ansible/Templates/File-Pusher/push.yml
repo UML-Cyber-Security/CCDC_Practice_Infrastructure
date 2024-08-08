@@ -1,0 +1,24 @@
+##
+# Usage: pull a given file or directory from the target system
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Push-Files
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    file_pairs:
+      - { host: ./SourceDir/test.txt, remote: /home/blueteam/testcpy.txt, owner: root, group: root, mode: '0600' }
+  tasks:
+    - name: Push-Content
+      ansible.builtin.copy:
+        src: "{{ item.host }}"
+        dest: "{{ item.remote }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        mode: "{{ item.mode }}"
+        remote_src: false
+      ignore_errors: true
+      with_items: "{{ file_pairs }}"
