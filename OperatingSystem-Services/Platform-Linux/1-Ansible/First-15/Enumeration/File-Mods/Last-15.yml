@@ -1,0 +1,48 @@
+##
+# Usage: Logs files that have been modified within a period of time.
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Last-15-Files
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    remote_tmp_target: /tmp/edited_files.out
+    local_tmp_target: ../Enumerated_Systems/
+    age: -1h
+  tasks:
+    - name: Find-Files-Modified
+      ansible.builtin.find:
+        paths: "{{ item }}"
+        age: "{{ age }}"
+        recurse: yes
+      register: edited_files
+      with_items:
+        - /bin
+        - /home
+        - /sbin
+        - /etc
+
+    - name: Concatenate-Output-Path
+      ansible.builtin.set_fact:
+        combined_output_last_edit: "{{ (edited_files.results | map(attribute='files') | sum(start=[]) | map(attribute='path') | join('\n'))  }}"
+
+    - name: Save-Remote
+      ansible.builtin.copy:
+        content: "{{ combined_output_last_edit }}"
+        dest: "{{ remote_tmp_target }}"
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ remote_tmp_target }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target }}"

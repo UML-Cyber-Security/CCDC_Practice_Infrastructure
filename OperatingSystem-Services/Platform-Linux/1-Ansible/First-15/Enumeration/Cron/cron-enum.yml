@@ -1,0 +1,77 @@
+##
+# Usage: Log Cron Entries
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Cronfile-Enumeration
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    remote_tmp_target_tabs: /tmp/cron_tab.out
+    remote_tmp_target_timers: /tmp/system_timers.out
+    local_tmp_target: ../Enumerated_Systems/
+  tasks:
+
+    - name: Crontab-Enum
+      ansible.builtin.find:
+        paths: "{{ item }}"
+        recurse: yes
+      register: cron_files
+      with_items:
+        - /var/spool/cron/crontabs
+        - /etc/cron.d
+      ignore_errors: true
+
+    - name: Concatenate-Output-Path
+      ansible.builtin.set_fact:
+        combined_output_crontab_paths: "{{ (cron_files.results | map(attribute='files') | sum(start=[]) | map(attribute='path')) }}"
+
+    - name: Generate-CronTab-Report
+      ansible.builtin.shell: |
+        echo "[!] CRONTAB {{item}} [!]"
+        cat {{ item}} 
+        echo "\n\n"
+      register: cron_report
+      with_items:
+        - /etc/crontab
+        - "{{ combined_output_crontab_paths }}"
+
+    - name: Concatenate-Cron-Report
+      ansible.builtin.set_fact:
+        combined_output_crontab_results: "{{ (cron_report.results |  map(attribute='stdout') | join('\n')) }}"
+
+    - name: Save-Remote-Cron
+      ansible.builtin.copy:
+        content: "{{ combined_output_crontab_results }}"
+        dest: "{{ remote_tmp_target_tabs }}"
+
+
+    - name: Generate-CronTab-Report
+      ansible.builtin.shell: |
+        echo "[!] System Timers [!]"
+        systemctl list-timers
+      register: timer_report
+
+    - name: Save-Remote-Timer
+      ansible.builtin.copy:
+        content: "{{ timer_report }}"
+        dest: "{{ remote_tmp_target_timers }}"
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ item }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+      with_items:
+        - "{{ remote_tmp_target_tabs }}"
+        - "{{ remote_tmp_target_timers }}"
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target_tabs }}"
+        - "{{ remote_tmp_target_timers }}"

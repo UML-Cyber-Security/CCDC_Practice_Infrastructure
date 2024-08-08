@@ -1,0 +1,40 @@
+##
+# Usage: Log Dangerous Sudo Configurations
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Sudo-Enum
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    remote_tmp_target: /tmp/sudo_danger.out
+    local_tmp_target: ../Enumerated_Systems/
+  tasks:
+    - name: Locate-Danger-Sudo
+      ansible.builtin.shell: |
+        echo "[!] NOPASSWORD GROUPS AND USERS [!]"
+        cat /etc/sudoers | grep NOPASS
+        echo "[!] NOAUTH GROUPS AND USERS [!]"
+        cat /etc/sudoers | grep !AUTH
+      register: sudo_log
+      ignore_errors: true
+
+    - name: Save-Remote
+      ansible.builtin.copy:
+        content: "{{ sudo_log.stdout }}"
+        dest: "{{ remote_tmp_target }}"
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ remote_tmp_target }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target }}"

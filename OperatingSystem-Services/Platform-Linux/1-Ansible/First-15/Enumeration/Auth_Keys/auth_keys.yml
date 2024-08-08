@@ -1,0 +1,43 @@
+##
+# Usage: Logs Authorized Key File locations and the authorized keys themselves
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: SSH Key Enumeration
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    remote_tmp_target: /tmp/auth_keys.out
+    local_tmp_target: ../Enumerated_Systems/
+    key_num_lines: 30
+  tasks:
+    - name: Gather-SSH-AuthKey-Info
+      ansible.builtin.shell: |
+        echo "[!] AUTHORIZED KEY FILES [!]"
+        cat /etc/ssh/sshd_config | grep -i AuthorizedKeysFile
+        echo "\n[!] USER AUTHORIZED KEYS [!]"
+        head -n {{ key_num_lines }} /home/*/.ssh/authorized_keys*
+        echo "\n[!] ROOT AUTHORIZED KEYS [!]"
+        head -n {{ key_num_lines }} /root/.ssh/authorized_keys*
+      register: auth_out
+      ignore_errors : true
+
+    - name: Save-Remote
+      ansible.builtin.copy:
+        content: "{{ auth_out.stdout }}"
+        dest: "{{ remote_tmp_target }}"
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ remote_tmp_target }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target }}"

@@ -9,7 +9,8 @@
   hosts: infra # Need to Coordinate This
   become: true # Need to be sudo
   vars: 
-    tmp_target: /tmp/linpeas.out
+    local_tmp_target: ../Enumerated_Systems/
+    remote_tmp_target: /tmp/linpeas.out
     tmp_sh: /tmp/lpsh.sh
     linpeas_url: https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh
     local_JSON_cmd: python3 PEASS-NG-Parsers/peas2json.py
@@ -47,12 +48,12 @@
     - name: Save-Remote
       ansible.builtin.copy:
         content: "{{ linpeas_out.stdout_lines }}"
-        dest: "{{ tmp_target }}"
+        dest: "{{ remote_tmp_target }}"
 
     - name: Fetch-Remote
       ansible.builtin.fetch:
-        src: "{{ tmp_target }}"
-        dest: "./Enumerated_Systems/"
+        src: "{{ remote_tmp_target }}"
+        dest: "{{ local_tmp_target }}"
         flat: false
 
     - name: Clean-Remote
@@ -60,7 +61,7 @@
         path: "{{ item }}"
         state: absent
       with_items:
-        - "{{ tmp_target }}"
+        - "{{ remote_tmp_target }}"
         - "{{ tmp_sh }}"
 
     # - name: Convert-JSON
