@@ -1,0 +1,40 @@
+##
+# Usage: Download or Remove specified Packages
+#
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Package-Management
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    Packages: # Supposedly adding the `-` makes it a dictionary of dictionaries. We can omit it to make a simple list?
+      - sl
+      - cowsay
+    State: present
+  tasks:
+    - name: Target-Host-Facts
+      ansible.builtin.setup:
+
+    - name: Manage-Packages-Debian
+      ansible.builtin.apt:
+        name: "{{ Packages }}"
+        state: "{{ State }}"
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Manage-Packages-Rhel
+      ansible.builtin.yum:
+        name: "{{ Packages }}"
+        state: present
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Manage-Packages-Alpine
+      ansible.builtin.apk:
+        name: "{{ Packages }}"
+        state: present
+      when: ansible_facts['os_family'] == 'Alpine'
+
+
+# Todo -- ARCH-- Probably test it on an easier to setup version like Manjaro
