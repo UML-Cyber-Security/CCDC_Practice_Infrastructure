@@ -1,0 +1,21 @@
+##
+# Usage: Remove a given file or directory
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Remove-Files
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    files:
+      - /home/blueteam/test.txt
+    Will_Force: false
+  tasks:
+    - name: Remove-Files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+        force: "{{ Will_Force }}"
+      with_items: "{{ files }}"

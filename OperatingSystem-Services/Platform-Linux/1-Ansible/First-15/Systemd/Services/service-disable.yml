@@ -1,0 +1,24 @@
+##
+# Usage: Setup Cron Restrictions
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Backup-Interesting-Files
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    Is_Masked: true # Modify this mask or unmask services
+    State: stopped
+  tasks:
+    - name: Disable-Services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: "{{ State }}"
+        masked: "{{ Is_Masked }}"
+      ignore_errors: true
+      with_items:
+        - cockpit
+        - rsync
+        - nis

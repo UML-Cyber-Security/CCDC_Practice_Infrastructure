@@ -1,0 +1,25 @@
+##
+# Usage: Enable or Disable services
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Service
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    Services:
+      - cockpit
+      - rsync
+      - nis
+    Is_Masked: true # Modify this mask or unmask services
+    State: stopped
+  tasks:
+    - name: Manage-Services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: "{{ State }}"
+        masked: "{{ Is_Masked }}"
+      ignore_errors: true
+      with_items: "{{ Services }}"

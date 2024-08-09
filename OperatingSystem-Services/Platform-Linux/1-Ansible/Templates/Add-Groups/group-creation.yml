@@ -1,0 +1,48 @@
+##
+# Usage: Generate New User and Group
+#
+# The goal of this script is to create a new group and user account.  The account will have an authorized key
+# file setup and password.
+#
+# Initially written by a Tired Matthew Harper
+#
+# NOTE: The Password must be hashed. We can generate a password with the `mkpasswd` command from the `whois` package
+##
+
+---
+- name: Group-Creation
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    new_groups: 
+      - team-player
+      - I-like-potatoes
+    sudoers: false
+  tasks:
+    - name: Backup-Pass-Group-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/{{ item }}
+        dest: /etc/{{ item }}.user.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      with_items:
+        - group
+
+    - name: Group-Creation
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ new_groups }}"
+
+    - name: Add-Sudoer-File
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%{{ item }}'
+        line: '%{{ item }} ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
+      with_items: "{{ new_groups }}"
+      when: "sudoers == true"
+

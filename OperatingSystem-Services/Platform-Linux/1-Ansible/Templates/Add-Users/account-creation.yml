@@ -1,0 +1,47 @@
+##
+# Usage: Generate New User and Group
+#
+# The goal of this script is to create a series of new users.
+#
+# Initially written by a Tired Matthew Harper
+#
+# NOTE: The Password must be hashed. We can generate a password with the `mkpasswd` command from the `whois` package
+##
+
+---
+- name: Account-Creation
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    new_users: 
+      - blueteam3
+      - blueteam4
+    passwd: $y$j9T$QPB0r8sLvi.LM7coxvYKU1$CQTOEClgM5M0oyshyIX2RIXGBTdU8q6X5HcfBF0pRP0
+  tasks:
+    - name: Backup-Pass-Group-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/{{ item }}
+        dest: /etc/{{ item }}.user.bak
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      with_items:
+        - passwd
+
+    - name: Backup-shadow-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/shadow
+        dest: /etc/shadow.user,bak
+        owner: root
+        group: root
+        mode: u=rw,g=r
+
+    - name: Account-Creation
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password: "{{ passwd }}"
+        create_home: yes
+        shell: /bin/bash
+      with_items: "{{ new_users }}"

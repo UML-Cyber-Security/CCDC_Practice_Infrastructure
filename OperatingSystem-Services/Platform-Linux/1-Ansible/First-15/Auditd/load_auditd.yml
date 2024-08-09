@@ -1,19 +1,19 @@
 ##
-# Load a config for sysctl
+# Configure auditd on the target system.
 #
-# Usage: Setup Basic System Configurations
+# 
 # Initially written by a Tired Matthew Harper
 ##
 
 ---
-- name: System-Ctl-Configuration
+- name: Auditd-Configuration
   hosts: infra # Need to Coordinate This
   become: true # Need to be sudo
   vars:
-    conf_file_trgt: /etc/sysctl.d/ccdc25.conf
-    conf_name: ./Configs/safe_conf.conf # Change to unsafe if you want
+    conf_file_trgt: /etc/audit/rules.d/ccdc.rules
+    conf_name: ./Configs/audit_rules.conf # Change to something else if wanted
   tasks:
-    - name: Configure-System
+    - name: Configure-auditd
       ansible.builtin.copy:
         src: "{{ conf_name }}"
         dest: "{{ conf_file_trgt }}"
@@ -22,5 +22,7 @@
         group: root
         mode: '644'
     - name: Load-Config
-      ansible.builtin.command: sysctl -p {{ conf_file_trgt }}
+      ansible.builtin.systemd:
+        name: auditd
+        state: restarted
       ignore_errors: yes
