@@ -1,11 +1,11 @@
 ##
-# Usage: Setup Cron Restrictions
+# Usage: Stop Potentially Dangerous Services
 #
 # Initially written by a Tired Matthew Harper
 ##
 
 ---
-- name: Backup-Interesting-Files
+- name: Service-Management
   hosts: infra # Need to Coordinate This
   become: true # Need to be sudo
   vars:
