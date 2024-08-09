@@ -1,0 +1,66 @@
+##
+# Usage: Enumerate current MAC, IP and other Interfaces set. Additionally stores common network configurations that could be used to mess with our devices.
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Network Configuration Enumeration
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    remote_tmp_target_network_state: /tmp/host-network-listen.out
+    remote_tmp_target_network_config: /tmp/host-network-conn.out
+    local_tmp_target: ../Enumerated_Systems/
+  tasks:
+    - name: Gather-Network-Info
+      ansible.builtin.shell: |
+        echo "[!] Network Namespaces [!]"
+        ip netns list
+        echo "[!] Interface IPs [!]"
+        ip -br address
+        echo "[!] Interface MACSs [!]"
+        ip -br link
+        echo "[!] Routes [!]"
+        ip route
+      register: net_state
+      ignore_errors : true
+
+    - name: Save-Remote
+      ansible.builtin.copy:
+        content: "{{ net_state.stdout }}"
+        dest: "{{ remote_tmp_target_network_state }}"
+
+    - name: Gather-Network-Info
+      ansible.builtin.shell: |
+        echo "[!] NSSWitch [!]"
+        cat /etc/nsswitch.conf | grep -Ev '#'
+        echo "[!] Hosts File [!]"
+        cat /etc/hosts | grep -Ev '#'
+        echo "[!] resolv Conf [!]"
+        cat /etc/resolv.conf | grep -Ev '#'
+      ignore_errors : true
+
+      register: net_conf
+
+    - name: Save-Remote
+      ansible.builtin.copy:
+        content: "{{ net_conf.stdout }}"
+        dest: "{{ remote_tmp_target_network_config }}"
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ remote_tmp_target_network_config }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+      with_items:
+        - "{{ remote_tmp_target_network_state }}"
+        - "{{ remote_tmp_target_network_config }}"
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target_network_state }}"
+        - "{{ remote_tmp_target_network_config }}"

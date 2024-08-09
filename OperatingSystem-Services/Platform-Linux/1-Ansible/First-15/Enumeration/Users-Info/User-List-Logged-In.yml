@@ -1,0 +1,93 @@
+##
+# Usage: Logs Users with common shells (Still want to manually inspect), and those that are currently logged in when the playbook was executed
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: User Enumeration
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    remote_tmp_target_active: /tmp/user-active.out
+    remote_tmp_target_sh: /tmp/user-sh.out
+    remote_tmp_target_group: /tmp/user-group.out
+    local_tmp_target: ../Enumerated_Systems/
+  tasks:
+    - name: Gather-Active-User-Info
+      ansible.builtin.shell: |
+        echo "[!] Currently Logged in Users (w) [!]"
+        w
+        echo "\n[!] Currently Logged in Users (who) [!]"
+        who
+      register: logged_in
+
+    - name: Save-Remote-Active
+      ansible.builtin.copy:
+        content: "{{ logged_in.stdout }}"
+        dest: "{{ remote_tmp_target_active }}"
+
+    - name: Gather-User-Info-SH
+      ansible.builtin.shell: |
+        echo "[!] listing Users With Shell {{ item }} [!]"
+        grep {{ item }} /etc/passwd | cut -d':' -f1
+      register: shell_info
+      with_items:
+        - bash
+        - fish
+        - csh
+        - zsh
+        - kitty
+        - ksh
+        - tcsh
+
+    - name: Concatenate-Output-SH
+      ansible.builtin.set_fact:
+        combined_output_shell: "{{ shell_info.results | map(attribute='stdout') | join('\n') }}"
+
+    - name: Save-Remote-Shell
+      ansible.builtin.copy:
+        content: "{{ combined_output_shell }}"
+        dest: "{{ remote_tmp_target_sh }}"
+
+    - name: Gather-User-Info-GP
+      ansible.builtin.shell: |
+        echo "[!] listing Users in Group {{ item }} [!]"
+        grep {{ item }} /etc/group |cut -d: -f4 | tr ',' '\n'
+      register: group_info
+      with_items:
+        - sudo
+        - wheel
+        - docker
+        - root
+        - shadow
+        - adm
+
+    - name: Concatenate-Output-GP
+      ansible.builtin.set_fact:
+        combined_output_group: "{{ group_info.results | map(attribute='stdout') | join('\n') }}"
+
+    - name: Save-Remote-Group
+      ansible.builtin.copy:
+        content: "{{ combined_output_group }}"
+        dest: "{{ remote_tmp_target_group }}"
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ item }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+      with_items:
+        - "{{ remote_tmp_target_active }}"
+        - "{{ remote_tmp_target_sh }}"
+        - "{{ remote_tmp_target_group }}"
+
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target_active }}"
+        - "{{ remote_tmp_target_sh }}"
+        - "{{ remote_tmp_target_group }}"

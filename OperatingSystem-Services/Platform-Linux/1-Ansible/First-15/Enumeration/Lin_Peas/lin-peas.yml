@@ -1,0 +1,68 @@
+##
+# Usage: Download and run Linpeas. Save the output to the system running it. It will remove the output and linpeas from the target system.
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Linpeas Enumeration
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    local_tmp_target: ../Enumerated_Systems/
+    remote_tmp_target: /tmp/linpeas.out
+    tmp_sh: /tmp/lpsh.sh
+    linpeas_url: https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh
+    local_JSON_cmd: python3 PEASS-NG-Parsers/peas2json.py
+  tasks:
+
+    - name: Gather-System-Package-Facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: CURL-Save
+      ansible.builtin.command:
+        cmd: curl -L {{ linpeas_url }} -o {{ tmp_sh }}
+      when: "'curl' in ansible_facts.packages"
+
+    - name: WGET-Save
+      ansible.builtin.command:
+        cmd: wget {{ linpeas_url }} > {{ tmp_sh }}
+      when: "'curl' not in ansible_facts.packages and 'wget' in ansible_facts.packages"
+
+    - name: PYTHON-Save
+      ansible.builtin.command:
+        cmd:  python3 -c "import urllib.request; urllib.request.urlretrieve('{{ linpeas_url }}', '{{ tmp_sh }}')"
+      when: "'curl' not in ansible_facts.packages and 'wget' not in ansible_facts.packages and 'python3' in ansible_facts.packages"
+
+    - name: Mark-Executable
+      ansible.builtin.file:
+        path: "{{ tmp_sh }}"
+        mode: 777
+
+    - name: Execute-Register
+      ansible.builtin.command:
+        cmd: "{{ tmp_sh }} -e -q"
+      register: linpeas_out
+
+    - name: Save-Remote
+      ansible.builtin.copy:
+        content: "{{ linpeas_out.stdout_lines }}"
+        dest: "{{ remote_tmp_target }}"
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ remote_tmp_target }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target }}"
+        - "{{ tmp_sh }}"
+
+    # - name: Convert-JSON
+    #   local_action: shell touch test.txt #ansible.builtin.command {{ local_JSON_cmd }} ./Enumerated_Systems/{{ item }}/tmp/linpeas.out ./Enumerated_Systems/{{ item }}/linpeas.json 

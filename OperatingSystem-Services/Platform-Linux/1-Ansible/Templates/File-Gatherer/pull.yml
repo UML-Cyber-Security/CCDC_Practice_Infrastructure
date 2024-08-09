@@ -1,0 +1,23 @@
+##
+# Usage: pull a given file or directory from the target system
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Pull-Files
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    files:
+      - /etc/shadow
+      - /etc/passwd
+    destination: ./Gathered-Content
+  tasks:
+    - name: Fetch-Content
+      ansible.builtin.fetch:
+        src: "{{ item }}"
+        dest: "{{ destination }}"
+        flat: false
+      ignore_errors: true
+      with_items: "{{ files }}"

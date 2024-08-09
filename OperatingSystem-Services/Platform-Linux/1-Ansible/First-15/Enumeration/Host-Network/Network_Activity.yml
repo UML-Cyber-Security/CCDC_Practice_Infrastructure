@@ -1,0 +1,75 @@
+##
+# Usage: Logs Network connections, Actively listening, established and raw.
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Network Activity Enumeration
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars: 
+    remote_tmp_target_network_listen: /tmp/host-network-listen.out
+    remote_tmp_target_network_established: /tmp/host-network-conn.out
+    remote_tmp_target_network_raw: /tmp/host-network-raw.out
+    local_tmp_target: ../Enumerated_Systems/
+  tasks:
+    - name: Gather-Listening-Ports
+      ansible.builtin.shell: |
+        echo "[!] Processes Currently Listening for Connections (ss) [!]"
+        ss -tulpnws
+        echo "\n[!] Processes Currently Listening for Connections (lsof - TCP) [!]"
+        lsof -i -s TCP:LISTEN
+      register: network_listen
+
+    - name: Save-Remote-Active
+      ansible.builtin.copy:
+        content: "{{ network_listen.stdout }}"
+        dest: "{{ remote_tmp_target_network_listen }}"
+
+    - name: Gather-Outbound-Ports
+      ansible.builtin.shell: |
+        echo "[!] Processes Currently Established/Establishing Connections (ss) [!]"
+        ss -tupnws
+        echo "\n[!] Processes Currently Established/Establishing Connections (lsof - TCP) [!]"
+        lsof -i -s TCP:ESTABLISHED
+      register: network_established
+      ignore_errors : true
+
+    - name: Save-Remote-Active
+      ansible.builtin.copy:
+        content: "{{ network_established.stdout }}"
+        dest: "{{ remote_tmp_target_network_established }}"
+
+    - name: Gather-Outbound-Ports
+      ansible.builtin.shell: |
+        echo "[!] Processes Currently Established/Establishing RAW/PCAP sessions [!]"
+        lsof | grep -i -E 'raw|pcap'
+        lsof | grep /proc/sys/net/ipv4
+      register: network_raw
+      ignore_errors : true
+    
+    - name: Save-Remote-Active
+      ansible.builtin.copy:
+        content: "{{ network_raw.stdout }}"
+        dest: "{{ remote_tmp_target_network_raw }}"
+
+
+    - name: Fetch-Remote
+      ansible.builtin.fetch:
+        src: "{{ item }}"
+        dest: "{{ local_tmp_target }}"
+        flat: false
+      with_items:
+        - "{{ remote_tmp_target_network_listen }}"
+        - "{{ remote_tmp_target_network_established }}"
+        - "{{ remote_tmp_target_network_raw }}"
+
+    - name: Clean-Remote
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ remote_tmp_target_network_listen }}"
+        - "{{ remote_tmp_target_network_established }}"
+        - "{{ remote_tmp_target_network_raw }}"

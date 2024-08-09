@@ -1,0 +1,188 @@
+##
+# Usage: Setup Cron Restrictions
+#
+# Initially written by a Tired Matthew Harper
+##
+
+---
+- name: Backup-Interesting-Files
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    allow_state: touch # Modify this to absent to remove allow files.
+  tasks:
+    - name: Target-Host-Facts
+      ansible.builtin.setup:
+
+    - name: Find-Usr-Homes
+      ansible.builtin.command: "ls /home/"
+      register: home_dirs
+
+    - name: Create-Backup-Directory
+      ansible.builtin.file:
+        path: /backups
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Find-History-Files
+      ansible.builtin.find:
+        paths: /home
+        recurse: yes
+        depth: 2
+        hidden: true
+        use_regex: true
+        pattern: '.*_history, .*history'
+        file_type: file
+      register: history_files
+
+    - name: Create-History-Backup-Directory
+      ansible.builtin.file:
+        path: /backups/user-histories
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Create-History-User-Directory
+      ansible.builtin.file:
+        path: /backups/users/{{ item }}
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      with_items:
+        - "{{ home_dirs.stdout_lines }}"
+
+    - name: Backup-User-Shell-Histories
+      ansible.builtin.copy:
+        src: "{{ item.path }}"
+        dest: /backups/users/{{ item.pw_name }}/{{ item.path.split('/')[-1] }}
+        remote_src: true
+      with_items: "{{ history_files.files }}"
+
+    - name: backup-auth-keys
+      ansible.builtin.copy:
+        src: /home/{{ item }}/.ssh/authorized_keys
+        dest: /backups/users/{{ item }}/authorized_keys
+        remote_src: true
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      with_items: "{{ home_dirs.stdout_lines }}"
+
+    - name: Create-SSHD-Backup-Dir
+      ansible.builtin.file:
+        path: /backups/ssh
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Backup-SSD-Directory
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/ssh/
+        dest: /backups/ssh
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Create-PAM-Backup-Dir
+      ansible.builtin.file:
+        path: /backups/pam/pam.d
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Backup-PAM-Directory
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/{{ item }}
+        dest: /backups/pam/{{ item }}
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      with_items:
+        - pam.d
+        - pam.conf
+
+    - name: Create-Cron-Dir
+      ansible.builtin.file:
+        path: /backups/cron
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Redhat-Cron
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/spool/cron/
+        dest: /backups/cron
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Debian-Cron
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/spool/cron/crontabs
+        dest: /backups/cron
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Other-Cron
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/spool/cron/crontabs
+        dest: /backups/cron
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+      when: not ansible_facts['os_family'] == 'Debian' and not ansible_facts['os_family'] == 'RedHat'
+
+    - name: Create-Log-Dir
+      ansible.builtin.file:
+        path: /backups/log
+        state: directory
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Logs-Backups
+      ansible.builtin.copy:
+        remote_src: true
+        src: /var/log
+        dest: /backups/log
+        owner: root
+        group: root
+        mode: u=rwx,g=,o=
+
+    - name: Backup-Pass-Group-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /backups/{{ item }}
+        dest: /backups/{{ item }}
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      with_items:
+        - passwd
+        - group
+
+    - name: Backup-shadow-File
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/shadow
+        dest: /backups/shadow
+        owner: root
+        group: root
+        mode: u=rw,g=r
+
+# May want to add Firewall backups later

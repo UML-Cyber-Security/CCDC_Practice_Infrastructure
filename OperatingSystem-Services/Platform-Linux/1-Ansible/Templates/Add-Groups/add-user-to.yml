@@ -1,0 +1,31 @@
+##
+# Usage: Generate New User and Group
+#
+# The goal of this script is to add users to one or more groups
+#
+# Initially written by a Tired Matthew Harper
+#
+##
+
+---
+- name: Account-Creation
+  hosts: infra # Need to Coordinate This
+  become: true # Need to be sudo
+  vars:
+    users: 
+      - {name: blueteam3, groups: [team-player, I-like-potatoes]}
+      - {name: blueteam4, groups: [team-player, I-like-potatoes]}
+  tasks:
+    - name: Ensure-Group-Existence
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ (users|map(attribute='groups') | list | flatten ) }}"
+
+    - name: Account-Creation
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        shell: /bin/bash
+        append: true
+        groups: "{{ item.groups }}"
+      with_items: "{{ users }}"
