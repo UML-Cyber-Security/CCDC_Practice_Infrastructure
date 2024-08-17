@@ -19,8 +19,7 @@ This repository contains notes on various services and platforms in the [Operati
 ## Table of Contents (TOPICS) 
 * TBD
 
-## OpenProject
-We are using OpenProject to preform some level of Task Management and tracking, please refer to the relevant documentation in the [Task-Management-Workflow/OpenProject](./Task-Managment-Workflow/OpenProject/OpenProject.md) directory. This is likely going to evolve and change as time progresses!
+## Taiga
+We are using Taiga to preform some level of Task Management and tracking, please refer to the relevant documentation in the [Admin/Task-Management-Workflow/Taiga](./Admin/Task-Managment-Workflow/Taiga) directory. This is likely going to evolve and change as time progresses!
 
-The old documentation in the [Task-Management-Workflow/Taiga](./Task-Managment-Workflow/Taiga/) directory may still be relevant but not in a direct manner.
-
+You should make an account on [tree.taiga.io](https://tree.taiga.io/), notify one of the team memebers so you can be added to the [project](https://tree.taiga.io/project/daintyjet-ccdc2025/timeline).
