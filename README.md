@@ -1,9 +1,9 @@
 # CCDC Practice Infrastructure <!-- omit from toc -->
 Any information regarding the setup and use of the infrastructure, or any related scripts will be located in their related subdirectories.
 
-A style guide for this repository is provided in the [Markdown_Style](./Markdown_Style.md) file. It is likely not followed but it also contains some useful programs, and software when interacting with GitHub and Markdown.
+A style guide for this repository is provided in the [Admin/Markdown_Style](./Admin/Markdown_Style.md) file. It is likely not followed but it also contains some useful programs, and software when interacting with GitHub and Markdown.
 
-This repository contains notes on various services and platforms in the [OperatingSystem-Services](./OperatingSystem-Services/) directory, some in-progress or completed projects using those technologies are contained in the [Projects](./Projects/) directory. Notes for the administration of our resources, mainly the creation of practice events, tasks, and infrastructure related tasks are contained in the [Admin](./Admin/) directory. The expected workflows are contained in the [Task-Management-Workflow](./Task-Management-Workflow/) directory, and limited event notes are contained in [Event-Notes](./Event-Notes/).
+This repository contains notes on various services and platforms in the [OperatingSystem-Services](./OperatingSystem-Services/) directory, some in-progress or completed projects using those technologies are contained in the [Projects](./Projects/) directory. Notes for the administration of our resources, mainly the creation of practice events, tasks, and infrastructure related tasks are contained in the [Admin](./Admin/) directory. The expected workflows are contained in the [Admin/Task-Management-Workflow](./Admin/Task-Management-Workflow/) directory, and limited event notes are contained in [Event-Notes](./Event-Notes/).
 
 ## Table of Contents (README) <!-- omit from toc -->
 - [Accessing Infrastructure](#accessing-infrastructure)
