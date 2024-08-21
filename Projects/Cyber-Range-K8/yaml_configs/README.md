@@ -1,0 +1,1 @@
+This folder contains different pre-configured yaml files for possible different request for CCDC + any other CCDC related compeitions.
