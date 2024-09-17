@@ -81,6 +81,8 @@ network:
 * Replace `MACADDR` with the *MAC* address of the interface you found earlier.
 * Replace `IP/SUBNET` with the IP address you are assigning to the machine, and the subnet the network will be a part of (how many network bits are there!?!).
 
+> [!IMPORTANT]
+> You will need to make sure the new file has the proper permissions, use `chmod 600 FILE` on the 51-static.yaml file.
 
 An example configuration is as follows:
 ```
@@ -112,3 +114,10 @@ Open the `Edit Config` menu for the Virtual Machine:
 Select the *Networks* window and click the big **X** on the interface you would like to remove. Once done save the changes and the system will need to restart.
 
 <img src="Images/VMD.png">
+
+## Application of Changes
+
+Finally once you are satisfied with your configuration you should run the `sudo netplan apply` command.
+
+> [!NOTE]
+> This will re-assign the address on the public ip, so you will be disconnected if you are using SSH.
