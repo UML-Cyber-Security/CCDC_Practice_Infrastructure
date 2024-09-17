@@ -1,11 +1,11 @@
-# Harvister Network Creation
-This document will contain notes on the creation of networks on the *Harvister* hypervisor.
+# Harvester Network Creation
+This document will contain notes on the creation of networks on the *Harvester* hypervisor.
 
-## (Harvister) Isolated Network Creation
-This section will discuss how you can create a network that can be used as a private network on Harvister. They do not have a option to create an internal network explicitly, as they have the *management* network which is used for this purpose. However we can create a `VLAN` or `Untagged` network that **does not use** DHCP, and has a gateway set to an **internal ip** to emulate this.
+## (Harvester) Isolated Network Creation
+This section will discuss how you can create a network that can be used as a private network on Harvester. They do not have a option to create an internal network explicitly, as they have the *management* network which is used for this purpose. However we can create a `VLAN` or `Untagged` network that **does not use** DHCP, and has a gateway set to an **internal ip** to emulate this.
 
 
-Open the *Networks* configuration menu in Harvister's VM management interface:
+Open the *Networks* configuration menu in Harvester's VM management interface:
 
 <img src="Images/VMN.png">
 
@@ -17,8 +17,8 @@ In the *Route* window configure it to use the **Manual** mode so we can make thi
 
 <img src="Images/VMR.png">
 
-## (Harvister) Isolated Network Attaching to Virtual Machine
-Once you have created the network, you can select this as one of the options when creating a VM in Harvister.
+## (Harvester) Isolated Network Attaching to Virtual Machine
+Once you have created the network, you can select this as one of the options when creating a VM in Harvester.
 
 > [!IMPORTANT]
 > If the only network you connect the VM to does not have access to the internet the boot time of the VM may be much longer than usual since there may be a networking service that will check for a network connections for ~2 mins before the boot process continues. If you open the serial or VNC console during the boot process this can be observed.
