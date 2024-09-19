@@ -1,6 +1,6 @@
 # Integration of Suricata into Wazuh
 
-complain about this writeup to: viktor : ) <br>
+complain about this writeup to: viktor <br>
 
 ## 1. Linux Steps (Ubuntu only...?)
 
