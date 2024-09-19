@@ -1,5 +1,5 @@
 ## TCP Dump Commands to eat the team ##
-created by Mr. G, edited by viktor <br><br>
+created by viktor with help from mr.g <br><br>
 TODO: Just add this to a cronjob, and pipe output into wazuh. <br>
 Create a custom dash. to show network traffic accross infrastructure. <br>
 This is more for injects that acually looking for suspicous activity. <br>
