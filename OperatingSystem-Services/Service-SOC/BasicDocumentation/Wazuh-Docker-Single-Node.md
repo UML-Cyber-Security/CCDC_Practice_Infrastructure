@@ -3,11 +3,12 @@
 
 
 ## Get wazuh-docker github repo
+Make sure this is latest version !!
 
 `git clone https://github.com/wazuh/wazuh-docker.git -b v4.6.0`
 
 ## Get Certs
-
+Navigate to the single node directory
 `docker compose -f generate-indexer-certs.yml run --rm generator`
 
 ## Deploy docker containers
