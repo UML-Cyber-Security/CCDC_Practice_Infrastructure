@@ -35,6 +35,7 @@ Make sure kernel version is greater than 3.10
 # Install Docker Compose
 
 ## Docker Compose Binary
+Check if this is latest version before copying command.
 
 `curl -L "https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
 
