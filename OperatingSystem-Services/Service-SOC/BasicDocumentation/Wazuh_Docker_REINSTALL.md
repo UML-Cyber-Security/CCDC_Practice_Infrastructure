@@ -1,5 +1,5 @@
 ## How to Reset and Reinstall Wazuh w/ Docker ##
-
+Easy way to fresh reinstall wazuh with docker already installed
 List out all docker containers\
 ``` docker ps ```
 
@@ -13,6 +13,7 @@ Remove the wazuh github directory\
 ``` rm -rf wazuh-docker ```
 
 Re-Pull the github\
+Check if this is latest version?
 ```git clone https://github.com/wazuh/wazuh-docker.git -b v4.6.0 ```
 
 Get Certs Again\
@@ -20,3 +21,5 @@ Get Certs Again\
 
 Deploy the Containers\
 ``` docker compose up -d ```
+
+Complain to Viktor about this if it doesn't work : /
