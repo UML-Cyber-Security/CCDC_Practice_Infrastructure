@@ -1,4 +1,4 @@
-## TCP Dump Commandse to eat red team activity ##
+## TCP Dump Commands to eat the team ##
 created by Mr. G, edited by viktor <br><br>
 TODO: Just add this to a cronjob, and pipe output into wazuh. <br>
 Create a custom dash. to show network traffic accross infrastructure. <br>
