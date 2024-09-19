@@ -1,5 +1,9 @@
 ## TCP Dump Commandse to eat red team activity ##
-created by Mr. G, edited by viktor <br>
+created by Mr. G, edited by viktor <br><br>
+TODO: Just add this to a cronjob, and pipe output into wazuh. <br>
+Create a custom dash. to show network traffic accross infrastructure. <br>
+This is more for injects that acually looking for suspicous activity. <br>
+
 ### Running the TCP-Dump for your Subnet ###
 
 ```bash
