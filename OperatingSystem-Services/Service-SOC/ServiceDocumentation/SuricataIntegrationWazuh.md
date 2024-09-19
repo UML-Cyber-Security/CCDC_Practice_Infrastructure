@@ -130,7 +130,7 @@ Add following to the `/var/ossec/etc/ossec.conf` file on agent machine
 </ossec_config>
 ```
 
-Restart Agent :)
+Restart Agent
 ```bash
 sudo systemctl restart wazuh-agent
 ```
