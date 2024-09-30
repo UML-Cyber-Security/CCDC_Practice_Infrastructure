@@ -1,0 +1,30 @@
+- Create Kubernetes cluster within infrastructure
+		- K8S cluster
+		- Config:
+			- 1 Master
+			- 3 Workers
+			- Don't want simple cluster
+			- master and workers to be running on longhorn
+	- Longhorn:
+		- Distributed storage
+		- Specifically built for Kubernetes
+		- Systems will contribute their own storage to create distributed Longhorn storage
+		- Makes services highly available
+		- Have some database:
+			- If database is on Worker 1, and worker 1 falls
+				- Without distributed storage, database will look for its own files once migrate
+		- Longhorn shards the data to create multiple replicas of files, making data available on all systems of cluster
+		- Even if database crashes and moves to another worker, it will still have access to its own files
+		- Storage method depends on solution itself
+			- Entire file could stay one one disc and be replicated to others
+			- Not sure how longhorn handles
+		- Persistent volume clean
+		- Protects against system falling and data loss occurring
+	- Why Longhorn?
+		- Other option is bad or something I don't really know
+		- Nightmares or something I'm too dumb to follow this
+	- After setup:
+		- Find ways to deploy services onto the cluster
+		- Work with databases involved
+		- Secure databases
+		- Migration focus

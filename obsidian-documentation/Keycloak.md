@@ -1,0 +1,22 @@
+- Identity provider solution
+	- Can be used as its own identity provider
+	- Can be used with AD to be able to sync together
+		- Put credentials into Keycloak
+		- Authenticate to other systems using Keycloak credentials
+		- Create own identity provider
+	- Task:
+		- Create own Keycloak identity provider
+		- Keycloak serves as default identity management solution, first of all
+		- Second of all, serve as an OpenID/OAuth provider
+			- Go on website, says that this website wants to authenticate using Google Account
+				- This would be OpenID
+			- Use Keycloak credentials to authenticate with external (not Keycloak) identification
+		- Set up Keycloak
+		- Use as default identity management solution
+	- Future task:
+		- SSH into systems using OAuth2
+		- SSH and web applications will all eventually go through OAuth2
+	- If not authenticated with OAuth2, will take you to website where you can register
+	- If authenticated, automatically SSH into system
+	- Essentially skipping password based and public key authentication
+	- Use common credentials for the infrastructure

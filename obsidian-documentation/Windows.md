@@ -1,0 +1,21 @@
+- Deploy two Windows servers
+		- One will run as certificate authority
+			- Chisom Explanation
+				- If machine wants to prove who they are, communicate with CA
+				- CA will give machine/website a Cert
+				- Signed cert essentially says machine/website is who they say they are
+				- There are trusted certificate authorities (DigiCert) provide certs to websites that register with them
+					- When browser types in youtube.com, the browser, with the CA linked to browser and the website having a signed Cert, knows it is the right website
+				- "Something like that, and I think that's the best I can do"
+				- Machine sends request and signs the certificate request with the machine's private key
+				- CA verifies the private key of the machine using the machine's public key
+				- Browser will not trust an untrusted CA by default unless browser config is modified
+					- Force browser to trust this self signed certificate
+				- If CA private key is stolen, false certificates can most likely be generated
+				- Root CA = Big Man in the Sky
+			- Non Chisom Explanation
+				- Do not let CA keys get stolen
+				- For now, set up CA
+				- Future:
+					- Use CA for setting up secure connections for whole network
+		- For now, nothing on other Windows machine

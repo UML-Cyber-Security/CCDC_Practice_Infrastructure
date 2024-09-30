@@ -1,0 +1,15 @@
+- Implementation up to us
+		- If request comes in from outside:
+			- zodu.com (example)
+			- only be served externally
+			- should have its own DNS entries
+				- app1.zodu.com
+			- May have certain cases where private system resolves IP addresses
+				- Soln.
+					- Internal DNS server
+					- dev.zodu.com
+				- If request from outside goes to dev.zodu.com, should be rejected
+				- If internal request goes to outside domain, should also be rejected
+		- Should be resolved based on zone of device
+	- No DNS server outside of subnet, should all be within infrastructure
+	- Server should be inside with public requests able to go in
