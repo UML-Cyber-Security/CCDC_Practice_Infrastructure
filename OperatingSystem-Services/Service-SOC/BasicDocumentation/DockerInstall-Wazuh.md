@@ -7,7 +7,7 @@ In case anything gets outdated more information can be found here: [Offical Wazu
 
 
 ## Increase max_map_count on your Docker host:
-This increases the maximum allows of "memmory mapping" a process is allowed to have. 
+This increases the maximum allows of "memmory mapping" a process is allowed to have.  
 `sudo sysctl -w vm.max_map_count=262144`
 
 > [!NOTE]
