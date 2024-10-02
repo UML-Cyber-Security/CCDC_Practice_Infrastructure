@@ -29,7 +29,7 @@ Example output: `6.5.6-300.fc39.x86_64` (Kernal version is 6.5.6)
 
 `sudo curl -sSL https://get.docker.com/ | sh`
 
-## Start Docker:
+Start Docker:
 
 `sudo systemctl start docker`
 
@@ -38,10 +38,10 @@ Check if this is latest version before copying command.
 
 `curl -L "https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
 
-> Grant Execute Permissions:
+Grant Execute Permissions:
 
 `chmod +x /usr/local/bin/docker-compose`
 
-> Make sure it installed fine
+Make sure it installed fine
 
 `docker-compose --version`
