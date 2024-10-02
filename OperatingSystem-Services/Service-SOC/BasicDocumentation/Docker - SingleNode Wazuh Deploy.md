@@ -1,7 +1,7 @@
 # How to Deploy Wazuh on Docker, Single-Node
 
 This is a working guide for a Ubuntu OS.  
-Extra informatino can be found here: [Official Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html)
+Extra information can be found here: [Official Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html)
 
 ## Get wazuh-docker github repo
 > [!IMPORTANT]
