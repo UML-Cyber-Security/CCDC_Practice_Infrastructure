@@ -15,7 +15,7 @@ Check how much LVM space you have:
 
 `lvdisplay`
 
-TO DO That:
+To extend the LVM space:
 
 `lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv`
 
