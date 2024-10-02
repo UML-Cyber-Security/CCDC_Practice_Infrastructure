@@ -1,6 +1,8 @@
 # How to install Docker For Wazuh Purposes
+Documentation showing how to install Docker for a Wazuh install. A default docker installation will most likely not work.
 
-## DISCLAIMER: Do not follow docker docs, follow provided steps
+> [!IMPORTANT]
+>DISCLAMER:  Do not follow docker docs, follow provided steps!
 
 
 Follow these steps:
