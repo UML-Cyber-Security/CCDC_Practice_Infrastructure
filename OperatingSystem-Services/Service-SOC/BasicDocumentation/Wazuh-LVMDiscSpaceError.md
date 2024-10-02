@@ -2,11 +2,11 @@
 
 First check if you are out of space
 
-`df -h`
+- `df -h`
 
 Check if there is existing space in the Volume Group
 
-`vgdisplay`
+- `vgdisplay`
 
 
 If Free Pe / Size has free space you can steal from there to allocate to LVM
