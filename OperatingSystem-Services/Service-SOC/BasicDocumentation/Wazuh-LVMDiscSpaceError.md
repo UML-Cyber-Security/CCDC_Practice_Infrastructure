@@ -1,4 +1,4 @@
-# LVM Out of Space
+# How to fix a LVM Out of Space Error with Wazuh on Docker
 
 - First check if you are out of space
 
@@ -15,11 +15,11 @@
 
 `lvdisplay`
 
-- To extend the LVM space:
+- Use lvextend to increase the LVM space:
 
 `lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv`
 
-- Use lv displat to make sure space changed:
+- Use lvdisplay to make sure space changed:
 
 `lvdisplay`
 
@@ -27,7 +27,7 @@
 
 `resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv`
 
-Check to make sure it is successful
+- Run command below to see if your system acquired more file space:
 
 `df -h`
 
