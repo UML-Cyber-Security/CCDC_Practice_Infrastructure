@@ -10,11 +10,11 @@ Extra information can be found here: [Official Wazuh Installation Docs](https://
 `git clone https://github.com/wazuh/wazuh-docker.git -b v4.6.0`
 
 ## Get Certs
-Navigate to the single node directory and run following command to generate proper certificates: 
+Navigate to the single node directory and run following command to generate proper certificates:  
 `docker compose -f generate-indexer-certs.yml run --rm generator`
 
 ## Deploy docker containers
-This will create 3 docker containers: Wazuh manager, Wazuh Dashboard, Wazuh Indexer
+This will create 3 docker containers: Wazuh manager, Wazuh Dashboard, Wazuh Indexer  
 `docker compose up -d`
 
 ## Possible Errors
