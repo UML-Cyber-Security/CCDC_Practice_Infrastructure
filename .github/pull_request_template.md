@@ -1,9 +1,6 @@
 ## Overview of Changes
 
-General overview of what has been changed
-```
-Modified IPTables documentation to removed errors, typos and add missing content. The added content is as follows: Docker Integration, Debugging Guidelines, and Useful commands.
-```
+** REPLACE WITH: General overview of what has been changed**
 
 ## Reason for Modification
 
