@@ -1,0 +1,28 @@
+#By using a DaemonSet instead of a Deployment, you ensure that an Nginx pod runs on each worker node in your Kubernetes cluster. This is ideal when you want each node to serve a copy of the application, such as for distributed logging, monitoring agents, or in this case, Nginx web servers.
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-html
+          mountPath: /usr/share/nginx/html
+          subPath: index.html
+  volumes:
+  - name: nginx-html
+    configMap:
+      name: nginx-html
