@@ -25,7 +25,7 @@ To confirm this, the rules should show up in the ```/usr/share/rules/``` folder:
 ![Image of folder output](../Images/image5.png)  
 
 
-> **Note:**
+> [!NOTE]
 > If `suricata-update` does not work (rules are not added to the folder) try to add the ruleset manually with the following commands:
 > ```bash
 > cd /tmp/ && curl -LO https://rules.emergingthreats.net/open/suricata-6.0.8/emerging.rules.tar.gz
