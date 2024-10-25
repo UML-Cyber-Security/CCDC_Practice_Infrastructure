@@ -1,6 +1,8 @@
 # Integration of Suricata into Wazuh
+WHAT THIS IS:  
+This guide installs and configures Suricata (Network IDS) with Wazuh on a Linux operating system. For more information/up to date information:  
+[Wazuh Suricata Integration](https://documentation.wazuh.com/current/proof-of-concept-guide/integrate-network-ids-suricata.html)  
 
-complain about this writeup to: viktor <br>
 
 ## 1. Linux Steps (Ubuntu only...?)
 
@@ -17,35 +19,44 @@ Download and extract the Emerging Threats Suricata ruleset
 ```bash
 sudo suricata-update
 ```
+Command should show that the rules should be "enabled".  
+![Image of suricata-update command](../Images/image4.png)  
+To confirm this, the rules should show up in the ```/usr/share/rules/``` folder: 
+![Image of folder output](../Images/image5.png)  
 
-If fails try following
+If `suricata-update` does not work (rules are not added to the folder) try to add the ruleset manually with the following commands:
 ```bash
-sudo suricata-update
-
 cd /tmp/ && curl -LO https://rules.emergingthreats.net/open/suricata-6.0.8/emerging.rules.tar.gz
 sudo tar -xvzf emerging.rules.tar.gz && sudo mv rules/*.rules /var/lib/suricata/rules/
 cd ~
 cd /var/lib/suricata/rules
 sudo chmod 640 *.rules
 ```
-
-Check the network interface on the machine\
+After this, check the network interface on the machine\
 (should be top left)\
 Check the subnet range (convert subnet mask to CIDR notation)
 
 ```bash
 ifconfig
 ```
+or 
+```bash
+ip a
+```
+Image below shows what you should be looking for:  
+![Image of docker compose output](../Images/image6.png)
 
 Modify Suricata settings in `/etc/suricata/suricata.yaml`
 Set following variables->
 
 ```bash
+# This is your IP range here, Example: 192.168.0.1/21
 HOME_NET: "[ubuntu-IP-LOW-Range/CIDR Notation]"
 EXTERNAL_NET: "any"
 
+# This line might be towards the bottom of the config
 default-rule-path: /var/lib/suricata/rules
-rule-files:
+rule-files: 
 - suricata.rules
 
 # Global stats configuration
@@ -54,10 +65,35 @@ enabled: yes
 
 # Linux high speed capture support
 af-packet:
-  - interface: enp0s3
+  - interface: <interface here>
 ```
 
-If above suricata update did not add rules, add them manually
+Restart Suricata service
+```bash
+sudo systemctl restart suricata
+```
+
+Add following to the `/var/ossec/etc/ossec.conf` file on agent machine
+
+```bash
+<ossec_config>
+  <localfile>
+    <log_format>json</log_format>
+    <location>/var/log/suricata/eve.json</location>
+  </localfile>
+</ossec_config>
+```
+
+Restart Agent
+```bash
+sudo systemctl restart wazuh-agent
+```
+
+
+
+## Troubleshooting ##
+
+If your Suricata cannot find the rules files, you can add them manually in the ```/etc/suricata/suricata.yaml``` file, and manually copy them to the ```/var/lib/suricata/rules/``` location:
 ```bash
 default-rule-path: /var/lib/suricata/rules/
 rule-files:
@@ -111,26 +147,4 @@ rule-files:
 - emerging-pop3.rules
 - emerging-exploit.rules          
 - emerging-rpc.rules
-```
-
-
-Restart Suricata service
-```bash
-sudo systemctl restart suricata
-```
-
-Add following to the `/var/ossec/etc/ossec.conf` file on agent machine
-
-```bash
-<ossec_config>
-  <localfile>
-    <log_format>json</log_format>
-    <location>/var/log/suricata/eve.json</location>
-  </localfile>
-</ossec_config>
-```
-
-Restart Agent
-```bash
-sudo systemctl restart wazuh-agent
 ```

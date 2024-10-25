@@ -1,13 +1,14 @@
-# How to install Docker For Wazuh Purposes
-Documentation showing how to install Docker for a Wazuh install. A default docker installation will most likely not work.  
-In case anything gets outdated more information can be found here: [Offical Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/docker-installation.html)  
+# How to install Docker For Wazuh Purposes #
+
+WHAT THIS IS:  
+Documentation showing how to correctly install Docker to prepare for a Wazuh docker deployment. A default docker installation will most likely not work. In case anything gets outdated/more information can be found here: [Offical Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/docker-installation.html)  
 
 > [!IMPORTANT]
->DISCLAMER:  Do not follow docker docs, follow provided steps!
+>DISCLAMER:  Do not follow official docker docs, follow provided steps!
 
 
 ## Increase max_map_count on your Docker host:
-This increases the maximum allows of "memmory mapping" a process is allowed to have.  <br> <br>
+This increases the maximum allows of "memory mapping" a process is allowed to have.  <br> <br>
 `sudo sysctl -w vm.max_map_count=262144`
 
 > [!NOTE]
@@ -25,11 +26,11 @@ Make sure kernel version is greater than 3.10.
 Example output: `6.5.6-300.fc39.x86_64` (Kernal version is 6.5.6)
 
 
-## Run docker installation script:
+## Next run the docker installation script:
 
 `sudo curl -sSL https://get.docker.com/ | sh`
 
-Start Docker:
+Afterwards, start Docker:
 
 `sudo systemctl start docker`
 
@@ -45,3 +46,5 @@ Grant Execute Permissions:
 Make sure it installed fine
 
 `docker-compose --version`
+
+This should output a version number of docker compose if installed correctly
