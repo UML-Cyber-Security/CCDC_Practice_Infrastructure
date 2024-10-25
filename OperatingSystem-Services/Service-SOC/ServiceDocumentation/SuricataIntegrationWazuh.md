@@ -24,14 +24,17 @@ Command should show that the rules should be "enabled".
 To confirm this, the rules should show up in the ```/usr/share/rules/``` folder: 
 ![Image of folder output](../Images/image5.png)  
 
-If `suricata-update` does not work (rules are not added to the folder) try to add the ruleset manually with the following commands:
-```bash
-cd /tmp/ && curl -LO https://rules.emergingthreats.net/open/suricata-6.0.8/emerging.rules.tar.gz
-sudo tar -xvzf emerging.rules.tar.gz && sudo mv rules/*.rules /var/lib/suricata/rules/
-cd ~
-cd /var/lib/suricata/rules
-sudo chmod 640 *.rules
-```
+
+> **Note:**
+> If `suricata-update` does not work (rules are not added to the folder) try to add the ruleset manually with the following commands:
+> ```bash
+> cd /tmp/ && curl -LO https://rules.emergingthreats.net/open/suricata-6.0.8/emerging.rules.tar.gz
+> sudo tar -xvzf emerging.rules.tar.gz && sudo mv rules/*.rules /var/lib/suricata/rules/
+> cd ~
+> cd /var/lib/suricata/rules
+> sudo chmod 640 *.rules
+> ```
+
 After this, check the network interface on the machine\
 (should be top left)\
 Check the subnet range (convert subnet mask to CIDR notation)
