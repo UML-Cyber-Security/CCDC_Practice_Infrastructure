@@ -22,12 +22,12 @@ Can also try to use this command instead to bring down all containers:
 docker system prune
 ```
 
-### Remove the wazuh github directory
+### Remove the Wazuh Github directory
 ```bash
 rm -rf wazuh-docker
 ```
 
-### Re-Pull the github
+### Re-Pull the Github
 Check if this is latest version?  
 ```bash
 git clone https://github.com/wazuh/wazuh-docker.git -b v4.6.0
