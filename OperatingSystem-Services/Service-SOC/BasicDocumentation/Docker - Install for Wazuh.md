@@ -1,10 +1,10 @@
 # How to install Docker For Wazuh Purposes #
 
 WHAT THIS IS:  
-Documentation showing how to correctly install Docker to prepare for a Wazuh docker deployment. A default docker installation will most likely not work. In case anything gets outdated/more information can be found here: [Offical Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/docker-installation.html)  
+Documentation showing how to correctly install Docker to prepare for a Wazuh Docker deployment. A default Docker installation will most likely not work. In case anything gets outdated/more information can be found here: [Offical Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/Docker/Docker-installation.html)  
 
 > [!IMPORTANT]
->DISCLAMER:  Do not follow official docker docs, follow provided steps!
+>DISCLAMER:  Do not follow official Docker docs, follow provided steps!
 
 
 ## Increase max_map_count on your Docker host:
@@ -26,25 +26,25 @@ Make sure kernel version is greater than 3.10.
 Example output: `6.5.6-300.fc39.x86_64` (Kernal version is 6.5.6)
 
 
-## Next run the docker installation script:
+## Next run the Docker installation script:
 
-`sudo curl -sSL https://get.docker.com/ | sh`
+`sudo curl -sSL https://get.Docker.com/ | sh`
 
 Afterwards, start Docker:
 
-`sudo systemctl start docker`
+`sudo systemctl start Docker`
 
 ## Install the Docker Compose Binary
 Check if this is latest version before copying command.
 
-`curl -L "https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
+`curl -L "https://github.com/Docker/compose/releases/download/v2.12.2/Docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/Docker-compose`
 
 Grant Execute Permissions:
 
-`chmod +x /usr/local/bin/docker-compose`
+`chmod +x /usr/local/bin/Docker-compose`
 
 Make sure it installed fine
 
-`docker-compose --version`
+`Docker-compose --version`
 
-This should output a version number of docker compose if installed correctly
+This should output a version number of Docker compose if installed correctly
