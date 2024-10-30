@@ -4,7 +4,7 @@ WHAT THIS IS:
 This is a guide for a Debian Linux OS on how to deploy a single-node instance of Wazuh (including manager, dashboard, and indexer) with Docker already installed (look at the Docker - Install for Wazuh guide).<br><br>
 Extra information can be found here: [Official Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html)
 
-## Get wazuh-docker github repo
+## Get wazuh-Docker github repo
 > [!IMPORTANT]
 > Make sure this is the latest version!
 
@@ -16,13 +16,13 @@ Navigate to the single node directory and run following command to generate prop
 ![Image of cert output](../Images/image1.png)
 (Sample output of the cert generator command shown above)
 
-## Deploy docker containers
-This will create 3 docker containers: Wazuh manager, Wazuh Dashboard, and the Wazuh Indexer  
+## Deploy Docker containers
+This will create 3 Docker containers: Wazuh manager, Wazuh Dashboard, and the Wazuh Indexer  
 `docker compose up -d`  <br><br>
 ![Image of docker compose output](../Images/image2.png)  
 ![Image of docker compose output](../Images/image3.png) 
-(Sample docker compose output shown above)  
-(Running docker containers with `docker ps` shown below)
+(Sample Docker compose output shown above)  
+(Running Docker containers with `docker ps` shown below)
 ![Image of docker ps output](../Images/image7.png) 
 In case of restarting a particluar Wazuh service (dashboard, indexer, or manager), the specific container will need to be restarted.
 
