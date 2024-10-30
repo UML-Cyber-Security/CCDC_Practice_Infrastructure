@@ -28,23 +28,33 @@ Example output: `6.5.6-300.fc39.x86_64` (Kernal version is 6.5.6)
 
 ## Next run the Docker installation script:
 
-```sudo curl -sSL https://get.Docker.com/ | sh```
+```bash
+sudo curl -sSL https://get.Docker.com/ | sh
+```
 
 Afterwards, start Docker:
 
-```sudo systemctl start Docker```
+```bash
+sudo systemctl start Docker
+```
 
 ## Install the Docker Compose Binary
 Check if this is latest version before copying command.
 
-```curl -L "https://github.com/Docker/compose/releases/download/v2.12.2/Docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/Docker-compose```
+```bash
+curl -L "https://github.com/Docker/compose/releases/download/v2.12.2/Docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/Docker-compose
+```
 
 Grant Execute Permissions:
 
-```chmod +x /usr/local/bin/Docker-compose```
+```bash
+chmod +x /usr/local/bin/Docker-compose
+```
 
 Make sure it installed fine
 
-```Docker-compose --version```
+```bash
+Docker-compose --version
+```
 
 This should output a version number of Docker compose if installed correctly
