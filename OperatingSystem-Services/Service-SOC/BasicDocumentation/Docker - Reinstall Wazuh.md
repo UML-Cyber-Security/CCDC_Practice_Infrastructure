@@ -11,7 +11,7 @@ In case anything gets outdated/more information can be found here: [Offical Wazu
 ### Stop all the ones with Wazuh
 There should be 3: Dashboard, manager, indexer  
 ``` docker stop <container> ```  
-Can also try to use this command:    
+Can also try to use this command instead to bring down all containers:      
 ```docker compose down```
 
 ### Run docker prune to remove all stopped containers and data
