@@ -37,7 +37,7 @@ sudo nano ../../docker-compose.yml
 
 Then change the `INDEXER_PASSWORD` in .manager and .dashboard enviorment!!! 
 ![Image of docker compose](../Images/image11.png)   
-Also change `DASHOBOARD_PASSWORD` in `wazuh.dashboard:` part  
+Also change `DASHBOARD_PASSWORD` in `wazuh.dashboard:` part  
 ![Image of docker compose](../Images/image12.png) 
 Then start the deployment stack->
 
