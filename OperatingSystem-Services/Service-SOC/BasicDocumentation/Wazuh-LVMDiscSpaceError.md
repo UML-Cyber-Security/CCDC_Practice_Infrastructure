@@ -1,6 +1,6 @@
 # Fixing "LVM Out of Space Error" Wazuh Docker Install
 WHAT THIS IS:  
-Rough guide on how to fix a out of space error on a Debian Linux OS, if you installed Wazuh through docker  
+Rough guide on how to fix a out of space error on a Debian Linux OS, if you installed Wazuh through Docker  
 - First check if you are out of space
 
 `df -h`
