@@ -1,9 +1,9 @@
 ## How to Reset and Reinstall Wazuh w/ Docker ##
 
 WHAT THIS IS:  
-Guide showing steps to fresh reinstall wazuh with docker already installed on a Debian linux OS.
+Guide showing steps to fresh reinstall wazuh with Docker already installed on a Debian linux OS.
 <br>
-In case anything gets outdated/more information can be found here: [Offical Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/docker-installation.html)  
+In case anything gets outdated/more information can be found here: [Offical Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/Docker/Docker-installation.html)  
 
 ### List out all Docker containers
 ``` docker ps ```
@@ -14,7 +14,7 @@ There should be 3: Dashboard, manager, indexer
 Can also try to use this command instead to bring down all containers:      
 ```docker compose down```
 
-### Run docker prune to remove all stopped containers and data
+### Run Docker prune to remove all stopped containers and data
 > [!IMPORTANT]
 > This command will remove ALL stopped containers, make sure all containers that are stopped you are comfortable with deleting!
 
@@ -39,7 +39,7 @@ docker compose -f generate-indexer-certs.yml run --rm generator
 ```
 
 ### Deploy the Containers
-``` docker compose up -d ```<br><br>
-![Image of docker compose output](../Images/image2.png)  
-![Image of docker compose output](../Images/image3.png) 
-(Sample docker compose output shown above)
+``` Docker compose up -d ```<br><br>
+![Image of Docker compose output](../Images/image2.png)  
+![Image of Docker compose output](../Images/image3.png) 
+(Sample Docker compose output shown above)
