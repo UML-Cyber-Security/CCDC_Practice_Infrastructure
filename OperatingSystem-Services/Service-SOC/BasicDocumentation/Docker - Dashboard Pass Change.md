@@ -62,7 +62,7 @@ export JAVA_HOME=/usr/share/wazuh-indexer/jdk
 ```
 
 <br>
-Then run the `securityadmin.sh` script->
+Then run the ```securityadmin.sh``` script->
 
 ```bash
 bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh -cd /usr/share/wazuh-indexer/opensearch-security/ -nhnv -cacert  $CACERT -cert $CERT -key $KEY -p 9200 -icl
