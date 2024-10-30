@@ -10,25 +10,33 @@ In case anything gets outdated/more information can be found here: [Offical Wazu
 
 ### Stop all the ones with Wazuh
 There should be 3: Dashboard, manager, indexer  
-``` docker stop <container> ```
-Can also trying to use  
+``` docker stop <container> ```  
+Can also try to use this command:    
 ```docker compose down```
 
 ### Run docker prune to remove all stopped containers and data
 > [!IMPORTANT]
 > This command will remove ALL stopped containers, make sure all containers that are stopped you are comfortable with deleting!
 
-``` docker system prune ```
+```bash
+docker system prune
+```
 
 ### Remove the wazuh github directory
-``` rm -rf wazuh-docker ```
+```bash
+rm -rf wazuh-docker
+```
 
 ### Re-Pull the github
 Check if this is latest version?  
-```git clone https://github.com/wazuh/wazuh-docker.git -b v4.6.0 ```
+```bash
+git clone https://github.com/wazuh/wazuh-docker.git -b v4.6.0
+```
 
 ### Get Certs Again
-```docker compose -f generate-indexer-certs.yml run --rm generator ```
+```bash
+docker compose -f generate-indexer-certs.yml run --rm generator
+```
 
 ### Deploy the Containers
 ``` docker compose up -d ```<br><br>
