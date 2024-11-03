@@ -7,14 +7,14 @@ Guide shows how to change dashboard password from a DOCKER Wazuh Install on a Li
 
 ## 1. Procedure
 
-Close your dashboard and then stop the docker containers  
+Close your dashboard and then stop the Docker containers  
 
 ```bash
 cd ~/wazuh-docker/single-node
 sudo docker-compose down
 ```
 
-Run the docker indexer container tool and input your NEW password:  
+Run the Docker indexer container tool and input your NEW password:  
 
 ```bash
 docker run --rm -ti wazuh/wazuh-indexer:4.6.0 bash /usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh
