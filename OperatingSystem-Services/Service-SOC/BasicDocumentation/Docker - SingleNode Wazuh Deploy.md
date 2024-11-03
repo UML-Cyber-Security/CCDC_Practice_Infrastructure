@@ -40,4 +40,4 @@ If installed correctly, image of what the inital dashboard login should look lik
 
 ## Possible Errors
 
-Make sure you have the certs before you try to deploy the docker containers. If you do not you will get an error. Make sure you follow the wazuh documentation for docker installation. If you follow docker docs you may install the wrong packages and wazuh will not work as intended
+Make sure you have the certs before you try to deploy the Docker containers. If you do not you will get an error. Make sure you follow the Wazuh documentation for Docker installation. If you follow Docker docs you may install the wrong packages and Wazuh will not work as intended.
