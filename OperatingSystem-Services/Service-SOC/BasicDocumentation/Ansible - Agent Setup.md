@@ -58,6 +58,8 @@ ansible-playbook wazuh-agent.yml -b -K
 
 ### Agent Configuration Playbooks ###
 
+For now, replacing the /default/main.yml with the one from repo should setup all configs!!  
+
 1. Pull all playbooks from repo to playbook folder:  
 ```pull command here lolz```
 
