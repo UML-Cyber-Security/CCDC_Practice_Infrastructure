@@ -1,0 +1,85 @@
+# Copyright Joan Montas
+# All rights reserved.
+# License under GNU General Public License v3.0
+
+---
+- name: Install and configure suricata
+  hosts: debian
+  become: true
+  gather_facts: true
+  tasks:
+
+    - name: Gather Network Facts
+      ansible.builtin.setup:
+        gather_subset: network
+
+    - name: Setup IP Netmask
+      ansible.builtin.set_fact:
+        ip: "{{ ansible_default_ipv4.address }}/{{ ansible_default_ipv4.netmask }}"
+
+    - name: Gather CIDR if IP Netmask- is present
+      ansible.builtin.set_fact:
+        mask_cidr: "{{ ip | ansible.utils.ipaddr('prefix') }}"
+      when: ip is defined
+
+    - name: Early terminate if Network Facts are not present
+      ansible.builtin.assert:
+        that: mask_cidr
+        fail_msg: "The CIDR was not present"
+
+    - name: Add Suricata PPA repository
+      ansible.builtin.apt_repository:
+        repo: ppa:oisf/suricata-stable
+        state: present
+
+    - name: Update package lists
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Suricata
+      ansible.builtin.apt:
+        name: suricata
+        state: present
+
+    - name: Enable Suricata service
+      ansible.builtin.systemd:
+        name: suricata
+        enabled: true
+
+    - name: Stop Suricata service
+      ansible.builtin.systemd:
+        name: suricata
+        state: stopped
+
+
+    - name: Replace af-packet to the default network interface
+      ansible.builtin.replace:
+        path: /etc/suricata/suricata.yaml
+        regexp: '^(\s*)af-packet:\n(\s*)- interface: (.+)'
+        replace: '\1af-packet:\n\2- interface: {{ ansible_default_ipv4.interface }}'
+
+
+    - name: Add live rule reloading support
+      ansible.builtin.lineinfile:
+        path: /etc/suricata/suricata.yaml
+        line: "detect-engine:\n  - rule-reload: true"
+        insertafter: EOF
+
+    - name: Run suricata-update
+      ansible.builtin.command: suricata-update
+
+    - name: Start Suricata service
+      ansible.builtin.systemd:
+        name: suricata
+        state: started
+
+    - name: Add localfile for suricata
+      ansible.builtin.blockinfile:
+        path: /var/ossec/etc/ossec.conf
+        block: |
+            <localfile>
+              <log_format>json</log_format>
+              <location>/var/log/suricata/eve.json</location>
+            </localfile>
+        marker: ""
+        insertafter: "<something>\n(</localfile>\n)*"
