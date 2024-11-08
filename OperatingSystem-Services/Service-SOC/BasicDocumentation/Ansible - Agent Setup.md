@@ -27,7 +27,7 @@ Can copy the keys over with:
 
 ```
 cd /etc/ansible/roles/
-sudo git clone --branch v4.9.1 https://github.com/wazuh/wazuh-ansible.git
+sudo git clone --branch v4.9.2 https://github.com/wazuh/wazuh-ansible.git
 ls
 ```
 IMPORTANT MAKE SURE BRANCH VERSION IS LATEST!!!  
