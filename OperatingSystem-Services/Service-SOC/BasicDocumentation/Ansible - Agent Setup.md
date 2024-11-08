@@ -1,17 +1,14 @@
 ## Quick Guide on how to use Ansible w/ Wazuh ##
-<br><br>
+<br>
 ### Update to use roles from official Guthub repo? Try to pull or push into here, play books as well, then integrate own cmdns into there as well ###
 
 Playbook - List of commands that are sent out to the managed nodes?? <br>
 Inventory File - List of machines w/ IP adress plus login info that playbook commands will run on
 
-### Installation ###  
-Below is guide for Linux Ubuntu
-
-#### Important: copy over your key to all machines??? ####
+### Important: copy over your key to all machines? ###
 For control node: Python 3.8 or newer required <br>
 For managed node: Python 2.6 or newer <br>
-ALL Linux based systems <br> 
+ALL Linux based systems to install Ansible <br> 
 
 1. Update ansible Personal Package Archive 
 ```sudo add-apt-repository --yes --update ppa:ansible/ansible```
@@ -22,7 +19,7 @@ ALL Linux based systems <br>
 
 ### Add Keys to Machines ###
 
-```ssh-keygen -t rsa -b 2048```
+```ssh-keygen -t rsa -b 2048```  
 Can copy the keys over with:  
 ```ssh-copy-id username@remote_host```
 
@@ -33,6 +30,10 @@ cd /etc/ansible/roles/
 sudo git clone --branch v4.9.1 https://github.com/wazuh/wazuh-ansible.git
 ls
 ```
+IMPORTANT MAKE SURE BRANCH VERSION IS LATEST!!!  
+https://documentation.wazuh.com/current/deployment-options/deploying-with-ansible/guide/install-ansible.html  
+
+
 Output: `wazuh-ansible`
 
 ### Install the Agents ###
@@ -45,7 +46,7 @@ Change `hosts` and `wazuh manager address`
 ```
 [wazuh-linux]
 test1 ansible_host=192.168.2.94 ansible_ssh_user=blueteam
-# etc..
+test2 ansible_host=192.168.2.55 ansible_ssh_user=blueteam
 ```
 
 3. Run the Playbook
@@ -55,7 +56,12 @@ ansible-playbook wazuh-agent.yml -b -K
 ```
 /var/ossec/bin/agent_control -l
 
-4. Run Agent Config Playbook 
-```
-Todo
-```
+### Agent Configuration Playbooks ###
+
+1. Pull all playbooks from repo to playbook folder:  
+```pull command here lolz```
+
+2. Playbook information
+- Agent config -> blahblahblah
+- This one -> creates this and this
+- playingbook -> plays with the books
