@@ -40,7 +40,7 @@ often utilize [NetworkManager](https://wiki.archlinux.org/title/NetworkManager) 
 
   ![Alt text](Images/NMTUI-4.png)
 
-1. Click *add* and fill out the information.
+6. Click *add* and fill out the information.
 
   ![Alt text](Images/NMTUI-5.png)
 

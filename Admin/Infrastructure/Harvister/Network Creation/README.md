@@ -21,7 +21,7 @@ Click Create and fill out the information in the *Basics* window. If you chose t
 > [!IMPORTANT]
 > Selecting the *Untagged* network is preferred to prevent any internal conflicts, and we have observed it is much more stable in our environment.
 
-In the *Route* window configure it to use the **Manual** mode so we can make this network *internal* and not able to immediately access the internet. Fill in a `CIDR` range that does not conflict with the host's network (In our case do not use addresses that conflict with `192.168.0.0/21`). You should also set the `Gateway` to be some address in the `CIDR` range you selected.
+In the *Route* window configure it to use the **Manual** mode so we can make this network *internal* and not able to immediately access the internet. Fill in a `CIDR` range that does not conflict with the host's network (In our case do not use addresses that conflict with `192.168.0.0/21`, you can find this by looking at the IP assigned to a device already on the network with `ip a`). You should also set the `Gateway` to be some address in the `CIDR` range you selected.
 
 <img src="Images/VMR.png">
 
@@ -76,10 +76,12 @@ Use the `ip` command to list the interfaces on your machine. We will need the *M
 > The use of the following options is **OPTIONAL** you can remove all of them, and the netplan can be applied to multiple VMs without issues.
 > ```
 > match:
->     macaddress: MACADDR
+>     macaddress: <MACADDR>
 > set-name: enp2s0
 > ```
 > The following examples will work just fine if you remove all three of them
+>
+> The `<MACADDR>` enrey is a place holder, they often look something like `02:42:4f:9d:cf:ee`
 
 Create a file `/etc/netplan/51-static.yaml` this is going to be applied after the cloudinit config which is `50-...`. This is where we add the configuration for the new interface, it should have the following contents:
 
