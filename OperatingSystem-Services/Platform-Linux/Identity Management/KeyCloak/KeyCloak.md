@@ -1,8 +1,8 @@
 # KeyCloak
 Keycloak is an open-source identity and access management (IAM) solution designed to help secure applications by providing centralized authentication and authorization services. It supports various security protocols and can integrate with different types of applications and services, both on-premise and in the cloud.
 
-## Getting Started
-In order to get started we will need to install docker as this documentation focuses on using the advantages of docker to better use KeyCloak in general. If you already have docker installed you can skip to KeyCloak Docker Install
+## Getting Started (Docker)
+In order to get started we will need to install docker as this documentation focuses on using the advantages of docker to better use KeyCloak in general. If you already have docker installed you can skip to KeyCloak Install.
 
 Below is the squential command lines needed to download and install docker, more in depth documentation on the workings of docker should be found elsewhere on this repo.
 
@@ -24,6 +24,27 @@ Then you can verify the docker installation by running and seeing the version ou
 docker --version
 ```
 
-## KeyCloak Docker Install
+## KeyCloak Install
+To begin since KeyCloak provides its own docker image for us we can use that to get KeyCloak up and running. 
+```sh
+docker pull quay.io/keycloak/keycloak:latest
+```
+> Can change :latest to any KeyCloak version you would like if preferred
+Now that we have pulled the latest KeyCloak image all we need to do is to execute a docker run command that looks like this:
+```sh
+docker run -d \
+  --name keycloak \
+  -e KC_ADMIN_USER=admin \      
+  -e KC_ADMIN_PASSWORD=admin \    
+  -p 8080:8080 \
+  quay.io/keycloak/keycloak:latest start-dev
+```
+After you execute this make sure to run
+```sh
+sudo docker ps -a
+```
+to make sure that the container is running normally
+
+
 
 
