@@ -29,14 +29,15 @@ To begin since KeyCloak provides its own docker image for us we can use that to 
 ```sh
 docker pull quay.io/keycloak/keycloak:latest
 ```
-> Can change :latest to any KeyCloak version you would like if preferred
+> Can change :latest to any KeyCloak version you would like if preferred 
+
 Now that we have pulled the latest KeyCloak image all we need to do is to execute a docker run command that looks like this:
 ```sh
 docker run -d \
   --name keycloak \
-  -e KC_ADMIN_USER=admin \      
-  -e KC_ADMIN_PASSWORD=admin \    
-  -p 8080:8080 \
+  -p 8080:8080
+  -e KC_BOOTSTRAP_ADMIN_USER=admin \      
+  -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \    
   quay.io/keycloak/keycloak:latest start-dev
 ```
 After you execute this make sure to run
@@ -44,6 +45,7 @@ After you execute this make sure to run
 sudo docker ps -a
 ```
 to make sure that the container is running normally
+
 
 
 
