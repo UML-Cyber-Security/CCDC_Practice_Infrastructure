@@ -63,7 +63,11 @@ For now, replacing the /default/main.yml with the one from repo should setup all
 1. Pull all playbooks from repo to playbook folder:  
 ```pull command here lolz```
 
-2. Playbook information
-- Agent config -> blahblahblah
-- This one -> creates this and this
-- playingbook -> plays with the books
+2. Add Config Asnible Files
+
+- Add + replace /defaults/main.yml
+- Add + replace /templates/var-ossec-etc-ossec-agent.conf.j2
+- Add following to the ansible agent playbook:
+```yaml
+code here lols
+```
