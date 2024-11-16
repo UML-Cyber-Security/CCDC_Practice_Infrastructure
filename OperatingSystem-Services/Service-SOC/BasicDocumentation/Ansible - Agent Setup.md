@@ -56,6 +56,23 @@ ansible-playbook wazuh-agent.yml -b -K
 ```
 /var/ossec/bin/agent_control -l
 
+Agent Delete Play:
+```yaml
+---
+- name: Remove Wazuh agent from Linux systems
+  hosts: wazuh-linux
+  become: yes
+  become_user: root
+  tasks:
+    - name: Remove Wazuh agent on Debian/Ubuntu systems
+      ansible.builtin.shell: "apt-get remove --purge -y wazuh-agent"
+      when: ansible_os_family == "Debian"
+
+    - name: Remove Wazuh agent on RedHat/CentOS systems
+      ansible.builtin.shell: "yum remove -y wazuh-agent"
+      when: ansible_os_family == "RedHat"
+```
+
 ### Agent Configuration Playbooks ###
 
 For now, replacing the /default/main.yml with the one from repo should setup all configs!!  
