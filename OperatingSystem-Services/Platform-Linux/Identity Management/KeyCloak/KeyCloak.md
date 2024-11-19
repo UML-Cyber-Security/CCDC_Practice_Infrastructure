@@ -37,7 +37,7 @@ Now that we have pulled the latest KeyCloak image all we need to do is to execut
 ```sh
 docker run -d \
   --name keycloak \
-  -p 8080:8080
+  -p 8080:8080 \
   -e KC_BOOTSTRAP_ADMIN_USER=admin \      
   -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \    
   quay.io/keycloak/keycloak:latest start-dev
