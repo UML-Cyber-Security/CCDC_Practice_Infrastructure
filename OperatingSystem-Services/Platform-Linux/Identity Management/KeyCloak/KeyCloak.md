@@ -95,6 +95,22 @@ And after signing in you should be able to see the homepage:
 ## KeyCloak Install Troubleshooting
 There were two main issues I ran into when first setting up KeyCloak with docker. One of them being the environment variables related to the username and password. It is important that they are named like they are above, otherwise KeyCloak doesn't neccesarilly recognize them and you will be unable to sign in. The other issue I ran into was the docker container exiting shortly after it was started. It gave me two different types of exit codes after running docker ps -a. Exit(0) which means the container completed its task succesfully and shut off afterwards, this may be a problem in your initialization such as not running the container with -d. The other code I got was exit(2) which means the process running on the container, in this case KeyCloak, ran into an issue and exited. Again this is most likely because the intitialization was wrong or incomplete, so double check it.
 
+Watch out if your machine is behind a proxy you might have to configure docker to use the proxy as well.
+```sh
+sudo nano /etc/systemd/system/docker.service.d/http-proxy.conf
+```
+Then within this new folder
+```sh
+[Service]
+Environment="HTTP_PROXY=http://your-proxy-address:port"
+Environment="HTTPS_PROXY=http://your-proxy-address:port"
+#Environment="NO_PROXY=localhost,127.0.0.1,.docker.io,.quay.io"
+```
+```sh
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
 Any other issues can hopefully be solved by looking at the KeyCloak documentation on their website: https://www.keycloak.org/getting-started/getting-started-docker
 
 ## KeyCloak Post-Install
