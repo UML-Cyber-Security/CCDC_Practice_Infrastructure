@@ -19,6 +19,3 @@ Somewhat intuitively, in this tab, you can add the root certificate we saw earli
 ![ss3][Images/trusted.png]
 
 Find your certificate file, and import it to this list, which requires Administrator permissions. The following screens prompt questions which may or may not be changed, as importing the way shown above will place the certificate in the right folder, though it will automatically detect if something is wrong.
-
-Linux:
-To be Written :)
