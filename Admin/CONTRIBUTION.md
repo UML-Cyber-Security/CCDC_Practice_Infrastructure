@@ -25,6 +25,7 @@ This repository is used by the University of Massachusetts Lowell (student) Cybe
 > If you make a branch it should be *focused* that is we should keep the changes in that branch to specific technology or set of files. You should not be updating Windows, AWS and Linux documents unless you are working with a technology that uses all three of those things. In that case it may be a good idea for the technology (such as Wazuh) to be in it's own folder.
 
 1. All contributions should first be pushed to a branch that is based on the *main* branch.
+   * This branch should be named after what you are doing, something like creating a *contributions guideline* or updating one it could be `CreatingContributionsGuideline` or `Creating-Contributions-Guideline`, etc.
    * See [Github - Creating and Deleting Branches](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-and-deleting-branches-within-your-repository), you can also use [Git Checkout](https://git-scm.com/docs/git-checkout).
 2. All commits should attempt to have some meaningful header. Although descriptions are appreciated they are not required (You do not need sign-off lines either!).
    * See [Atlassian - Git Commit](https://www.atlassian.com/git/tutorials/saving-changes/git-commit) or [Gitlab - Make your first Git commit](https://docs.gitlab.com/ee/tutorials/make_first_git_commit/).
