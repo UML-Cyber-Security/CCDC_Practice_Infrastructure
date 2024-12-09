@@ -1,0 +1,29 @@
+# Kubernetes will create and maintain 3 running instances of your Nginx pod.
+# Does not specify that a node should only run 1 nginx pod (See Nginx_Daemonset.yml)
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: nginx-deployment
+   spec:
+     replicas: 3  # Change this to 3 or dependent on how many machine nodes you have
+     selector:
+       matchLabels:
+         app: nginx
+     template:
+       metadata:
+         labels:
+           app: nginx
+       spec:
+         containers:
+         - name: nginx
+           image: nginx:latest
+           ports:
+           - containerPort: 80
+           volumeMounts:
+           - name: nginx-html
+             mountPath: /usr/share/nginx/html
+             subPath: index.html
+     volumes:
+     - name: nginx-html
+       configMap:
+         name: nginx-html
