@@ -149,20 +149,20 @@ wazuh_agent_osquery:
 
 wazuh_agent_syscollector:
   disable: 'no'
-  interval: '5m'
+  interval: '3m'
   scan_on_start: 'yes'
   hardware: 'yes'
   os: 'yes'
   network: 'yes'
   packages: 'yes'   #####################################################
-  ports_no: 'no'  ## THIS OPTION HERE CAN BE CHANGED!!! "ports_no: 'no'"
+  ports_no: 'yes'   # THIS OPTION HERE CAN BE CHANGED!!! "ports_no: 'no'"
   processes: 'yes'  #####################################################
 
 ## SCA
 wazuh_agent_sca:
   enabled: 'yes'
   scan_on_start: 'yes'
-  interval: '30m'
+  interval: '15m'
   skip_nfs: 'yes'
   day: ''
   wday: ''
@@ -170,7 +170,7 @@ wazuh_agent_sca:
 
 ## Syscheck
 wazuh_agent_syscheck:
-  frequency: 30
+  frequency: 15
   scan_on_start: 'yes'
   auto_ignore: 'no'
   win_audit_interval: 60

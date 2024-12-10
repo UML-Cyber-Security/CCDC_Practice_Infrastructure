@@ -1,13 +1,13 @@
 #!/bin/bash
-# WHAT IS THIS: 
-# Initial Wazuh agent configuration that should be ran on each new agent that is created. 
+# WHAT IS THIS:
+# Initial Wazuh agent configuration that should be ran on each new agent that is created.
 #
 # TODO: Currently just appends everything to the config file, would be nice to not add all the rules if they are already there
 # OSSEC CONFIG FOR AUDITD IS CURRENTLY BROKEN? This needs to be tested as I am not sure
 # Created by VA
 ## Must run as superuser ##
 
-if [ "$EUID" -ne 0 ]; then 
+if [ "$EUID" -ne 0 ]; then
   echo "ERROR: Must run as superuser"
   exit
 fi
@@ -33,17 +33,10 @@ bash -c 'cat <<EOF | sed "/<!-- Directories to check  (perform all possible veri
 <directories realtime="yes">/etc/hosts.allow</directories>
 <directories realtime="yes">/home/*/.ssh/authorized_keys</directories>
 <directories realtime="yes">/home/*/.bashrc</directories>
-<directories realtime="yes">/var/ossec/etc/wazuh-auto-restart.sh</directories>
 <directories realtime="yes">/etc/group</directories>
 <directories realtime="yes">/etc/shadow</directories>
 <directories realtime="yes">/etc/passwd</directories>
 <directories realtime="yes" check_all="yes" restrict=".sh$">/home</directories>
-
-<directories realtime="yes">/opt/vault/config.hcl</directories>
-<directories realtime="yes">/vault/config.hcl</directories>
-<directories realtime="yes">/opt/vault/tls*</directories>
-<directories realtime="yes">/opt/vault/tls/tls.cert</directories>
-<directories realtime="yes">/opt/vault/tls/tls.key</directories>
 
 EOF'
 sudo mv /var/ossec/etc/ossec.conf.new /var/ossec/etc/ossec.conf

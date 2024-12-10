@@ -228,7 +228,7 @@
     <os>{{ wazuh_agent_config.syscollector.os }}</os>
     <network>{{ wazuh_agent_config.syscollector.network }}</network>
     <packages>{{ wazuh_agent_config.syscollector.packages }}</packages>
-    <ports all="no">{{ wazuh_agent_config.syscollector.ports_no }}</ports>
+    <ports all="yes">{{ wazuh_agent_config.syscollector.ports_no }}</ports>
     <processes>{{ wazuh_agent_config.syscollector.processes }}</processes>
   </wodle>
 
@@ -382,6 +382,11 @@
     <log_format>journald</log_format>
     <location>journald</location>
   </localfile>
+
+  <localfile>
+    <log_format>audit</log_format>
+    <location>/var/log/audit/audit.log</location>
+  </localfile>
   {% endif %}
 
   {% if ansible_system == "Darwin" %}
@@ -491,6 +496,12 @@
     {% endif %}
     </ca_store>
     <ca_verification>{{ wazuh_agent_config.active_response.ca_verification }}</ca_verification>
+  </active-response>
+
+  <active-response>
+   <command>user-creation-alert</command>
+   <location>local</location>
+   <rules_id>5902</rules_id>
   </active-response>
 
   <logging>
