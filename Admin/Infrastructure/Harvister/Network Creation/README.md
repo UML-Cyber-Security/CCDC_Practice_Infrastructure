@@ -1,9 +1,14 @@
 # Harvester Network Creation
 This document will contain notes on the creation of networks on the *Harvester* hypervisor.
 
+> [!NOTE]
+> Harvister per [their documentation](https://docs.harvesterhci.io/v1.3/networking/harvester-network/#management-network) will reassign the IP of machines that are connected to the management network each time you restart.
+
 ## (Harvester) Isolated Network Creation
 This section will discuss how you can create a network that can be used as a private network on Harvester. They do not have a option to create an internal network explicitly, as they have the *management* network which is used for this purpose. However we can create a `VLAN` or `Untagged` network that **does not use** DHCP, and has a gateway set to an **internal ip** to emulate this.
 
+> [!IMPORTANT]
+> You should use *Untagged* networks as this has generally been more stable
 
 Open the *Networks* configuration menu in Harvester's VM management interface:
 
@@ -13,7 +18,10 @@ Click Create and fill out the information in the *Basics* window. If you chose t
 
 <img src="Images/VMC.png">
 
-In the *Route* window configure it to use the **Manual** mode so we can make this network *internal* and not able to immediately access the internet. Fill in a `CIDR` range that does not conflict with the host's network (In our case do not use addresses that conflict with `192.168.0.0/21`). You should also set the `Gateway` to be some address in the `CIDR` range you selected.
+> [!IMPORTANT]
+> Selecting the *Untagged* network is preferred to prevent any internal conflicts, and we have observed it is much more stable in our environment.
+
+In the *Route* window configure it to use the **Manual** mode so we can make this network *internal* and not able to immediately access the internet. Fill in a `CIDR` range that does not conflict with the host's network (In our case do not use addresses that conflict with `192.168.0.0/21`, you can find this by looking at the IP assigned to a device already on the network with `ip a`). You should also set the `Gateway` to be some address in the `CIDR` range you selected.
 
 <img src="Images/VMR.png">
 
@@ -64,6 +72,17 @@ Use the `ip` command to list the interfaces on your machine. We will need the *M
     <img src="Images/IPLINK.png">
 
 
+> [!NOTE]
+> The use of the following options is **OPTIONAL** you can remove all of them, and the netplan can be applied to multiple VMs without issues.
+> ```
+> match:
+>     macaddress: <MACADDR>
+> set-name: enp2s0
+> ```
+> The following examples will work just fine if you remove all three of them
+>
+> The `<MACADDR>` enrey is a place holder, they often look something like `02:42:4f:9d:cf:ee`
+
 Create a file `/etc/netplan/51-static.yaml` this is going to be applied after the cloudinit config which is `50-...`. This is where we add the configuration for the new interface, it should have the following contents:
 
 ```
@@ -101,6 +120,73 @@ network:
 > [!NOTE]
 > You can add this as another entry in the `50-cloud-init.yaml file however if the cloudinit config is ever re-applied it will be overwritten.
 
+## Gateways and Routing
+
+In the `netplan` or equivalent files if you expect your devices to reach out and connect to external services you will need to modify their configurations to set the *gateway* they use by *default*, and you will need to configure them to use a *DNS* server in order to preform the Domain Name translations that are often required for any real access to the internet.
+
+> [!NOTE]
+> The use of the following options is **OPTIONAL** you can remove all of them, and the netplan can be applied to multiple VMs without issues.
+> ```
+> match:
+>     macaddress: MACADDR
+> set-name: enp2s0
+> ```
+> The following examples will work just fine if you remove all three of them
+
+Given the following base configuration we would need to make a few changes:
+```
+network:
+    ethernets:
+        enp2s0:
+            dhcp4: false
+            dhcp6: false
+            match:
+                macaddress: MACADDR
+            addresses: [IP/SUBNET]
+            set-name: enp2s0
+    version: 2
+```
+
+We would first need to configure the *routes* the device would use. In more complex environments you may want to route specific traffic to a specific *gateway*, there will also be a *default* route which is where most of our traffic goes, and generally this is the route that will lead to the *internet*.
+```
+network:
+    ethernets:
+        enp2s0:
+            dhcp4: false
+            dhcp6: false
+            match:
+                macaddress: MACADDR
+            addresses: [IP/SUBNET]
+            set-name: enp2s0
+            routes:
+                - to: default
+                  via: <IP>
+    version: 2
+
+```
+
+> [!NOTE]
+> Make sure the IP you target in the `via` option is set to forward traffic. This can be done with NAT forwarding or a caching proxy like [Squid](https://www.squid-cache.org/)
+
+After that we need to configure a DNS server so our DNS queries will succeed:
+```
+network:
+    ethernets:
+        enp2s0:
+            dhcp4: false
+            dhcp6: false
+            match:
+                macaddress: MACADDR
+            addresses: [IP/SUBNET]
+            set-name: enp2s0
+            routes:
+                - to: default
+                  via: <IP>
+            nameservers:
+                - addresses: [<IP>]
+    version: 2
+
+```
 ## Removing the External Interface.
 This section will discuss the process of removing an interface from one of your VMs.
 
