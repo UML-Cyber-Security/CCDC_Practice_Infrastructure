@@ -1,0 +1,93 @@
+# About
+This a helpfile listing the components used in the creation of a teraform based infrastructure. This uses aws-provider based examples, but are general to any terraform provider. This is organized into 2 groups, components & files.
+
+*Of course, this is not every single aspect of terraform, but should be a decent start to creating a full terraform-based infrastructure*
+
+
+## Components
+### Providers: 
+Providers are like toolboxes for your infrastructure. They define which cloud service or infrastructure you're working with (e.g., AWS, Azure, Google Cloud). If you're building on AWS, for example, you need the AWS provider.
+```hcl
+provider "aws" {
+	region = "us-west-2"
+}
+```
+```hcl
+provider "<provider-name>" {
+
+}
+```
+
+### Resources:
+Resources are the actual components you are building, like EC2 instances or S3 buckets.
+A resource is like telling the worker to build a single unit in your skyscraper — an EC2 instance in AWS.
+```hcl
+resource "aws-instance" "example" {
+	ami = "ami-####" # Specific to AWS EC2 instance
+	instance_type = "t2.micro" # Specific to AWS EC2 instance
+}
+```
+```hcl
+resource "<resource-type>" "<resource-name>" { 
+<resouce specific key required by aws/provider>
+}
+```
+#### keyword vs key
+keys are configuration attributes/fields (usually specific to the provider)
+keywords are reserved words specific to the programming language (ITC. Terraform)
+- resource = keyword
+- ami = key
+- instance_type  = key
+
+### Modules: 
+Reusable chunks of code.
+Sub-blueprint. 
+Instead of writing the same set of instructions over and over again, you create a module that you can reuse across your projects.
+If  you need multiple identical floors in your skyscraper, a module is a reusable floor plan.
+
+```hcl
+module "web_server" {
+  source = "./modules/web_server" 
+  instance_count = 3 # a custom variable defined within the web_server module
+}
+```
+```hcl
+module "web_server" {
+  source = "<path to find code for a specifc module>"  
+  <you can specifc parameters that relate to the code here> 
+}
+```
+
+### State
+Terraform keeps track of the infrastructure using a statefile.
+
+### Output
+Outputs are like a report card after the construction is done. They tell you useful things like where the main door is (the public IP of the instance), so you know where to go or connect to after your infrastructure is built.
+```yaml
+output "instance_ip" {
+  value = aws_instance.example.public_ip
+}
+
+```
+
+
+### Data
+data keyword like a scout who goes out to gather information about things that already exist. **You’re not creating anything new**; you’re just finding what’s already there (like discovering where roads or pipelines already exist before you build).
+```yaml
+data "aws_vpc" "default" {
+  default = true
+}
+```
+
+
+# Files & Directories
+Note: All the entire terraform component can be written in 1 main.tf file. Convention is to split up these components into logical component files.
+## main.tf
+- used to declare resources
+
+## variables.tf
+- a file to hold resuables variable names that you may use through out the terraform creation
+
+
+## modules
+A higher level Directory used to section off, organize and/or seperate often general components, for example, subnets, & a vpc files/details.

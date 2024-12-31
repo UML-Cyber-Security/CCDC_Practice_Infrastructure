@@ -15,7 +15,7 @@ Simple Static Web server hosted on Kubernetes [Easy]
 
 ## Dependencies
 
-- You could delete one of the following peices and see if they notice,
+- You could delete one of the following pieces and see if they notice,
   - Deployment itself
     - kubectl get deployments
     - kubectl delete deployment
