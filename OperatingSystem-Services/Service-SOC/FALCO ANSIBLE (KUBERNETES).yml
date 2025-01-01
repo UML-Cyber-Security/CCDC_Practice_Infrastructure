@@ -1,0 +1,39 @@
+FALCO ANSIBLE (KUBERNETES)
+---
+- name: Deploy Falco on Kubernetes Cluster
+  hosts: kubernetes
+  become: yes
+  tasks:
+    - name: Install Helm (if not installed)
+      apt:
+        name: helm
+        state: present
+
+    - name: Add Falco Helm repository
+      command: helm repo add falcosecurity https://falcosecurity.github.io/charts
+
+    - name: Update Helm repository
+      command: helm repo update
+
+    - name: Install Falco using Helm on Kubernetes
+      command: helm install falco falcosecurity/falco --namespace default
+
+    - name: Configure Falco to send logs to Wazuh (Syslog)
+      copy:
+        dest: /etc/falco/falco.yaml
+        content: |
+          syslog:
+            enabled: true
+            host: "{{ wazuh_manager_ip }}"
+            port: 514
+
+    - name: Restart Falco pod
+      command: kubectl rollout restart daemonset/falco -n default
+
+    - name: Create a ServiceAccount for Falco (if needed)
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: ServiceAccount
+        metadata:
+          name: falco
+          namespace: default
