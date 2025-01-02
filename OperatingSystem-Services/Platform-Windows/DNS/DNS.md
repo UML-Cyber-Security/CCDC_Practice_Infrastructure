@@ -33,6 +33,10 @@ To create an A record just right click your new Forward Lookup Zone and click ne
 
 This is fairly simple but all we are doing is just giving an ip adresses a name, so in the example above we are giving our proxy machine a domain name so all we did is put nginx as the name and give the respective ip address, and once completed just click add host and it should be good. Now we are able to communicate to this machine 192.168.2.250 by using the domain name nginx.zodu.com. 
 
+##Integration w/Active Directory
+
+If you download AD after DNS you will need to integrate DNS with AD so it has the appropriate records to manage the AD, specifically the _msdcs zone. 
+
 ##DNS PowerShell Commands
 
 
