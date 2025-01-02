@@ -1,6 +1,7 @@
 #!/bin/bash
 # WHAT IS THIS:
 # Initial Wazuh agent configuration that should be ran on each new agent that is created.
+# THIS IS WIP!
 #
 # TODO: Currently just appends everything to the config file, would be nice to not add all the rules if they are already there
 # OSSEC CONFIG FOR AUDITD IS CURRENTLY BROKEN? This needs to be tested as I am not sure
