@@ -1,13 +1,25 @@
 # DOCKER Graylog Install #
 
 WHAT THIS IS:  
-Short guide to show the correct way to install and configure Graylog on a DOCKER container. This is done on a <br>
+Short guide to show the correct way to install and configure Graylog on a DOCKER container. This is done on a Ubuntu Linux OS. <br>
 
 
 ## 1. Install Docker + Docker-Compose ##
 
 ```sudo apt install docker ```  
 ```sudo apt install docker-compose```  
+
+MAKE SURE TO INCREASE ```vm.max_map_count```!!!  
+RUN:  
+```bash
+nano /etc/sysctl.conf
+
+## THEN ADD THIS LINE BELOW TO BOTTOM OF FILE
+vm.max_map_count=262144
+
+## SAVE+EXIT THEN RUN THIS
+sudo sysctl -p
+```
 
 ## 2. Configer the Docker-Compose.yml ##
 
