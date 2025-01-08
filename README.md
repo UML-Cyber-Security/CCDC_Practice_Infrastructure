@@ -3,12 +3,14 @@ Any information regarding the setup and use of the infrastructure, or any relate
 
 A style guide for this repository is provided in the [Admin/Markdown_Style](./Admin/Markdown_Style.md) file. It is likely not followed but it also contains some useful programs, and software when interacting with GitHub and Markdown.
 
+> [!IMPORTANT]
+> Please refer to the [CONTRIBUTIONS](./Admin/CONTRIBUTION.md) for information on how you can add to this repository.
+
 This repository contains notes on various services and platforms in the [OperatingSystem-Services](./OperatingSystem-Services/) directory, some in-progress or completed projects using those technologies are contained in the [Projects](./Projects/) directory. Notes for the administration of our resources, mainly the creation of practice events, tasks, and infrastructure related tasks are contained in the [Admin](./Admin/) directory. The expected workflows are contained in the [Admin/Task-Management-Workflow](./Admin/Task-Management-Workflow/) directory, and limited event notes are contained in [Event-Notes](./Event-Notes/).
 
 ## Table of Contents (README) <!-- omit from toc -->
 - [Accessing Infrastructure](#accessing-infrastructure)
 - [Table of Contents (TOPICS)](#table-of-contents-topics)
-- [OpenProject](#openproject)
 
 ## Accessing Infrastructure
 1. Connect to the OpenVPN server using your certificate. This requires the [OpenVPN Client](https://openvpn.net/client/)
