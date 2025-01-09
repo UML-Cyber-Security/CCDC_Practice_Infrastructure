@@ -149,7 +149,7 @@ verbose(){
       dpkg -l | grep "CVE" 
       dpkg -l | grep "exploit" 
     else
-      echo "this approach dont work for RHEL cope"
+      echo "this approach dont work for RHEL nooo : ("
     fi
 }
 
