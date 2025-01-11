@@ -8,7 +8,8 @@ In order to get started we will need to install Docker as this documentation foc
 
 Use the following commands to install Docker, we will be leveraging the advantages of containerization in this deployment. Additional details on Docker and other containerization platforms can be found elsewhere in this repository. 
 
->There are other containerization engines that will most likely require different install methods that are not covered here
+> [!NOTE]
+> There are other containerization engines that will most likely require different install methods that are not covered here
 
 ```sh
 sudo apt update
@@ -33,6 +34,8 @@ To begin since KeyCloak provides its own Docker image for us we can use that to 
 ```sh
 docker pull quay.io/keycloak/keycloak:latest
 ```
+
+> [!NOTE]
 > Can change :latest to any KeyCloak version you would like if preferred 
 
 Now that we have pulled the latest KeyCloak image all we need to do is to execute a Docker run command that looks like this:
@@ -95,7 +98,7 @@ And after signing in you should be able to see the homepage:
 
 
 ## KeyCloak Install Troubleshooting
-There were two main issues I ran into when first setting up KeyCloak with Docker. One of them being the environment variables related to the username and password. It is important that they are named like they are above, otherwise KeyCloak doesn't neccesarilly recognize them and you will be unable to sign in. The other issue I ran into was the Docker container exiting shortly after it was started. It gave me two different types of exit codes after running Docker ps -a. Exit(0) which means the container completed its task succesfully and shut off afterwards, this may be a problem in your initialization such as not running the container with -d. The other code I got was exit(2) which means the process running on the container, in this case KeyCloak, ran into an issue and exited. Again this is most likely because the intitialization was wrong or incomplete, so double check it.
+There were two main issues I ran into when first setting up KeyCloak with Docker. One of them being the environment variables related to the username and password. It is important that they are named like they are above, otherwise KeyCloak doesn't necessarily recognize them and you will be unable to sign in. The other issue I ran into was the Docker container exiting shortly after it was started. It gave me two different types of exit codes after running Docker ps -a. Exit(0) which means the container completed its task successfully and shut off afterwards, this may be a problem in your initialization such as not running the container with -d. The other code I got was exit(2) which means the process running on the container, in this case KeyCloak, ran into an issue and exited. Again this is most likely because the initialization was wrong or incomplete, so double check it.
 
 Watch out if your machine is behind a proxy you might have to configure Docker to use the proxy as well.
 ```sh

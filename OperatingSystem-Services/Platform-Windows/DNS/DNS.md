@@ -2,7 +2,7 @@
 This documentation will give an overview of the Windows DNS on Server Manager that is installed on Windows 2019. Giving insight on how to download, use, secure, and briefly integrate with Active Directory.
 
 ## Info
-DNS stands for Domain Name Service and its purpose is to store records that translate domain names into IP addresses. This makes it so it is easier to interact with IPs as it is easier to write down or remeber a domain name rather than a bunch of numbers. For example, when a user enters a domain name into their browser, the user's device sends a request to its DNS server and the DNS server processes that requests and routes the user to the respective IP address. DNS is used in places like email, video chat, apps, IoT, and more. The main way CCDC uses DNS is to hold use domain names to better and more easily use servers and things that require IP adressses, such as pinging or accessing. 
+DNS stands for Domain Name Service and its purpose is to store records that translate domain names into IP addresses. This makes it so it is easier to interact with IPs as it is easier to write down or remember a domain name rather than a bunch of numbers. For example, when a user enters a domain name into their browser, the user's device sends a request to its DNS server and the DNS server processes that requests and routes the user to the respective IP address. DNS is used in places like email, video chat, apps, IoT, and more. The main way CCDC uses DNS is to hold use domain names to better and more easily use servers and things that require IP addresses, such as pinging or accessing. 
 
 ## Install
 To start make sure you have server manager open, then go to the top right and click on add or remove features and click add. This will bring up another window where you can choose which tools you would like to install, so click next until you get to this page.
@@ -14,7 +14,7 @@ In our case here we will only need to install DNS server so just click the box a
 
 Once you click next just keep doing that and use the default options until you reach the install button where you can just click it. DNS is now installed, YAY!
 
-##DNS Manager
+## DNS Manager
 Once the DNS is installed you can now access the DNS manager, which can be opened via clicking tools in the top right and finding "DNS Manager". With this open we can now create forward and reverse lookup zones, trust points, and conditional forwarders, as well as setting various options such as security or logging preferences by clicking properties on the server.
 
 One of the most basic things that we can do with DNS is create a Forward Lookup Zone where we can map domain names to ip addresses. To do so just right click Forward Lookup Zone folder and click new zone, this will pull up a page like this:
@@ -31,4 +31,4 @@ To create an A record just right click your new Forward Lookup Zone and click ne
 
 ![Screenshot 2024-12-26 143716](https://github.com/user-attachments/assets/c7eb1896-2147-4a11-89c5-8630889d597a)
 
-This is fairly simple but all we are doing is just giving an ip adresses a name, so in the example above we are giving our proxy machine a domain name so all we did is put nginx as the name and give the respective ip address, and once completed just click add host and it should be good. Now we are able to communicate to this machine 192.168.2.250 by using the domain name nginx.zodu.com. 
+This is fairly simple but all we are doing is just giving an ip address a name, so in the example above we are giving our proxy machine a domain name so all we did is put nginx as the name and give the respective ip address, and once completed just click add host and it should be good. Now we are able to communicate to this machine 192.168.2.250 by using the domain name nginx.zodu.com. 
