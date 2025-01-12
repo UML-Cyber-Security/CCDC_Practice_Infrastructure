@@ -35,4 +35,4 @@ for file in "${suid_exec[@]}"; do
                echo "Ignored file $file"
                 echo "Ignored file $file" >> file_report.txt
         fi
-done
+donesdf
