@@ -1,4 +1,5 @@
 #!/bin/bash
+# Linux Audit Script
 # UML and RIT edits
 # Must be run as superuser #
 
@@ -13,7 +14,7 @@ t="0s"
 
 timestamp() {
   echo -e "\n------------------------------"
-  echo -e "-------- SCRIPT START --------"
+  echo -e "-------- Init_Audit.sh --------"
   echo -e "------------------------------\n"
   echo -e "\n\n-------- $(date) --------\n\n"
 }
@@ -22,6 +23,16 @@ basic(){
     echo -e "\n-------------\n > Machine INFO <\n------------- "
     $s cat /etc/os-release | grep -i PRETTY_NAME
     $s cat /etc/hostname
+    echo -e "Most likely MAC below(check this)"
+    $s ip a | grep -i link/ether | head -n 1
+
+    echo -e "\nHardware: "
+    $s lscpu | grep -i Architecture
+    $s lscpu | grep -i 'Model name:'
+    $s lscpu | grep -i 'Core(s) per socket:'
+    $s lscpu | grep -i 'Socket(s):'
+    echo -e "\n"
+    $s df -h
     sleep $t
 
     echo -e "\n-------------\n > Aliases <\n------------- "
@@ -35,6 +46,9 @@ basic(){
     sleep $t
 
     echo -e "\n-----------------------\n > User Accounts <\n----------------------- "
+    echo -e "/home directory: "
+    $s ls /home/
+    echo -e "All users w/ shells: \n"
     user_list=$(grep -E "/bin/(bash|sh|zsh|fish)" /etc/passwd | cut -d':' -f1); # shells to check for
 
     for user in $user_list; do
@@ -57,11 +71,12 @@ basic(){
 
     echo -e "\n-------------\n > SSHD Config Check <\n------------- "
     cat /etc/ssh/sshd_config | grep -i Include
+    echo -e "\n"
     cat /etc/ssh/sshd_config | grep -i PasswordAuthentication | head -n 1
     cat /etc/ssh/sshd_config | grep -i PubkeyAuthentication | head -n 1
     cat /etc/ssh/sshd_config | grep -i PermitRootLogin | head -n 1
     cat /etc/ssh/sshd_config | grep -i X11Forwarding
-    echo -e "\n.conf file includes: "
+    echo -e "\n.conf file includes: (check these!)"
     ls /etc/ssh/sshd_config.d/
     sleep $t
 
@@ -111,6 +126,20 @@ verbose(){
     $s cat /var/ossec/etc/ossec.conf | grep -i "<agent_name>"
     sleep $t
 
+    echo -e "\n-------------\n > Graylog rsyslog Monitoring <\n------------- "
+    echo -e "(If blank here no rsyslog logging found)"
+    $s cat /etc/rsyslog.conf | grep -i RSYSLOG_SyslogProtocol23Format
+    $s cat /etc/rsyslog.d/* | grep -i RSYSLOG_SyslogProtocol23Format
+    sleep $t
+
+    echo -e "\n-------------\n > History Traces <\n------------- "
+    $s find /home/* -name "docker-compose"
+
+    echo -e "Bash history snippet: "
+    $s sudo tail -n 100 /root/.bash_history | grep -Ei 'compose|curl|apt|yum|dnf|wget|git clone|docker|ctr|pip|snap'
+    $s sudo -n 100 /home/*/.bash_history | grep -Ei 'compose|curl|apt|yum|dnf|wget|git clone|docker|ctr|pip|snap|sudo'
+    sleep $t
+
     echo -e "\n-------------\n > Auto Runs <\n------------- "
     $s cat /etc/crontab | grep -Ev '#|PATH|SHELL'
     $s cat /etc/cron.d/* | grep -Ev '#|PATH|SHELL'
@@ -138,7 +167,7 @@ verbose(){
     ip -br -c link
 
     echo -e "\n---------------\n > Services <\n--------------- "
-    $s find /etc/systemd/system -name "*.service" -exec cat {} + | grep ExecStart | cut -d "=" -f2  | grep -Ev "\!\!" 
+    $s find /etc/systemd/system -name "*.service" -exec cat {} + | grep ExecStart | cut -d "=" -f2  | grep -Ev "\!\!"
     sleep $t
 
     echo -e "\n------------------------------\n > Files Modified Last 10Min <\n------------------------------ "
@@ -179,6 +208,12 @@ verbose(){
     dpkg -l | grep "rexec"
     dpkg -l | grep "rlogin"
     dpkg -l | grep "rlogin"
+    dpkg -l | grep "rpcbind"
+    sleep $t
+
+    echo -e "\n------------------\n > Active Running Services <\n------------------ "
+    $s systemctl list-units --type=service --state=running
+    sleep $t
 }
 
 # Get User Input to get sleep time and Type
