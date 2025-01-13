@@ -7,6 +7,9 @@
 - ```sudo crontab -l``` root user crontabs (active)
 - ```sudo crontab -l -u <username>``` user crontabs
 - ```sudo userdel -r <username>``` delete user+directory
+- ```sudo adduser <username>```
+- ```sudo usermod -aG <group> <user>```
+- ```source ~/.bashrc``` .bashrc reload
 
 ## SERVICE CHECKS ##
 - ```systemctl list-units --type=service --state=running``` all running services
