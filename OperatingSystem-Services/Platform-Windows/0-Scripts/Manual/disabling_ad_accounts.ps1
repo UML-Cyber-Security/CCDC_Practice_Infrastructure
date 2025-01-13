@@ -15,7 +15,7 @@ if (-not (Get-Module -Name ActiveDirectory -ErrorAction SilentlyContinue)) {
 if ($ActiveDirectoryModuleAvailable) {
     # Current user and excluded accounts
     $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-    $excludedAccounts = @("black team") # Add any other accounts to this array if needed
+    $excludedAccounts = @("blackteam") # Add any other accounts to this array if needed
 
     try {
         Get-ADUser -Filter * | 

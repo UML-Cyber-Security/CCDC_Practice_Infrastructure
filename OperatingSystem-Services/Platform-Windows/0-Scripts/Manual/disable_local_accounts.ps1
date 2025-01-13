@@ -2,7 +2,7 @@
 
 # Current user and excluded accounts
 $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$excludedAccounts = @("black team") # Add any other accounts to this array if needed
+$excludedAccounts = @("blackteam") # Add any other accounts to this array if needed
 
 # Disable local accounts
 Get-WmiObject -Class Win32_UserAccount -Filter "LocalAccount='True'" | 
