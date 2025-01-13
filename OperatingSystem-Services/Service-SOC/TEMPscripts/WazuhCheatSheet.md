@@ -28,7 +28,7 @@
 ## GRAYLOG PORTS USED ##
 9000 - Browser Dashboard  
 1468 - Syslog tcp  
-5044 - Beats tcp/n/n
+5044 - Beats tcp
 
 9200 - Graylog to Opensearch  
 9300 - Opensearch cluster
