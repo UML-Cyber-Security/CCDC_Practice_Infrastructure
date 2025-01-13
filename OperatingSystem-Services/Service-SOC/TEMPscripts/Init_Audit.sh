@@ -28,9 +28,7 @@ basic(){
 
     echo -e "\nHardware: "
     $s lscpu | grep -i Architecture
-    $s lscpu | grep -i 'Model name:'
-    $s lscpu | grep -i 'Core(s) per socket:'
-    $s lscpu | grep -i 'Socket(s):'
+
     echo -e "\n"
     $s df -h
     sleep $t
@@ -126,18 +124,21 @@ verbose(){
     $s cat /var/ossec/etc/ossec.conf | grep -i "<agent_name>"
     sleep $t
 
-    echo -e "\n-------------\n > Graylog rsyslog Monitoring <\n------------- "
-    echo -e "(If blank here no rsyslog logging found)"
+    echo -e "\n-------------\n > Graylog Basic Monitoring <\n------------- "
+    echo -e "(If blank here no (basic) logging found)"
     $s cat /etc/rsyslog.conf | grep -i RSYSLOG_SyslogProtocol23Format
     $s cat /etc/rsyslog.d/* | grep -i RSYSLOG_SyslogProtocol23Format
+
+    # CHECK HERE FOR JOURNALD LOGGING?
+
     sleep $t
 
     echo -e "\n-------------\n > History Traces <\n------------- "
     $s find /home/* -name "docker-compose"
 
     echo -e "Bash history snippet: "
-    $s sudo tail -n 100 /root/.bash_history | grep -Ei 'compose|curl|apt|yum|dnf|wget|git clone|docker|ctr|pip|snap'
-    $s sudo -n 100 /home/*/.bash_history | grep -Ei 'compose|curl|apt|yum|dnf|wget|git clone|docker|ctr|pip|snap|sudo'
+    $s tail -n 350 /root/.bash_history | grep -Ei 'compose|curl|apt|yum|dnf|wget|git clone|docker|ctr|pip|snap'
+    $s tail -n 350 /home/*/.bash_history | grep -Ei 'compose|curl|apt|yum|dnf|wget|git clone|docker|ctr|pip|snap|sudo'
     sleep $t
 
     echo -e "\n-------------\n > Auto Runs <\n------------- "

@@ -126,3 +126,6 @@ CHANGE THESE IN OFFICIAL DEPLOYMENT!!
 
 Navigate to: ```http://<graylog_IP>:9000```  
 Create + manage CA and start the dashboard. 
+
+Make note of the ports open logging inputs:  
+(Beats, syslog, GELF, etc;)
