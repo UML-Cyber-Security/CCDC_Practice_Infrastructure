@@ -1,4 +1,4 @@
-## Linux Waz Sheet ##
+## SOC Sheet ##
 
 ### Basic Linux ###
 - ```passwd <username>``` pass change
@@ -24,6 +24,14 @@
 ## ALL PORTS ##
 - ```lsof -i```
 - ```sudo netstat -tuln```
+
+## GRAYLOG PORTS USED ##
+9000 - Browser Dashboard  
+1468 - Syslog tcp  
+5044 - Beats tcp
+
+9200 - Graylog to Opensearch  
+9300 - Opensearch cluster
 
 ## Wazuh AGENT STARTERS ##
 ```
