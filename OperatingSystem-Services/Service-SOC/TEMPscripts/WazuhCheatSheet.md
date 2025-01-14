@@ -30,9 +30,9 @@
 1468 - Syslog tcp  
 5044 - Beats tcp
 
-9200 - Graylog to ElasticSearch   tcp
-9300 - ElasticSearch Node cluster tcp
-27017 - MongoDB tcp
+9200 - Graylog to ElasticSearch   tcp  
+9300 - ElasticSearch Node cluster tcp  
+27017 - MongoDB tcp  
 
 ## Wazuh AGENT STARTERS ##
 ```
