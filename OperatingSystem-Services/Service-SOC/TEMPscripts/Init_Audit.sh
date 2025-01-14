@@ -126,8 +126,14 @@ verbose(){
 
     echo -e "\n-------------\n > Graylog Basic Monitoring <\n------------- "
     echo -e "(If blank here no (basic) logging found)"
+    # checks basic rsyslog logging
     $s cat /etc/rsyslog.conf | grep -i RSYSLOG_SyslogProtocol23Format
     $s cat /etc/rsyslog.d/* | grep -i RSYSLOG_SyslogProtocol23Format
+
+    # checks for sidecar for all linux OS
+    if [ -f /etc/graylog/sidecar/sidecar.yml ]; then
+      echo "GRAYLOG SIDECAR configuration file found. There should be logging happening..."
+    fi
 
     # CHECK HERE FOR JOURNALD LOGGING?
 
