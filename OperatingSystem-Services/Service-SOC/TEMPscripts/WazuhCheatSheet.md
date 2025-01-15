@@ -25,6 +25,10 @@
 - ```lsof -i```
 - ```sudo netstat -tuln```
 
+## GRAYLOG Searchs Sheet ##
+- ```"<IP>"``` Msgs containing that IP
+- ```SourceIP:<IP>``` Msgs with source IP
+
 ## GRAYLOG PORTS USED ##
 9000 - Browser Dashboard  
 1468 - Syslog tcp  
