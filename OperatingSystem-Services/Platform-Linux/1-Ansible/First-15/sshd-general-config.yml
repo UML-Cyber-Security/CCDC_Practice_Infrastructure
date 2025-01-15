@@ -1,21 +1,21 @@
 ##
-# Usage: Initial SSH configiguration of Target Linux Machines.
+# Usage: Initial SSH configuration of Target Linux Machines.
 #
-# The goal of this script is to provide a secure initial configiguration and one that is "Safe" i.e maintains
+# The goal of this script is to provide a secure initial configuration and one that is "Safe" i.e maintains
 # uptime and access to the target system. A number of the suggestions are over the top, but are from Wazuh...
 #
 # Initially written by a Tired Matthew Harper
 # Based on:
 # * https://github.com/UML-Cyber-Security/ccdc2024/blob/main/2-Scripts/SOC/AnsibleMisc_WazuhSurricataSSH/03sshHardening/hardenSSH.yml -- not where it should have been :(
 # * https://github.com/UML-Cyber-Security/ccdc2024/blob/main/2-Scripts/Ansible/Linux/Account-Management/pubkey-enforcement-copy-sshkeys.yml
-# * https://github.com/UML-Cyber-Security/ccdc2024/tree/main/2-Scripts/Linux/Files-Services-configigs/SSH
+# * https://github.com/UML-Cyber-Security/ccdc2024/tree/main/2-Scripts/Linux/Files-Services-configs/SSH
 #
-# NOTE: Will create a backup file named sshd_configig.bak
+# NOTE: Will create a backup file named sshd_config.bak
 ##
 
 ---
 - name: SSH-Inital-Harden
-  hosts: infra # Need to Coordinate This
+  hosts: inventory # Need to Coordinate This
   become: true # Need to be sudo
   tasks: 
     - name: Backup-SSHD-File

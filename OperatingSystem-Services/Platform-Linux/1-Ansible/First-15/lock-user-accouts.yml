@@ -1,18 +1,10 @@
 ##
-# Usage: Backup all user authorized keys (Except Whitelist)
-#
-# The goal of this script is to create a new group and user account.  The account will have an authorized key
-# file setup and password.
-#
-# Initially written by a Tired Matthew Harper
-# Based on: Files in the OLD directory
-#
-# NOTE: The Password must be hashed. We can generate a password with the `mkpasswd` command from the `whois` package
+# This playbook backs up the /etc/passwd and /etc/shadow files
 ##
 
 ---
 - name: Lock-User-Accounts
-  hosts: infra # Need to Coordinate This
+  hosts: inventory # Need to Coordinate This
   become: true # Need to be sudo
   vars:
     managing_user: blueteam # This is the user we will make the owner of the backups
@@ -47,6 +39,7 @@
       debug:
         var: home_dirs.stdout_lines
 
+        #TODO: probably good to instead to have all non-whitelisted users shell be /sbin/nologin instead of lock
     - name: lock-users
       ansible.builtin.user:
         name: "{{ item }}"
