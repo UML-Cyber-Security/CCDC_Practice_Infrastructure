@@ -6,7 +6,7 @@
 
 ---
 - name: Service-Management
-  hosts: infra # Need to Coordinate This
+  hosts: inventory # Need to Coordinate This
   become: true # Need to be sudo
   vars:
     Is_Masked: true # Modify this mask or unmask services
