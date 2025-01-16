@@ -1,5 +1,5 @@
 ##
-# Usage: Generate New User and Group
+# Usage: Generate New User and Group, add user to new group as well as one of sudo or wheel, and give sudo to new group.
 #
 # The goal of this script is to create a new group and user account.  The account will have an authorized key
 # file setup and password.
@@ -12,9 +12,10 @@
 
 ---
 - name: Account-Group-Creation
-  hosts: infra # Need to Coordinate This
+  hosts: inventory # Need to Coordinate This
   become: true # Need to be sudo
   vars:
+    # TODO: new users plural instead of only one
     new_user: blueteam2
     passwd: $y$j9T$QPB0r8sLvi.LM7coxvYKU1$CQTOEClgM5M0oyshyIX2RIXGBTdU8q6X5HcfBF0pRP0
     key_path: ./auth_keys
@@ -50,7 +51,7 @@
         path: /etc/sudoers
         state: present
         regexp: '^%Minecraft-User'
-        line: '%Minecraft-User ALL=(ALL) NOPASSWD: ALL'
+        line: '%Minecraft-User ALL=(ALL) NOPASSWD: ALL' #nopasswd is risky
         validate: '/usr/sbin/visudo -cf %s'
       become: yes
 

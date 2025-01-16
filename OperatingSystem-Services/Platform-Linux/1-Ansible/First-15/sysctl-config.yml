@@ -7,11 +7,11 @@
 
 ---
 - name: System-Ctl-Configuration
-  hosts: infra # Need to Coordinate This
+  hosts: inventory # Need to Coordinate This
   become: true # Need to be sudo
   vars:
     conf_file_trgt: /etc/sysctl.d/ccdc25.conf
-    conf_name: ./Configs/safe_conf.conf # Change to unsafe if you want
+    conf_name: ./sysctl_safe.conf # Change to unsafe if you want
   tasks:
     - name: Configure-System
       ansible.builtin.copy:

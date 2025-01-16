@@ -1,0 +1,13 @@
+infra:
+  hosts:
+    proxy:
+      ansible_host: 172.16.0.250
+    master:
+      ansible_host: 172.16.1.241
+    worker1:
+      ansible_host: 172.16.1.242
+    worker2:
+      ansible_host: 172.16.1.243
+    worker3:
+      ansible_host: 172.16.0.202
+

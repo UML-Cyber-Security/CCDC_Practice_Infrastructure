@@ -7,11 +7,11 @@
 
 ---
 - name: Auditd-Configuration
-  hosts: infra # Need to Coordinate This
+  hosts: inventory # Need to Coordinate This
   become: true # Need to be sudo
   vars:
     conf_file_trgt: /etc/audit/rules.d/ccdc.rules
-    conf_name: ./Configs/audit_rules.conf # Change to something else if wanted
+    conf_name: ./audit_rules.conf # Change to something else if wanted
   tasks:
     - name: Configure-Forward-Journald
       ansible.builtin.lineinfile:
