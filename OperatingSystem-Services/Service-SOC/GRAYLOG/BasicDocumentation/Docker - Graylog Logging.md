@@ -32,7 +32,14 @@ ports:
     restart: "on-failure"
 ```
 
-## 2. Adding rsyslog logging (Linux) ##
+## Graylog Sidecar ##
+
+Graylog Sidecar -> configuration management system for log collecters.  
+This is available to both Windows and Linux, and works through Graylogs API to enable, configure, and collect logs from machines.  
+This is slightly simillar to a Wazuh "agent", but the key difference is that Sidecar itself is NOT a log collecter, just a manager.  
+
+
+## 3. Adding rsyslog logging (Linux) ##
 
 For the "agent" machine, adding the following to the bottom of the ```/etc/rsyslog.conf``` or any other rsyslog configuration files will add rsyslog logging.<br><br>
 
@@ -43,7 +50,7 @@ or
 For UDP logging
 ```*.*@<Graylog_ip>:<port>;RSYSLOG_SyslogProtocol23Format" >> "/etc/rsyslog.conf```
 
-## 3. Adding Eventlog logging (NXLog + GELF) (Windows)
+## Adding Eventlog logging (NXLog + GELF) (Windows)
 
 ## 3.1 Adding Eventlog logging (Sidecar + Winlogbeat) (Windows)
 
