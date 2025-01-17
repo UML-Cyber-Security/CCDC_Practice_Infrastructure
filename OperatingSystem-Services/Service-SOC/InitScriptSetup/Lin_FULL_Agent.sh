@@ -2,7 +2,7 @@
 # WHAT IS THIS:
 # Script that should be run to reinstall + configure ALL Wazuh agents. This script should work for
 # all Linux types and should automatically uninstall and reinstall a Wazuh agent
-# Created by VA (THIS IS WIP!)
+# (THIS IS WIP!)
 
 if [ "$EUID" -ne 0 ]; then
   echo "ERROR: Must run as superuser"
