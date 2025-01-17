@@ -1,7 +1,7 @@
 ## Creating a Port Inventory Dashboard on Wazuh ##
 WHAT THIS IS:  
 Guide shows how to setup a "port inventory" dashboard for Wazuh, making it able to monitor any/all open ports accross the infrastructure, including port numbers, processes used, port count, machine names, etc.  
-Writeup by viktor, more info here: <br>
+more info here: <br>
 ```
 https://wazuh.com/blog/detecting-threats-using-inventory-data/
 https://documentation.wazuh.com/current/user-manual/capabilities/system-inventory/using-syscollector-information-to-trigger-alerts.html
