@@ -8,7 +8,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 echo -e "\n-----------------------------------------"
-echo -e "\n-----------------------------------------\nSetting up rsyslogging by UDP port 5140...\n"
+echo -e "\n-----------------------------------------\nSetting up rsyslogging by TCP port 5140...\n"
 
 if [[ -e "/etc/rsyslog.conf" ]]; then
     read -p "Enter GRAYLOG manager machine ip: " manager_ip
@@ -23,7 +23,7 @@ if tail /etc/rsyslog.conf -n 1 | grep -q "RSYSLOG_SyslogProtocol23Format"; then
     cat /etc/rsyslog.conf | grep -i RSYSLOG_SyslogProtocol23Format | head -n 1
     exit 1
 else
-    echo "*.*@$manager_ip:5140;RSYSLOG_SyslogProtocol23Format" >> "/etc/rsyslog.conf"
+    echo "*.*@@$manager_ip:5140;RSYSLOG_SyslogProtocol23Format" >> "/etc/rsyslog.conf"
     echo -e "Configuration added successfully."
 fi
 

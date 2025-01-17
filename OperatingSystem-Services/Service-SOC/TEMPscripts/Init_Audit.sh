@@ -64,7 +64,18 @@ basic(){
     sleep $t
 
     echo -e "\n-------------\n > .bashrc Command Check <\n------------- "
-    $s tail -n 10 /home/*/.bashrc
+    $s cat /home/*/.bashrc | grep -Ei 'exec |.sh |systemctl'
+    echo -e "\n"
+    $s cat /root/.bashrc | grep -Ei 'exec |.sh |systemctl'
+    echo -e "\n"
+    $s tail -n 7 /home/*/.bashrc
+    echo -e "\n"
+    $s tail -n 7 /root/.bashrc
+    echo -e "\n"
+    sleep $t
+
+    echo -e "\n-------------\n > /etc/profile Check <\n------------- "
+    $s tail -n 7 /etc/profile
     sleep $t
 
     echo -e "\n-------------\n > SSHD Config Check <\n------------- "
@@ -209,6 +220,7 @@ verbose(){
     dpkg -l | grep "CVE"
     dpkg -l | grep "exploit"
     dpkg -l | grep "ncat"
+    dpkg -l | grep "socat"
     dpkg -l | grep "netcat"
     dpkg -l | grep "tcpdump"
     dpkg -l | grep "rsh"
@@ -216,6 +228,7 @@ verbose(){
     dpkg -l | grep "rlogin"
     dpkg -l | grep "rlogin"
     dpkg -l | grep "rpcbind"
+    dpkg -l | grep "lynis"
     sleep $t
 
     echo -e "\n------------------\n > Active Running Services <\n------------------ "

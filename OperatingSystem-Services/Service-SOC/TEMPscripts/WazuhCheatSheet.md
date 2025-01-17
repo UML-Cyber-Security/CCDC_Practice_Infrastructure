@@ -10,6 +10,7 @@
 - ```sudo adduser <username>```
 - ```sudo usermod -aG <group> <user>```
 - ```source ~/.bashrc``` .bashrc reload
+- ```sudo debsums <arg> <arg>``` -a (all + configs), -e (config only), -s (only report error)
 
 ## SERVICE CHECKS ##
 - ```systemctl list-units --type=service --state=running``` all running services
