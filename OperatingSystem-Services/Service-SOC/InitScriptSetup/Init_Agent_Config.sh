@@ -5,7 +5,6 @@
 #
 # TODO: Currently just appends everything to the config file, would be nice to not add all the rules if they are already there
 # OSSEC CONFIG FOR AUDITD IS CURRENTLY BROKEN? This needs to be tested as I am not sure
-# Created by VA
 ## Must run as superuser ##
 
 if [ "$EUID" -ne 0 ]; then
