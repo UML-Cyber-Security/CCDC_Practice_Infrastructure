@@ -13,6 +13,7 @@ PAMFILE="/etc/pam.d/common-password"
 
 declare -A configs
 configs=(
+    ["retry"]="3"
     ["minlen"]="12"
     ["dcredit"]="-1"
     ["ucredit"]="-1"
@@ -35,9 +36,14 @@ else
         apt update && sudo apt install -y libpam-pwquality
     fi
 
-    if grep -q "/pam_pwquality\.so/ s/$/" $PAMFILE; then
-        sed -i "/pam_pwquality\.so/ s/pam_pwquality\.so.*/pam_pwquality.so retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" $PAMFILE
+    new_line="password required pam_pwquality.so "
+    for item in "${!configs[@]}"; do
+        new_line+=" ${item}=${configs[$item]}"
+    done
+
+    if grep -q "pam_pwquality\.so" $PAMFILE; then
+        sed -i "/pam_pwquality\.so/ c\\$new_line" $PAMFILE
     else
-        echo "password required pam_pwquality.so retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" >> $PAMFILE
+        echo $new_line >> $PAMFILE
     fi
 fi
