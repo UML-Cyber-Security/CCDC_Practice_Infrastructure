@@ -9,7 +9,7 @@ if [ $EUID -ne 0 ]; then
 fi
 
 PWFILE="/etc/security/pwquality.conf"
-PAMFILE="/etc/pam.d/common-auth"
+PAMFILE="/etc/pam.d/common-password"
 
 declare -A configs
 configs=(
@@ -20,7 +20,6 @@ configs=(
 )
 
 if [ -f $PWFILE ]; then
-    echo "Here"
     for item in "${!configs[@]}"; do
 
         if grep -q "^.*$item.*$" $PWFILE; then
@@ -31,14 +30,14 @@ if [ -f $PWFILE ]; then
     done
 else
     if [ -x "$(command -v yum)" ]; then
-        echo "yum install -y pam"
+        yum install -y pam
     elif [ -x "$(command -v apt)" ]; then
-        echo "apt update && sudo apt install -y libpam-pwquality"
+        apt update && sudo apt install -y libpam-pwquality
     fi
 
-    if [ -f $PAMFILE ]; then
+    if grep -q "/pam_pwquality\.so/ s/$/" $PAMFILE; then
         sudo sed -i "/pam_pwquality\.so/ s/$/ retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" $PAMFILE
     else
-        echo "pam_pwquality.so retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" $PAMFILE
+        echo "password required pam_pwquality.so retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" >> $PAMFILE
     fi
 fi
