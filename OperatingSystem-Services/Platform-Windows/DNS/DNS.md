@@ -2,7 +2,7 @@
 This documentation will give an overview of the Windows DNS on Server Manager that is installed on Windows 2019. Giving insight on how to download, use, secure, and briefly integrate with Active Directory.
 
 ## Info
-DNS stands for Domain Name Service and its purpose is to store records that translate domain names into IP addresses. This makes it so it is easier to interact with IPs as it is easier to write down or remember a domain name rather than a bunch of numbers. For example, when a user enters a domain name into their browser, the user's device sends a request to its DNS server and the DNS server processes that requests and routes the user to the respective IP address. DNS is used in places like email, video chat, apps, IoT, and more. The main way CCDC uses DNS is to hold use domain names to better and more easily use servers and things that require IP addresses, such as pinging or accessing. 
+DNS (Domain Name System) is a system that translates human-readable domain names, such as www.example.com, into machine-readable IP addresses, like 192.0.2.1. This allows users to access websites using easy-to-remember names instead of numerical IP addresses. DNS functions like a phonebook for the internet, ensuring that browsers can locate websites and services based on their domain names.
 
 ## Install
 To start make sure you have server manager open, then go to the top right and click on add or remove features and click add. This will bring up another window where you can choose which tools you would like to install, so click next until you get to this page.
