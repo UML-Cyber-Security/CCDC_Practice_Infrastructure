@@ -36,7 +36,7 @@ else
     fi
 
     if grep -q "/pam_pwquality\.so/ s/$/" $PAMFILE; then
-        sudo sed -i "/pam_pwquality\.so/ s/$/ retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" $PAMFILE
+        sed -i "/pam_pwquality\.so/ s/pam_pwquality\.so.*/pam_pwquality.so retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" $PAMFILE
     else
         echo "password required pam_pwquality.so retry=3 minlen=${configs[minlen]} dcredit=${configs[dcredit]} ucredit=${configs[ucredit]} ocredit=${configs[ocredit]}/" >> $PAMFILE
     fi
