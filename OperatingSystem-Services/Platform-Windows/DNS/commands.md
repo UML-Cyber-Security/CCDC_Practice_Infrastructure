@@ -173,7 +173,6 @@ Add-DnsServerZoneScopeSubnet -ZoneName "example.com" -ZoneScope "Scope1" -Subnet
 Get-DnsServerZoneScopeSubnet -ZoneName "example.com" -ZoneScope "Scope1"
 ```
 
-
 To display all policies:
 
 ```sh
