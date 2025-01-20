@@ -1,5 +1,14 @@
 # First 15 Minutes in Windows (including commands)
 
+#### First Steps
+1 - Need to gain access to machines 
+  - Split this between each of us Johnny on security so he gets precedence on choice 
+2 - Run NMAP scans if needed to get network topology
+3 - Once in machines we can run through steps below
+
+#### Notes
+1 - Don't forget about GPOs and their ability of enabling domain wide firewall rules, password complexities, and more
+
 #### Downloading FireFox
 ```sh
 # Set the URL for the Firefox installer
@@ -19,7 +28,7 @@ Remove-Item -Path $installerPath
 ```
 
 #### Download NMAP
-(Doesn't work rn)
+(Doesn't fully work rn)
 ```sh
 # Define the URL for the Nmap installer
 $nmapUrl = "https://nmap.org/dist/nmap-7.93-setup.exe"
