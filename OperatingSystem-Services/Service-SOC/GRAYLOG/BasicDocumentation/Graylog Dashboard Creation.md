@@ -38,7 +38,11 @@ To create a new "Search Query":
 You can now load and use the search query's in searches by pressing ```Load```, or in dashboards. 
 
 
-## 5. Creating Dashboards from Searches ##
+## 5. Creating and using Pipelines + Rules
+
+Pipelines help transform and process messages coming from certain streams. 
+
+## 6. Creating Dashboards from Searches ##
 
 Dashboards are composed of ```Widgets``` (the charts and graphs) which in turn are usually created from ```Search Query's```. 
 
