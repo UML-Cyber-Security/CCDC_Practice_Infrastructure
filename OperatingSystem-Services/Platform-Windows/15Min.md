@@ -7,7 +7,7 @@
 3 - Once in machines we can run through steps below
 
 #### Notes
-1 - Don't forget about GPOs and their ability of enabling domain wide firewall rules, password complexities, and more
+1 - Don't forget about GPOs and their ability of enabling/disabling domain wide firewall rules, password complexities, and more
 
 #### Downloading FireFox
 ```sh
