@@ -1,16 +1,24 @@
-# Define the path to the dump folder in the user's Documents
+# DNS Dump <!-- omit from toc -->
+- [Define the path to the dump folder in the user's Documents](#define-the-path-to-the-dump-folder-in-the-users-documents)
+- [Function to check if the machine is a Domain Controller](#function-to-check-if-the-machine-is-a-domain-controller)
+- [Dump DNS records if the machine is a Domain Controller](#dump-dns-records-if-the-machine-is-a-domain-controller)
+
+## Define the path to the dump folder in the user's Documents
+```sh
 $folderPath = [System.IO.Path]::Combine([Environment]::GetFolderPath("MyDocuments"), "Dump")
 If (!(Test-Path -Path $folderPath)) {
     New-Item -ItemType Directory -Force -Path $folderPath
 }
-
-# Function to check if the machine is a Domain Controller
+```
+## Function to check if the machine is a Domain Controller
+```sh
 function Is-DomainController {
     $dc = (Get-WmiObject Win32_ComputerSystem).DomainRole
     return $dc -eq 5 -or $dc -eq 6
 }
-
-# Dump DNS records if the machine is a Domain Controller
+```
+## Dump DNS records if the machine is a Domain Controller
+```sh
 if (Is-DomainController) {
     try {
         # Export DNS zones and records
@@ -30,3 +38,4 @@ if (Is-DomainController) {
 } else {
     Write-Host "This machine is not a Domain Controller."
 }
+```

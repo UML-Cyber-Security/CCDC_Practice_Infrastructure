@@ -1,4 +1,4 @@
-**FireWall**
+# FireWall Commands
 ```sh
 # Enable Remote Desktop (RDP) Firewall Rule
 Write-Host "Enabling Remote Desktop Firewall rule..."
@@ -43,5 +43,3 @@ Get-NetFirewallRule -Profile Domain | Remove-NetFirewallRule
 
 Write-Host "All firewall rules for the Domain profile have been removed."
 ```
-
-****

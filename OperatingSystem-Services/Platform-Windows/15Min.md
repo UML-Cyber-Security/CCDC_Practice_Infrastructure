@@ -1,13 +1,24 @@
-# First 15 Minutes in Windows (including commands)
+# First 15 Minutes in Windows (including commands) <!-- omit from toc -->
+- [First Steps](#first-steps)
+- [Downloading FireFox](#downloading-firefox)
+- [Download NMAP](#download-nmap)
+- [Wireshark](#wireshark)
+- [FireWall Rules](#firewall-rules)
+- [Disable Local Accounts](#disable-local-accounts)
+- [Disable AD Accounts](#disable-ad-accounts)
+- [Dumping](#dumping)
+- [Resetting Local Account Password](#resetting-local-account-password)
+- [Resetting AD Account Passwords](#resetting-ad-account-passwords)
+- [Kicking RDP Sessions](#kicking-rdp-sessions)
 
 #### First Steps
-1 - Need to gain access to machines 
-  - Split this between each of us Johnny on security so he gets precedence on choice 
-2 - Run NMAP scans if needed to get network topology
-3 - Once in machines we can run through steps below
+1.  Need to gain access to machines.
+  - Split this between each of us Johnny on security so he gets preference on choice.
+2.  Run NMAP scans if needed to get network topology.
+3.  Once in machines we can run through steps below.
 
-#### Notes
-1 - Don't forget about GPOs and their ability of enabling/disabling domain wide firewall rules, password complexities, and more
+> [!IMPORTANT]
+> **Don't forget about GPOs** and their ability of enabling/disabling domain wide firewall rules, password complexities, and more!
 
 #### Downloading FireFox
 ```sh
