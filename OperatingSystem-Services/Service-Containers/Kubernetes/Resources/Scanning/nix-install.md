@@ -1,11 +1,13 @@
-# Installing nix
+# Nix Environment Setup
+
+## Installing nix
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
   sh -s -- install
 ```
 
-# Using devenv and direnv
+## Using devenv and direnv
 
 To install them to the system use:
 
