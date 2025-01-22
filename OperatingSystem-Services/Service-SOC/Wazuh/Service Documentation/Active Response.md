@@ -1,6 +1,5 @@
 ## Adding Active Response Capabilities to Wazuh ##
-WHAT THIS IS:  
-A small walkthrough of adding "active repsponse", specifically "client end" user alerts for any suspicous activity.  
+A small walkthrough of adding "active response", specifically "client end" user alerts for any suspicious activity.  
 ```
 https://documentation.wazuh.com/current/user-manual/capabilities/active-response/how-to-configure.html
 ```
@@ -31,7 +30,7 @@ Add the following command block:
 ### 2. Add Custom Script to all Linux endpoints ###
 
 Add script/exe to `/var/ossec/active-response/bin`.  
-Add following permisions:  
+Add following permissions:  
 
 ```bash
 sudo chmod 750 /var/ossec/active-response/bin/<CUSTOM_SCRIPT>

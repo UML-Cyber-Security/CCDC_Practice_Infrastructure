@@ -1,6 +1,6 @@
 ## Creating a Port Inventory Dashboard on Wazuh ##
 WHAT THIS IS:  
-Guide shows how to setup a "port inventory" dashboard for Wazuh, making it able to monitor any/all open ports accross the infrastructure, including port numbers, processes used, port count, machine names, etc.  
+Guide shows how to setup a "port inventory" dashboard for Wazuh, making it able to monitor any/all open ports across the infrastructure, including port numbers, processes used, port count, machine names, etc.  
 more info here: <br>
 ```
 https://wazuh.com/blog/detecting-threats-using-inventory-data/
@@ -77,7 +77,7 @@ Add the rules below to the ```/var/ossec/etc/rules/local_rules.xml``` file to ge
 Restart manager: ```systemctl restart wazuh-manager```
 
 ### 5. Add monitoring for new Network Interfaces ###
-This will push a alert to the dashboard when syscollecter detecets new network interface on a agent.<br><nr>
+This will push a alert to the dashboard when syscollecter detects new network interface on a agent.<br><nr>
 Add the rules below to the ```/var/ossec/etc/rules/local_rules.xml``` file:
 ```
 <group name="syscollector2,">
