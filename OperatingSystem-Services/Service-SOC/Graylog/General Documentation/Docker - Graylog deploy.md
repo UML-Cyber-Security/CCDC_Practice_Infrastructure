@@ -1,6 +1,5 @@
 # DOCKER Graylog Install #
 
-WHAT THIS IS:  
 Short guide to show the correct way to install and configure Graylog on a DOCKER container. This is done on a Ubuntu Linux OS. This installs Graylog with DATANODE. <br>
 
 

@@ -1,6 +1,6 @@
 # DOCKER Graylog Logging #
 
-WHAT THIS IS:  
+
 Short writeup showing the basics of adding logging inputs (Linux and Windows) to a Graylog manager.  
 For this setup, the manager is on a Ubuntu system through Docker.  
 
@@ -34,9 +34,9 @@ ports:
 
 ## Graylog Sidecar ##
 
-Graylog Sidecar -> configuration management system for log collecters.  
+Graylog Sidecar -> configuration management system for log collectors.  
 This is available to both Windows and Linux, and works through Graylogs API to enable, configure, and collect logs from machines.  
-This is slightly simillar to a Wazuh "agent", but the key difference is that Sidecar itself is NOT a log collecter, just a manager.  
+This is slightly similar to a Wazuh "agent", but the key difference is that Sidecar itself is NOT a log collector, just a manager.  
 
 
 ## 3. Adding rsyslog logging (Linux) ##
@@ -54,7 +54,7 @@ For UDP logging
 
 ## 3.1 Adding Eventlog logging (Sidecar + Winlogbeat) (Windows)
 
-Easiest way to add this is to downlaod Graylog Sidecar (configuration management system for log collecters) onto each Windows machine that needs logging.  
+Easiest way to add this is to download Graylog Sidecar (configuration management system for log collectors) onto each Windows machine that needs logging.  
 
 Sidecar uses Graylogs REST API, so this needs to be secured.  
 
