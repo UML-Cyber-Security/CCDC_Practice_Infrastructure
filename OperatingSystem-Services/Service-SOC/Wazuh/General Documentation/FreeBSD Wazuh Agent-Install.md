@@ -24,7 +24,7 @@ Edit the Ossec.conf file so it is the same as your machines IP:
 vim /var/ossec/etc/ossec.conf
 ```
 
-Edit the rc config file so the wazuh agent boots on start
+Edit the rc config file so the Wazuh agent boots on start
 
 ```bash
 vim /etc/rc.conf

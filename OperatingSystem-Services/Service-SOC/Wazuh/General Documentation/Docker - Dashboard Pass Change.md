@@ -1,6 +1,5 @@
 # Wazuh Dashboard Password Change w/DOCKER
 
-WHAT THIS IS:  
 Guide shows how to change dashboard password from a DOCKER Wazuh Install on a Linux system. More information/if guide is outdated can be found here:  
 [Docker Wazuh Password/Installation Docs](https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html#change-pwd-existing-usr)  
 

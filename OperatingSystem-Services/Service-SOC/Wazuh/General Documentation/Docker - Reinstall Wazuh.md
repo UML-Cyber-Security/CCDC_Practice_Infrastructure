@@ -1,9 +1,8 @@
 ## How to Reset and Reinstall Wazuh w/ Docker ##
 
-WHAT THIS IS:  
 Guide showing steps to fresh reinstall Wazuh with Docker already installed on a Debian linux OS.
 <br>
-In case anything gets outdated/more information can be found here: [Offical Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/Docker/Docker-installation.html)  
+In case anything gets outdated/more information can be found here: [Official Wazuh Installation Docs](https://documentation.wazuh.com/current/deployment-options/Docker/Docker-installation.html)  
 
 ### List out all Docker containers
 ``` docker ps ```

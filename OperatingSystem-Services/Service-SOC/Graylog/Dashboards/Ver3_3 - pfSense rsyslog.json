@@ -1,0 +1,3292 @@
+{
+    "v": 1,
+    "id": "a0402bc6-92e6-4fb0-a1f3-c9ad156c37e1",
+    "rev": 1,
+    "name": "Old ver. pfSense rsyslog dashes",
+    "summary": "Dashboard and all inputs + streams set up for an older version of Graylog manager.",
+    "description": "Shows rsyslog linux collection and rsylog pfSense collection. Check the inputs for correct port numberings. ",
+    "vendor": "qwerty",
+    "url": "",
+    "parameters": [],
+    "entities": [
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "b298d640-7bef-4314-bc23-98b471dc3354",
+        "data": {
+          "name": "HTTPD20_ERRORLOG",
+          "pattern": "\\[%{HTTPDERROR_DATE:timestamp}\\] \\[%{LOGLEVEL:loglevel}\\] (?:\\[client %{IPORHOST:clientip}\\] ){0,1}%{GREEDYDATA:errormsg}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "7f4797f9-5024-4243-a449-e7239e2256da",
+        "data": {
+          "name": "SYSLOGHOST",
+          "pattern": "%{IPORHOST}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "6d644c64-78a1-4c20-af49-95cc4a22444e",
+        "data": {
+          "name": "TZ",
+          "pattern": "(?:[PMCE][SD]T|UTC)"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "89564950-006d-4bf7-866e-5264b121fc9b",
+        "data": {
+          "name": "DATESTAMP_EVENTLOG",
+          "pattern": "%{YEAR}%{MONTHNUM2}%{MONTHDAY}%{HOUR}%{MINUTE}%{SECOND}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "0dae600c-2636-448b-9b52-23d15d3a7058",
+        "data": {
+          "name": "YEAR",
+          "pattern": "(?>\\d\\d){1,2}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "5f7344e1-3c3d-4444-847b-edde5ca7e61e",
+        "data": {
+          "name": "MAC",
+          "pattern": "(?:%{CISCOMAC}|%{WINDOWSMAC}|%{COMMONMAC})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "5b43185f-0a42-4805-b003-12313ac61e01",
+        "data": {
+          "name": "UNIXPATH",
+          "pattern": "(/([\\w_%!$@:.,~-]+|\\\\.)*)+"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "f2c251d7-0028-4522-917a-26709cfcd9d1",
+        "data": {
+          "name": "MINUTE",
+          "pattern": "(?:[0-5][0-9])"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "bf6bab19-84a3-4b6c-a62e-87aa4f2bcd32",
+        "data": {
+          "name": "BASE16NUM",
+          "pattern": "(?<![0-9A-Fa-f])(?:[+-]?(?:0x)?(?:[0-9A-Fa-f]+))"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "b1ebebac-5d72-4952-9829-0b64b45bd131",
+        "data": {
+          "name": "IPORHOST",
+          "pattern": "(?:%{IP}|%{HOSTNAME})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "07d6c6b7-d431-4007-9c4d-8fb9d3559001",
+        "data": {
+          "name": "TIMESTAMP_ISO8601",
+          "pattern": "%{YEAR}-%{MONTHNUM}-%{MONTHDAY}[T ]%{HOUR}:?%{MINUTE}(?::?%{SECOND})?%{ISO8601_TIMEZONE}?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "9d2c1b85-3605-4250-9728-28271aef4fa9",
+        "data": {
+          "name": "COMBINEDAPACHELOG",
+          "pattern": "%{COMMONAPACHELOG} %{QS:referrer} %{QS:agent}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "0a7c8026-03dd-4882-8f0f-b497b89f6f70",
+        "data": {
+          "name": "COMMONMAC",
+          "pattern": "(?:(?:[A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "stream",
+          "version": "1"
+        },
+        "id": "e8ef731a-5909-40b5-8689-1e6feb7e152a",
+        "data": {
+          "alarm_callbacks": [],
+          "outputs": [],
+          "remove_matches": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "title": {
+            "@type": "string",
+            "@value": "non-pfSense"
+          },
+          "stream_rules": [
+            {
+              "type": {
+                "@type": "string",
+                "@value": "EXACT"
+              },
+              "field": {
+                "@type": "string",
+                "@value": "source"
+              },
+              "value": {
+                "@type": "string",
+                "@value": "pfSense.home.arpa"
+              },
+              "inverted": {
+                "@type": "boolean",
+                "@value": true
+              },
+              "description": {
+                "@type": "string",
+                "@value": ""
+              }
+            }
+          ],
+          "alert_conditions": [],
+          "matching_type": {
+            "@type": "string",
+            "@value": "AND"
+          },
+          "disabled": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "description": {
+            "@type": "string",
+            "@value": "All messages that are NOT pfSense"
+          },
+          "default_stream": {
+            "@type": "boolean",
+            "@value": false
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "ec7ac375-f2b8-4ac7-9c67-16aab54cbc5d",
+        "data": {
+          "name": "NUMBER",
+          "pattern": "(?:%{BASE10NUM})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "stream",
+          "version": "1"
+        },
+        "id": "e7e99cad-b1f5-4e28-a8b6-14cc3e02b9a7",
+        "data": {
+          "alarm_callbacks": [],
+          "outputs": [],
+          "remove_matches": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "title": {
+            "@type": "string",
+            "@value": "pfSense"
+          },
+          "stream_rules": [
+            {
+              "type": {
+                "@type": "string",
+                "@value": "EXACT"
+              },
+              "field": {
+                "@type": "string",
+                "@value": "source"
+              },
+              "value": {
+                "@type": "string",
+                "@value": "pfSense.home.arpa"
+              },
+              "inverted": {
+                "@type": "boolean",
+                "@value": false
+              },
+              "description": {
+                "@type": "string",
+                "@value": "log filtering for pfsense"
+              }
+            }
+          ],
+          "alert_conditions": [],
+          "matching_type": {
+            "@type": "string",
+            "@value": "AND"
+          },
+          "disabled": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "description": {
+            "@type": "string",
+            "@value": "pfsense routing stuff"
+          },
+          "default_stream": {
+            "@type": "boolean",
+            "@value": false
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "8e24eabd-53ac-4935-a86e-842126142cb7",
+        "data": {
+          "name": "MONTHNUM",
+          "pattern": "(?:0?[1-9]|1[0-2])"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "64e85305-6ed7-40b1-999e-51a5568d041e",
+        "data": {
+          "name": "IP",
+          "pattern": "(?:%{IPV6}|%{IPV4})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "dashboard",
+          "version": "2"
+        },
+        "id": "22dc4d01-68fb-4cc9-96f2-369af70c4ee6",
+        "data": {
+          "summary": {
+            "@type": "string",
+            "@value": ""
+          },
+          "search": {
+            "queries": [
+              {
+                "id": "0ac4a02d-9f8f-4799-b376-4f64baea8fcf",
+                "timerange": {
+                  "type": "relative",
+                  "range": 300
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": ""
+                },
+                "search_types": [
+                  {
+                    "query": {
+                      "type": "elasticsearch",
+                      "query_string": "application_name: filterlog AND action: pass"
+                    },
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "count()",
+                        "field": null
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "values",
+                        "field": "source-address",
+                        "limit": 15
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "8c410822-1697-48af-8058-219951a09dfa",
+                    "column_groups": [],
+                    "sort": []
+                  },
+                  {
+                    "query": {
+                      "type": "elasticsearch",
+                      "query_string": "application_name: filterlog AND action: pass"
+                    },
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "count()",
+                        "field": null
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "values",
+                        "field": "source-address",
+                        "limit": 15
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "bd97ebc9-93cf-4dce-b5e5-8be899b0dc6f",
+                    "column_groups": [
+                      {
+                        "type": "values",
+                        "field": "source-port",
+                        "limit": 15
+                      }
+                    ],
+                    "sort": []
+                  },
+                  {
+                    "query": {
+                      "type": "elasticsearch",
+                      "query_string": "application_name: filterlog AND action: pass AND direction: out"
+                    },
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "count()",
+                        "field": null
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "values",
+                        "field": "destination-address",
+                        "limit": 15
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "b69236aa-ec29-4816-b6bb-805ce872b591",
+                    "column_groups": [
+                      {
+                        "type": "values",
+                        "field": "destination-port",
+                        "limit": 15
+                      }
+                    ],
+                    "sort": []
+                  },
+                  {
+                    "query": {
+                      "type": "elasticsearch",
+                      "query_string": "application_name: filterlog AND action: pass AND direction: out"
+                    },
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "count()",
+                        "field": null
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "values",
+                        "field": "protocol-text",
+                        "limit": 15
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "d7c12332-e555-4a79-8896-05e1660a8831",
+                    "column_groups": [],
+                    "sort": []
+                  },
+                  {
+                    "query": {
+                      "type": "elasticsearch",
+                      "query_string": "application_name: filterlog AND action: pass AND direction: out"
+                    },
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [
+                      "e7e99cad-b1f5-4e28-a8b6-14cc3e02b9a7"
+                    ],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "count(destination-address)",
+                        "field": "destination-address"
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "values",
+                        "field": "destination-address",
+                        "limit": 15
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "596ab90e-aedc-4941-b72c-0b84a37ce6e1",
+                    "column_groups": [],
+                    "sort": []
+                  }
+                ]
+              }
+            ],
+            "parameters": [],
+            "requires": {},
+            "owner": "admin",
+            "created_at": "2025-01-20T19:10:34.777Z"
+          },
+          "created_at": "2025-01-20T18:33:03.610Z",
+          "requires": {},
+          "state": {
+            "0ac4a02d-9f8f-4799-b376-4f64baea8fcf": {
+              "selected_fields": null,
+              "static_message_list_id": null,
+              "titles": {},
+              "widgets": [
+                {
+                  "id": "270a2836-8270-41c0-a2df-df4beac17e52",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "application_name: filterlog AND action: pass AND direction: out"
+                  },
+                  "streams": [],
+                  "config": {
+                    "visualization": "bar",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "protocol-text",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": null
+                        },
+                        "function": "count()"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [],
+                    "visualization_config": null,
+                    "formatting_settings": null,
+                    "sort": []
+                  }
+                },
+                {
+                  "id": "f7ee75ab-185e-4394-93d2-2107db43d194",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "application_name: filterlog AND action: pass AND direction: out"
+                  },
+                  "streams": [],
+                  "config": {
+                    "visualization": "bar",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "destination-address",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": null
+                        },
+                        "function": "count()"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [
+                      {
+                        "field": "destination-port",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "visualization_config": {
+                      "barmode": "stack"
+                    },
+                    "formatting_settings": null,
+                    "sort": []
+                  }
+                },
+                {
+                  "id": "16fea5f6-92e2-4fc1-878a-9dba009ec8cb",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "application_name: filterlog AND action: pass"
+                  },
+                  "streams": [],
+                  "config": {
+                    "visualization": "bar",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "source-address",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": null
+                        },
+                        "function": "count()"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [],
+                    "visualization_config": null,
+                    "formatting_settings": null,
+                    "sort": []
+                  }
+                },
+                {
+                  "id": "e24868c4-3720-43b0-8f65-55cef1f3799e",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "application_name: filterlog AND action: pass AND direction: out"
+                  },
+                  "streams": [
+                    "e7e99cad-b1f5-4e28-a8b6-14cc3e02b9a7"
+                  ],
+                  "config": {
+                    "visualization": "bar",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "destination-address",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": null
+                        },
+                        "function": "count(destination-address)"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [],
+                    "visualization_config": null,
+                    "formatting_settings": null,
+                    "sort": []
+                  }
+                },
+                {
+                  "id": "de1b6183-0f9f-4381-82be-085a7160261f",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "application_name: filterlog AND action: pass"
+                  },
+                  "streams": [],
+                  "config": {
+                    "visualization": "bar",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "source-address",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": null
+                        },
+                        "function": "count()"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [
+                      {
+                        "field": "source-port",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "visualization_config": {
+                      "barmode": "stack"
+                    },
+                    "formatting_settings": null,
+                    "sort": []
+                  }
+                }
+              ],
+              "widget_mapping": {
+                "e24868c4-3720-43b0-8f65-55cef1f3799e": [
+                  "596ab90e-aedc-4941-b72c-0b84a37ce6e1"
+                ],
+                "270a2836-8270-41c0-a2df-df4beac17e52": [
+                  "d7c12332-e555-4a79-8896-05e1660a8831"
+                ],
+                "f7ee75ab-185e-4394-93d2-2107db43d194": [
+                  "b69236aa-ec29-4816-b6bb-805ce872b591"
+                ],
+                "16fea5f6-92e2-4fc1-878a-9dba009ec8cb": [
+                  "8c410822-1697-48af-8058-219951a09dfa"
+                ],
+                "de1b6183-0f9f-4381-82be-085a7160261f": [
+                  "bd97ebc9-93cf-4dce-b5e5-8be899b0dc6f"
+                ]
+              },
+              "positions": {
+                "e24868c4-3720-43b0-8f65-55cef1f3799e": {
+                  "col": 1,
+                  "row": 17,
+                  "height": 6,
+                  "width": 9
+                },
+                "270a2836-8270-41c0-a2df-df4beac17e52": {
+                  "col": 1,
+                  "row": 14,
+                  "height": 3,
+                  "width": 5
+                },
+                "f7ee75ab-185e-4394-93d2-2107db43d194": {
+                  "col": 1,
+                  "row": 9,
+                  "height": 5,
+                  "width": "Infinity"
+                },
+                "16fea5f6-92e2-4fc1-878a-9dba009ec8cb": {
+                  "col": 1,
+                  "row": 5,
+                  "height": 4,
+                  "width": "Infinity"
+                },
+                "de1b6183-0f9f-4381-82be-085a7160261f": {
+                  "col": 1,
+                  "row": 1,
+                  "height": 4,
+                  "width": "Infinity"
+                }
+              },
+              "formatting": {
+                "highlighting": []
+              },
+              "display_mode_settings": {
+                "positions": {}
+              }
+            }
+          },
+          "properties": [],
+          "owner": "admin",
+          "title": {
+            "@type": "string",
+            "@value": "TestDash1"
+          },
+          "type": "DASHBOARD",
+          "description": {
+            "@type": "string",
+            "@value": ""
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "7fa4f78b-8e3c-408b-889f-f76ce33b2e3e",
+        "data": {
+          "name": "SYSLOGFACILITY",
+          "pattern": "<%{NONNEGINT:facility}.%{NONNEGINT:priority}>"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "4333c185-3721-4e7f-ba6b-e94b42a583c3",
+        "data": {
+          "name": "URIPARAM",
+          "pattern": "\\?[A-Za-z0-9$.+!*'|(){},~@#%&/=:;_?\\-\\[\\]<>]*"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "ff833ff5-9950-43c7-b3c6-dc1b41e54a0a",
+        "data": {
+          "name": "UUID",
+          "pattern": "[A-Fa-f0-9]{8}-(?:[A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "0d616556-110e-43df-b2f5-219206253aa6",
+        "data": {
+          "name": "MONTHDAY",
+          "pattern": "(?:(?:0[1-9])|(?:[12][0-9])|(?:3[01])|[1-9])"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "cb6271ae-de8a-45f7-9f82-199d111d559a",
+        "data": {
+          "name": "URIPATHPARAM",
+          "pattern": "%{URIPATH}(?:%{URIPARAM})?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "932f277e-0a5f-4373-9b0b-d7b9272239a8",
+        "data": {
+          "name": "URI",
+          "pattern": "%{URIPROTO}://(?:%{USER}(?::[^@]*)?@)?(?:%{URIHOST})?(?:%{URIPATHPARAM})?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "17c7795e-286c-474f-bd57-3fa842b34b3a",
+        "data": {
+          "name": "ISO8601_SECOND",
+          "pattern": "(?:%{SECOND}|60)"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "40de8720-f1c6-4537-a461-9b5c1e2d4ad7",
+        "data": {
+          "name": "COMMONAPACHELOG",
+          "pattern": "%{IPORHOST:clientip} %{HTTPDUSER:ident} %{USER:auth} \\[%{HTTPDATE:timestamp;date;dd/MMM/yyyy:HH:mm:ss Z}\\] \"(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})\" %{NUMBER:response} (?:%{NUMBER:bytes}|-)"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "dashboard",
+          "version": "2"
+        },
+        "id": "b866ae4b-43ed-4441-afd5-5f0cccfbd267",
+        "data": {
+          "summary": {
+            "@type": "string",
+            "@value": "This is a list of all sources that sent in messages to Graylog."
+          },
+          "search": {
+            "queries": [
+              {
+                "id": "a1647eb6-a064-4fe6-b459-1e4267d3f659",
+                "timerange": {
+                  "type": "relative",
+                  "range": 300
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": ""
+                },
+                "search_types": [
+                  {
+                    "query": null,
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "Message count",
+                        "field": null
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "time",
+                        "field": "timestamp",
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "481de18f-938e-40d5-8ab2-6eaf6a28f091",
+                    "column_groups": [],
+                    "sort": []
+                  },
+                  {
+                    "query": null,
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "Message count",
+                        "field": null
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "values",
+                        "field": "source",
+                        "limit": 15
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "011b2894-49e5-44d8-aab6-8c4d4457a886",
+                    "column_groups": [],
+                    "sort": [
+                      {
+                        "type": "series",
+                        "field": "count()",
+                        "direction": "Descending"
+                      }
+                    ]
+                  },
+                  {
+                    "query": null,
+                    "name": "chart",
+                    "timerange": {
+                      "type": "relative",
+                      "range": 300
+                    },
+                    "streams": [],
+                    "series": [
+                      {
+                        "type": "count",
+                        "id": "Message count",
+                        "field": null
+                      }
+                    ],
+                    "filter": null,
+                    "rollup": true,
+                    "row_groups": [
+                      {
+                        "type": "values",
+                        "field": "source",
+                        "limit": 10
+                      }
+                    ],
+                    "type": "pivot",
+                    "id": "a964f1c5-e108-4b5e-a907-ffe0b0f0683c",
+                    "column_groups": [],
+                    "sort": [
+                      {
+                        "type": "series",
+                        "field": "count()",
+                        "direction": "Descending"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "parameters": [],
+            "requires": {},
+            "owner": "admin",
+            "created_at": "2019-11-22T10:58:47.255Z"
+          },
+          "created_at": "2019-11-22T10:54:50.950Z",
+          "requires": {},
+          "state": {
+            "a1647eb6-a064-4fe6-b459-1e4267d3f659": {
+              "selected_fields": null,
+              "static_message_list_id": null,
+              "titles": {
+                "tab": {
+                  "title": "Sources Overview"
+                },
+                "widget": {
+                  "6c127c5d-be75-4157-b43f-ac0194ac0586": "Selected sources",
+                  "92d63811-e4dd-47db-bd3b-db03c8a9bd53": "Messages per Source",
+                  "00637e63-d728-4b3e-932b-7c8696b4855d": "Messages over time"
+                }
+              },
+              "widgets": [
+                {
+                  "id": "92d63811-e4dd-47db-bd3b-db03c8a9bd53",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": null,
+                  "streams": [],
+                  "config": {
+                    "visualization": "pie",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "source",
+                        "type": "values",
+                        "config": {
+                          "limit": 10
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": "Message count"
+                        },
+                        "function": "count()"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [],
+                    "visualization_config": null,
+                    "formatting_settings": null,
+                    "sort": [
+                      {
+                        "type": "series",
+                        "field": "count()",
+                        "direction": "Descending"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "00637e63-d728-4b3e-932b-7c8696b4855d",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": null,
+                  "streams": [],
+                  "config": {
+                    "visualization": "line",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "timestamp",
+                        "type": "time",
+                        "config": {
+                          "interval": {
+                            "type": "auto",
+                            "scaling": null
+                          }
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": "Message count"
+                        },
+                        "function": "count()"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [],
+                    "visualization_config": null,
+                    "formatting_settings": null,
+                    "sort": []
+                  }
+                },
+                {
+                  "id": "6c127c5d-be75-4157-b43f-ac0194ac0586",
+                  "type": "aggregation",
+                  "filter": null,
+                  "timerange": {
+                    "type": "relative",
+                    "range": 300
+                  },
+                  "query": null,
+                  "streams": [],
+                  "config": {
+                    "visualization": "table",
+                    "event_annotation": false,
+                    "row_pivots": [
+                      {
+                        "field": "source",
+                        "type": "values",
+                        "config": {
+                          "limit": 15
+                        }
+                      }
+                    ],
+                    "series": [
+                      {
+                        "config": {
+                          "name": "Message count"
+                        },
+                        "function": "count()"
+                      }
+                    ],
+                    "rollup": true,
+                    "column_pivots": [],
+                    "visualization_config": null,
+                    "formatting_settings": null,
+                    "sort": [
+                      {
+                        "type": "series",
+                        "field": "count()",
+                        "direction": "Descending"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "widget_mapping": {
+                "6c127c5d-be75-4157-b43f-ac0194ac0586": [
+                  "011b2894-49e5-44d8-aab6-8c4d4457a886"
+                ],
+                "92d63811-e4dd-47db-bd3b-db03c8a9bd53": [
+                  "a964f1c5-e108-4b5e-a907-ffe0b0f0683c"
+                ],
+                "00637e63-d728-4b3e-932b-7c8696b4855d": [
+                  "481de18f-938e-40d5-8ab2-6eaf6a28f091"
+                ]
+              },
+              "positions": {
+                "6c127c5d-be75-4157-b43f-ac0194ac0586": {
+                  "col": 1,
+                  "row": 5,
+                  "height": 4,
+                  "width": 6
+                },
+                "92d63811-e4dd-47db-bd3b-db03c8a9bd53": {
+                  "col": 7,
+                  "row": 5,
+                  "height": 4,
+                  "width": 6
+                },
+                "00637e63-d728-4b3e-932b-7c8696b4855d": {
+                  "col": 1,
+                  "row": 1,
+                  "height": 4,
+                  "width": "Infinity"
+                }
+              },
+              "formatting": {
+                "highlighting": []
+              },
+              "display_mode_settings": {
+                "positions": {}
+              }
+            }
+          },
+          "properties": [],
+          "owner": "admin",
+          "title": {
+            "@type": "string",
+            "@value": "Sources"
+          },
+          "type": "DASHBOARD",
+          "description": {
+            "@type": "string",
+            "@value": "This is a list of all sources that sent in messages to Graylog. You can narrow the timerange by zooming in on the message histogram, or you can increase the time range by specifying a broader one in the controls at the top. You can also specify filters to limit the results you are seeing. You can also add additional widgets to this dashboard, or adapt the appearance of existing widgets to suit your needs."
+          }
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "3a797091-a72c-4932-aa50-8492f3c999e9",
+        "data": {
+          "name": "URIPROTO",
+          "pattern": "[A-Za-z]+(\\+[A-Za-z+]+)?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "f26a7070-e76a-464c-9e1b-0f15db4c3369",
+        "data": {
+          "name": "CISCOMAC",
+          "pattern": "(?:(?:[A-Fa-f0-9]{4}\\.){2}[A-Fa-f0-9]{4})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "6ea226eb-462c-4d32-925d-8ac73f047af5",
+        "data": {
+          "name": "PROG",
+          "pattern": "[\\x21-\\x5a\\x5c\\x5e-\\x7e]+"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "1227804e-e555-46f9-9c16-0b9d6f1ea998",
+        "data": {
+          "name": "WINDOWSMAC",
+          "pattern": "(?:(?:[A-Fa-f0-9]{2}-){5}[A-Fa-f0-9]{2})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "input",
+          "version": "1"
+        },
+        "id": "f9089680-e9fc-43fe-8e52-9ea65e3ba0d9",
+        "data": {
+          "title": {
+            "@type": "string",
+            "@value": "syslog pfSense"
+          },
+          "configuration": {
+            "expand_structured_data": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "recv_buffer_size": {
+              "@type": "integer",
+              "@value": 262144
+            },
+            "port": {
+              "@type": "integer",
+              "@value": 5141
+            },
+            "number_worker_threads": {
+              "@type": "integer",
+              "@value": 2
+            },
+            "force_rdns": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "allow_override_date": {
+              "@type": "boolean",
+              "@value": true
+            },
+            "bind_address": {
+              "@type": "string",
+              "@value": "0.0.0.0"
+            },
+            "store_full_message": {
+              "@type": "boolean",
+              "@value": true
+            }
+          },
+          "static_fields": {},
+          "type": {
+            "@type": "string",
+            "@value": "org.graylog2.inputs.syslog.udp.SyslogUDPInput"
+          },
+          "global": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "extractors": [
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "tcp_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(?:[^,]*,){16}tcp,(.+)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "source-port,destination-port,data-length,tcp-flags,sequence-number,ack-number,tcp-window,urg,tcp-options"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){20}([^,]+(?:,[^,]*+){8})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "tcp-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "ip_specific_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(?:[^,]*,){9}(.+)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){9}(.+)"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "ip-specific-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "ip_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(?:[^,]*,){8}4,(.+)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "length,source-address,destination-address"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){17}([^,]+(?:,[^,]*+){2})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "ip-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "ipv4_specific_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(?:[^,]*,){8}4,(.+)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "tos,ecn,ttl,id,offset,flags,protocol-id,protocol-text"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){9}([^,]+(?:,[^,]*+){7})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "ipv4-specific-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "ip_common_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(([^,]*,){8}([^,]*)),"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "rule-number,sub-rule-number,anchor,tracker,real-interface,reason,action,direction,ip-version"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(([^,]*,){8}([^,]*)),"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "ip-common-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "ipv6_specific_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(?:[^,]*,){8}6,(.+)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "class,flow-label,hop-limit,protocol-text,protocol-id"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){9}([^,]+(?:,[^,]*+){4})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "ipv6-specific-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "udp_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(?:[^,]*,){16}udp,(.+)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "source-port,destination-port,data-length"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){20}([^,]+(?:,[^,]*+){2})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "udp-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "carp_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^(?:[^,]*,){16}carp,(.+)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "carp-type,carp-ttl,vhid,version,advbase,advskew"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){20}([^,]+(?:,[^,]*+){5})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "carp-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "unreachport_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^([^,]*,){20}unreachport"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "icmp-destination-ip-address,unreachable-protocol-id,unreachable-port-number"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){21}([^,]+(?:,[^,]*+){2})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "unreachport-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "echo_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^([^,]*,){20}request"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "icmp-id,icmp-sequence"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){21}([^,]+(?:,[^,]*+){1})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "echo-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "needfrag_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^([^,]*,){20}needfrag"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "icmp-destination-ip-address,icmp-mtu"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){21}([^,]+(?:,[^,]*+){1})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "needfrag-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "unreachproto_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^([^,]*,){20}unreachproto"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "icmp-destination-ip-address,unreachable-protocol-id"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){21}([^,]+(?:,[^,]*+){1})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "unreachport-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "tstamp_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^([^,]*,){20}tstamp"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "icmp-id,icmp-sequence"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){21}([^,]+(?:,[^,]*+){1})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "tstamp-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "other_unreachable_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^([^,]*,){20}(timexceed|unreach|paramprob|redirect|maskreply)"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "icmp-description"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){21}(.+)"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "other-unreachable-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            },
+            {
+              "target_field": {
+                "@type": "string",
+                "@value": "tstampreply_data"
+              },
+              "condition_value": {
+                "@type": "string",
+                "@value": "^([^,]*,){20}tstampreply"
+              },
+              "order": {
+                "@type": "integer",
+                "@value": 0
+              },
+              "converters": [
+                {
+                  "type": {
+                    "@type": "string",
+                    "@value": "CSV"
+                  },
+                  "configuration": {
+                    "column_header": {
+                      "@type": "string",
+                      "@value": "icmp-id,icmp-sequence,icmp-otime,icmp-rtime,icmp-ttime"
+                    }
+                  }
+                }
+              ],
+              "configuration": {
+                "regex_value": {
+                  "@type": "string",
+                  "@value": "^(?:[^,]*,){21}([^,]+(?:,[^,]*+){4})"
+                }
+              },
+              "source_field": {
+                "@type": "string",
+                "@value": "message"
+              },
+              "title": {
+                "@type": "string",
+                "@value": "tstampreply-data"
+              },
+              "type": {
+                "@type": "string",
+                "@value": "REGEX"
+              },
+              "cursor_strategy": {
+                "@type": "string",
+                "@value": "COPY"
+              },
+              "condition_type": {
+                "@type": "string",
+                "@value": "REGEX"
+              }
+            }
+          ]
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "2ec5b5c4-fcec-46c9-b5cf-ecd2edd60d57",
+        "data": {
+          "name": "URIPATH",
+          "pattern": "(?:/[A-Za-z0-9$.+!*'(){},~:;=@#%_\\-]*)+"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "734487f3-b757-411d-909d-5005818563d7",
+        "data": {
+          "name": "SYSLOGBASE",
+          "pattern": "%{SYSLOGTIMESTAMP:timestamp} (?:%{SYSLOGFACILITY} )?%{SYSLOGHOST:logsource} %{SYSLOGPROG}:"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "290950c9-5b8c-4c2e-a68c-a0b3f7a3419a",
+        "data": {
+          "name": "WINPATH",
+          "pattern": "(?>[A-Za-z]+:|\\\\)(?:\\\\[^\\\\?*]*)+"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "7f5eab1f-27b7-4eab-9f59-b2bebcdce1be",
+        "data": {
+          "name": "IPV4",
+          "pattern": "(?<![0-9])(?:(?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))(?![0-9])"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "be741b99-cac5-4f6f-88df-e687bc50d2a3",
+        "data": {
+          "name": "DATE",
+          "pattern": "%{DATE_US}|%{DATE_EU}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "1f04c9a3-a963-466a-9ce4-54b81bc7e947",
+        "data": {
+          "name": "EMAILLOCALPART",
+          "pattern": "[a-zA-Z][a-zA-Z0-9_.+-=:]+"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "95e159d2-554d-45ea-b04e-fe09aadc23e6",
+        "data": {
+          "name": "IPV6",
+          "pattern": "((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "00933a1a-2856-4dcc-bc93-68545428c7a7",
+        "data": {
+          "name": "GREEDYDATA",
+          "pattern": ".*"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "2ec6c0a7-b5d1-4164-baf5-1f457e1f19b9",
+        "data": {
+          "name": "USERNAME",
+          "pattern": "[a-zA-Z0-9._-]+"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "83f43913-bd03-47d6-bc8f-dd7869859967",
+        "data": {
+          "name": "HTTPD_ERRORLOG",
+          "pattern": "%{HTTPD20_ERRORLOG}|%{HTTPD24_ERRORLOG}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "f5be019e-383e-42d6-8914-42b3587e5840",
+        "data": {
+          "name": "QUOTEDSTRING",
+          "pattern": "(?>(?<!\\\\)(?>\"(?>\\\\.|[^\\\\\"]+)+\"|\"\"|(?>'(?>\\\\.|[^\\\\']+)+')|''|(?>`(?>\\\\.|[^\\\\`]+)+`)|``))"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "410d7c57-c4ce-4365-b045-d52471a06fa0",
+        "data": {
+          "name": "BASE10NUM",
+          "pattern": "(?<![0-9.+-])(?>[+-]?(?:(?:[0-9]+(?:\\.[0-9]+)?)|(?:\\.[0-9]+)))"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "4a0c09ca-475b-47ae-a8ce-f9188728c27c",
+        "data": {
+          "name": "HTTPDUSER",
+          "pattern": "%{EMAILADDRESS}|%{USER}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "0a2d0b9c-ae9c-4590-bc72-5d9a5bfacfb3",
+        "data": {
+          "name": "HTTPD24_ERRORLOG",
+          "pattern": "\\[%{HTTPDERROR_DATE:timestamp}\\] \\[%{WORD:module}:%{LOGLEVEL:loglevel}\\] \\[pid %{POSINT:pid}:tid %{NUMBER:tid}\\]( \\(%{POSINT:proxy_errorcode}\\)%{DATA:proxy_errormessage}:)?( \\[client %{IPORHOST:client}:%{POSINT:clientport}\\])? %{DATA:errorcode}: %{GREEDYDATA:message}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "7fb07132-9482-439c-86ba-618cd82a2f0b",
+        "data": {
+          "name": "WORD",
+          "pattern": "\\b\\w+\\b"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "4a26484b-1b72-4e3e-a898-1298cccbce20",
+        "data": {
+          "name": "HTTPDATE",
+          "pattern": "%{MONTHDAY}/%{MONTH}/%{YEAR}:%{TIME} %{INT}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "a3240312-da74-4de7-b699-6704d7211127",
+        "data": {
+          "name": "DATESTAMP",
+          "pattern": "%{DATE}[- ]%{TIME}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "226a0347-6faa-4c8d-b1d1-c266074d400a",
+        "data": {
+          "name": "SECOND",
+          "pattern": "(?:(?:[0-5]?[0-9]|60)(?:[:.,][0-9]+)?)"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "f6975039-e797-439b-a111-1e38272112ea",
+        "data": {
+          "name": "SPACE",
+          "pattern": "\\s*"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "4e535bc7-c7f8-4932-afe1-b47386c1536e",
+        "data": {
+          "name": "DATE_EU",
+          "pattern": "%{MONTHDAY}[./-]%{MONTHNUM}[./-]%{YEAR}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "19976647-9fb6-443e-86fa-d5642a6e2ff2",
+        "data": {
+          "name": "HOSTNAME",
+          "pattern": "\\b(?:[0-9A-Za-z][0-9A-Za-z-]{0,62})(?:\\.(?:[0-9A-Za-z][0-9A-Za-z-]{0,62}))*(\\.?|\\b)"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "input",
+          "version": "1"
+        },
+        "id": "20f35b31-8f3f-4baa-a1b1-4ad679f221b7",
+        "data": {
+          "title": {
+            "@type": "string",
+            "@value": "syslog"
+          },
+          "configuration": {
+            "expand_structured_data": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "recv_buffer_size": {
+              "@type": "integer",
+              "@value": 262144
+            },
+            "port": {
+              "@type": "integer",
+              "@value": 5140
+            },
+            "number_worker_threads": {
+              "@type": "integer",
+              "@value": 2
+            },
+            "force_rdns": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "allow_override_date": {
+              "@type": "boolean",
+              "@value": true
+            },
+            "bind_address": {
+              "@type": "string",
+              "@value": "0.0.0.0"
+            },
+            "store_full_message": {
+              "@type": "boolean",
+              "@value": true
+            }
+          },
+          "static_fields": {},
+          "type": {
+            "@type": "string",
+            "@value": "org.graylog2.inputs.syslog.udp.SyslogUDPInput"
+          },
+          "global": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "extractors": []
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "9a928973-a02f-4362-8511-3f25ddd6b755",
+        "data": {
+          "name": "HOSTPORT",
+          "pattern": "%{IPORHOST}:%{POSINT}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "61543c97-bb1f-408a-a146-3aa181b3d28e",
+        "data": {
+          "name": "QS",
+          "pattern": "%{QUOTEDSTRING}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "0377d77c-758b-408f-9ccf-b2d6e5a45a93",
+        "data": {
+          "name": "EMAILADDRESS",
+          "pattern": "%{EMAILLOCALPART}@%{HOSTNAME}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "43b39251-77dc-4827-85de-d3251063682b",
+        "data": {
+          "name": "DATESTAMP_RFC2822",
+          "pattern": "%{DAY}, %{MONTHDAY} %{MONTH} %{YEAR} %{TIME} %{ISO8601_TIMEZONE}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "6645e38f-9b7f-4b64-b14c-f927c85ed962",
+        "data": {
+          "name": "DATE_US",
+          "pattern": "%{MONTHNUM}[/-]%{MONTHDAY}[/-]%{YEAR}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "e7d156b6-c089-4d36-a616-af0ca441eb74",
+        "data": {
+          "name": "MONTHNUM2",
+          "pattern": "(?:0[1-9]|1[0-2])"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "a7af4755-b448-4395-9bf5-6f6ab60e9b40",
+        "data": {
+          "name": "PATH",
+          "pattern": "(?:%{UNIXPATH}|%{WINPATH})"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "bd91c779-b99b-4df1-a948-52982b1ffc01",
+        "data": {
+          "name": "URIHOST",
+          "pattern": "%{IPORHOST}(?::%{POSINT:port})?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "464318b5-22a1-43aa-a7ef-bf8af59ce16d",
+        "data": {
+          "name": "POSINT",
+          "pattern": "\\b(?:[1-9][0-9]*)\\b"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "6ed30d43-ec8e-4f13-a19b-a12e5dfee345",
+        "data": {
+          "name": "TTY",
+          "pattern": "(?:/dev/(pts|tty([pq])?)(\\w+)?/?(?:[0-9]+))"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "90d9a94c-60ae-4f8d-a9f2-ce62f263cbb7",
+        "data": {
+          "name": "NONNEGINT",
+          "pattern": "\\b(?:[0-9]+)\\b"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "164fafb0-44b0-45b2-b017-4913c3d62ce1",
+        "data": {
+          "name": "DATESTAMP_OTHER",
+          "pattern": "%{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{TZ} %{YEAR}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "804909de-9f7a-4992-8f50-db4c19130278",
+        "data": {
+          "name": "USER",
+          "pattern": "%{USERNAME}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "78948de3-b6fe-4910-aadc-43ddcd72c5e6",
+        "data": {
+          "name": "LOGLEVEL",
+          "pattern": "([Aa]lert|ALERT|[Tt]race|TRACE|[Dd]ebug|DEBUG|[Nn]otice|NOTICE|[Ii]nfo|INFO|[Ww]arn?(?:ing)?|WARN?(?:ING)?|[Ee]rr?(?:or)?|ERR?(?:OR)?|[Cc]rit?(?:ical)?|CRIT?(?:ICAL)?|[Ff]atal|FATAL|[Ss]evere|SEVERE|EMERG(?:ENCY)?|[Ee]merg(?:ency)?)"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "94df3f98-40cd-4443-8d08-55beb71a2bfc",
+        "data": {
+          "name": "BASE16FLOAT",
+          "pattern": "\\b(?<![0-9A-Fa-f.])(?:[+-]?(?:0x)?(?:(?:[0-9A-Fa-f]+(?:\\.[0-9A-Fa-f]*)?)|(?:\\.[0-9A-Fa-f]+)))\\b"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "6b9ff277-0071-4158-8801-4179001855c0",
+        "data": {
+          "name": "HTTPDERROR_DATE",
+          "pattern": "%{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{YEAR}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "af756db6-35be-4a67-bdeb-cfa2ab3a434d",
+        "data": {
+          "name": "DATA",
+          "pattern": ".*?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "2e32c15a-567e-4209-89b4-57b327256efb",
+        "data": {
+          "name": "MONTH",
+          "pattern": "\\b(?:Jan(?:uary|uar)?|Feb(?:ruary|ruar)?|M(?:a|ä)?r(?:ch|z)?|Apr(?:il)?|Ma(?:y|i)?|Jun(?:e|i)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|O(?:c|k)?t(?:ober)?|Nov(?:ember)?|De(?:c|z)(?:ember)?)\\b"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "672ed659-f4d2-44de-9b4f-79146996b6c3",
+        "data": {
+          "name": "DAY",
+          "pattern": "(?:Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "2c61365f-6673-4326-87ed-c98e6abad59c",
+        "data": {
+          "name": "ISO8601_TIMEZONE",
+          "pattern": "(?:Z|[+-]%{HOUR}(?::?%{MINUTE}))"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "2152f6af-d072-4322-9d0b-3166a8b63d43",
+        "data": {
+          "name": "NOTSPACE",
+          "pattern": "\\S+"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "1bdf154c-d237-498d-a759-42fc8e780818",
+        "data": {
+          "name": "HOUR",
+          "pattern": "(?:2[0123]|[01]?[0-9])"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "30044561-983f-4048-91b9-dc025cd05e67",
+        "data": {
+          "name": "SYSLOGPROG",
+          "pattern": "%{PROG:program}(?:\\[%{POSINT:pid}\\])?"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "90f7f24d-1fd9-49ad-96d9-f9960d454dc8",
+        "data": {
+          "name": "DATESTAMP_RFC822",
+          "pattern": "%{DAY} %{MONTH} %{MONTHDAY} %{YEAR} %{TIME} %{TZ}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "f97d87b4-920f-4205-8f65-a27c6bd500a1",
+        "data": {
+          "name": "TIME",
+          "pattern": "(?!<[0-9])%{HOUR}:%{MINUTE}(?::%{SECOND})(?![0-9])"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "28de66a1-f8c6-4227-8ab5-738133fbaf7d",
+        "data": {
+          "name": "INT",
+          "pattern": "(?:[+-]?(?:[0-9]+))"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      },
+      {
+        "v": "1",
+        "type": {
+          "name": "grok_pattern",
+          "version": "1"
+        },
+        "id": "7c73606d-596e-47e5-b2ee-b3c67740e507",
+        "data": {
+          "name": "SYSLOGTIMESTAMP",
+          "pattern": "%{MONTH} +%{MONTHDAY} %{TIME}"
+        },
+        "constraints": [
+          {
+            "type": "server-version",
+            "version": ">=3.3.17+07035e1"
+          }
+        ]
+      }
+    ]
+  }

@@ -1,5 +1,4 @@
 # Integration of Suricata into Wazuh
-WHAT THIS IS:  
 This guide installs and configures Suricata (Network IDS) with Wazuh on a Linux operating system. For more information/up to date information:  
 [Wazuh Suricata Integration](https://documentation.wazuh.com/current/proof-of-concept-guide/integrate-network-ids-suricata.html)  
 
