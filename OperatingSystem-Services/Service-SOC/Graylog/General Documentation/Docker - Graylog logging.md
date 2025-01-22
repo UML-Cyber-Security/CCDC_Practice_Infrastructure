@@ -64,3 +64,4 @@ Sidecar can then configure either NXLog logging or (recommended) Winlogbeat.
 ## 4. Adding Palo Al ##
 
 ## 5. Adding pfSense ##
+Working extractor ruleset: https://github.com/xTITUSMAXIMUSX/graylog-pfsense 

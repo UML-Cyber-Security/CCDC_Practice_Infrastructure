@@ -27,8 +27,6 @@ else
     echo -e "Configuration added successfully."
 fi
 
-systemctl restart rsyslog
-
 # Ensure Journald logs are sent to syslog
 echo -e "\n-----------------------------------------\nForwarding journald logs to rsyslog...\n"
 if [ "$(grep "ForwardToSyslog" /etc/systemd/journald.conf | wc -l)" -ne 0 ]; then 
@@ -52,5 +50,7 @@ if [ "$(grep "Storage" /etc/systemd/journald.conf | wc -l)" -ne 0 ]; then
 else
   echo "Storage=persistent" >> /etc/systemd/journald.conf
 fi
+
+systemctl restart rsyslog
 
 echo -e "\n-----------------------------------------\nFinished\n"

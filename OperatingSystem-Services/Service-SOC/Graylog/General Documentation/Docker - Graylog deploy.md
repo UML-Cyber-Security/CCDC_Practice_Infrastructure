@@ -1,7 +1,7 @@
 # DOCKER Graylog Install #
 
 WHAT THIS IS:  
-Short guide to show the correct way to install and configure Graylog on a DOCKER container. This is done on a Ubuntu Linux OS. <br>
+Short guide to show the correct way to install and configure Graylog on a DOCKER container. This is done on a Ubuntu Linux OS. This installs Graylog with DATANODE. <br>
 
 
 ## 1. Install Docker + Docker-Compose ##
@@ -21,7 +21,16 @@ vm.max_map_count=262144
 sudo sysctl -p
 ```
 
-## 2. Configer the Docker-Compose.yml ##
+## 2. Configure the Docker-Compose.yml ##
+
+Graylog root password hash can be generated with the following command: 
+```bash
+echo -n "Enter Password: " && head -1 < /dev/stdin | tr -d '\n' | sha256sum | cut -d " " -f1
+```
+
+Make sure to also add a randomized password secret phrase!!  
+
+THERE ARE TWO INSTANCES TO SET OF BOTH!!
 
 ```cd ~```  
 ```touch compose.yaml```  
@@ -118,9 +127,6 @@ volumes:
   graylog-datanode:
   graylog_data:
 ```
-
-CUSTOM PASSWORDS CAN BE SET USING THE "secret_password" and "SHA2" hashed passwords. <br>
-CHANGE THESE IN OFFICIAL DEPLOYMENT!!
 
 ## 3. Configure the CA and Data_node on the Graylog Dashboard ##
 
