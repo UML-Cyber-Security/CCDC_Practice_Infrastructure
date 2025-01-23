@@ -91,8 +91,10 @@ basic(){
 
     echo -e "\n--------------------\n > Auth Backdoors <\n-------------------- "
     $s cat /etc/sudoers | grep NOPASS
+    $s cat /etc/sudoers | grep NOPASSWD
     $s cat /etc/sudoers | grep !AUTH
     $s find / -type f \( -name ".rhosts" -o -name ".shosts" -o -name "hosts.equiv" \) -exec ls -l {} \;
+    cat /etc/sudoers | grep -i secure_path=
     sleep $t
 
     echo -e "\n-------------------------\n > Currently Logged In <\n------------------------- "
