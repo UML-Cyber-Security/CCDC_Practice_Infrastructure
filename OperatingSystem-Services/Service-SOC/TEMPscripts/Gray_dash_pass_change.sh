@@ -1,4 +1,5 @@
 #!/bin/bash
+# Script should change the dashboard password for Graylog
 
 # Generate a random password secret
 password_secret=$(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-96};echo;)

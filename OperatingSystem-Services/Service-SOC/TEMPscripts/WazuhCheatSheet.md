@@ -14,7 +14,7 @@
 - ```sudo freshclam``` update clamAV scans
 - ```sudo clamscan -r -i/ &``` background scan displaying bad file
 
-### Graylog passes ###
+### Graylog Passes ###
 - ```< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-96};echo;``` secret gen.
 - ```echo -n "Enter Password: " && head -1 </dev/stdin | tr -d '\n' | sha256sum | cut -d" " -f1``` SHA2 pass gen.
 
@@ -41,16 +41,16 @@
 :514
 :1514
 :4739
-:5044
+:5044 - beats input
 :5555
 :9515
 :27017
 
 with docker also uses?(these are for log inputs):
-:5140
-:12201
-:13301
-:13303
+:5140 - syslog tcp + udp
+:12201 - GELF input
+:13301 - forwarder data
+:13302 - forwarder config
 ```
 ### Wazuh AGENT STARTERS ###
 ```bash
