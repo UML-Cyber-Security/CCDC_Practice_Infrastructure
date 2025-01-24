@@ -1,0 +1,4707 @@
+{
+  "v": 1,
+  "id": "306e2337-e7cb-4298-ba4a-d39dfcadd96d",
+  "rev": 1,
+  "name": "TestMonitor1",
+  "summary": "qwerty",
+  "description": "qwerty",
+  "vendor": "qwerty",
+  "url": "",
+  "parameters": [],
+  "entities": [
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector_configuration",
+        "version": "1"
+      },
+      "id": "ee40d454-a432-44f9-a78e-36e653c195a1",
+      "data": {
+        "collector_id": {
+          "@type": "string",
+          "@value": "5911de09-9036-41a1-80b7-9fe103ee37c8"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "auditbeat-linux-default"
+        },
+        "color": {
+          "@type": "string",
+          "@value": "#ffffff"
+        },
+        "template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/auditbeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/auditbeat\"}/log\nfields:\n  event_source_product: linux_auditbeat\n\n# You can find the full configuration reference here:\n# https://www.elastic.co/guide/en/beats/auditbeat/index.html\n\n# =========================== Modules configuration ============================\nauditbeat.modules:\n\n# The auditd module collects events from the audit framework in the Linux kernel.\n- module: auditd\n  resolve_ids: true\n  failure_mode: log\n  backlog_limit: 8196\n  rate_limit: 0\n  include_raw_message: true\n  include_warnings: true\n  backpressure_strategy: auto\n\n  audit_rules: |\n    ## Define audit rules here.\n    ## Create file watches (-w) or syscall audits (-a or -A).\n\n    ## If you are on a 64 bit platform, everything should be running\n    ## in 64 bit mode. This rule will detect any use of the 32 bit syscalls\n    ## because this might be a sign of someone exploiting a hole in the 32\n    ## bit API.\n    -a always,exit -F arch=b32 -S all -F key=32bit-abi\n\n    ## Executions.\n    -a always,exit -F arch=b64 -S execve,execveat -k exec\n\n    ## External access (warning: these can be expensive to audit).\n    -a always,exit -F arch=b64 -S accept,bind,connect -F key=external-access\n\n    ## Identity changes.\n    -w /etc/group -p wa -k identity\n    -w /etc/passwd -p wa -k identity\n    -w /etc/gshadow -p wa -k identity\n    -w /etc/shadow -p wa -k identity\n\n    ## Unauthorized access attempts.\n    -a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -F key=access\n    -a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -F key=access\n    -a always,exit -F arch=b64 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -F key=access\n    -a always,exit -F arch=b64 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -F key=access\n\n# The file integrity module sends events when files are changed (created, updated, deleted).\n# The events contain file metadata and hashes.\n- module: file_integrity\n  paths:\n  - /bin\n  - /usr/bin\n  - /sbin\n  - /usr/sbin\n  - /etc\n  - /etc/graylog/server\n  exclude_files:\n  - '(?i)\\.sw[nop]$'\n  - '~$'\n  - '/\\.git($|/)'\n  include_files: []\n  scan_at_start: true\n  scan_rate_per_sec: 50 MiB\n  max_file_size: 100 MiB\n  hash_types: [sha256]\n  recursive: false"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "c7716730-bbaf-4a3a-a067-d0a521ec7b1a",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "This is a list of all sources that sent in messages to Graylog."
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "a1647eb6-a064-4fe6-b459-1e4267d3f659",
+              "timerange": {
+                "range": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "5e9a9bfe-7a97-4835-86fd-896f40b20531",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 0.25
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "848773e8-20ec-4140-ae11-4d14fdec771e",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "streams"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "f1c5d593-3831-42e2-b8f8-5107abc380db",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 10,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "22249f29-f042-4bd8-b745-252b00a35891",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "9333f7ef-11ad-4bd2-967f-29288e1d254b",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                }
+              ]
+            },
+            {
+              "id": "be9fdec2-0d46-4219-9860-b26ba839d2b4",
+              "timerange": {
+                "range": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 0.25
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "85e0eb88-577c-45c1-b91d-7edd165a05d5",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "streams"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "4cab9d48-a864-420d-a08a-a59ddc5b0b34",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 10,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "0892cc6a-0f4e-4886-8835-bc1adf1dc7e9",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "9a0914fa-c83c-416c-8709-78d5e8cc9657",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Messages size",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "4e285e1f-5675-4005-9634-0e9d4181dd08",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2023-06-01T12:37:51.057Z"
+        },
+        "created_at": "2023-06-01T08:43:23.743Z",
+        "requires": {},
+        "state": {
+          "a1647eb6-a064-4fe6-b459-1e4267d3f659": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Log Volume by Message Count"
+              },
+              "widget": {
+                "6c127c5d-be75-4157-b43f-ac0194ac0586": "Selected sources",
+                "92d63811-e4dd-47db-bd3b-db03c8a9bd53": "Messages per Source",
+                "00637e63-d728-4b3e-932b-7c8696b4855d": "Messages over time",
+                "8850cc37-1877-4963-a518-b33e21599ebd": "Messages over time by Streams",
+                "5de0575e-094c-4234-96b2-042fc4f069ec": "Messages over time by Inputs",
+                "219f666b-8a98-468f-b1db-5841c89827d3": "Messages over time by Nodes"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "5de0575e-094c-4234-96b2-042fc4f069ec",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "219f666b-8a98-468f-b1db-5841c89827d3",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "pie",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "92d63811-e4dd-47db-bd3b-db03c8a9bd53",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 0.25
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "streams"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "8850cc37-1877-4963-a518-b33e21599ebd",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "table",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "6c127c5d-be75-4157-b43f-ac0194ac0586",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "92d63811-e4dd-47db-bd3b-db03c8a9bd53": [
+                "22249f29-f042-4bd8-b745-252b00a35891"
+              ],
+              "8850cc37-1877-4963-a518-b33e21599ebd": [
+                "848773e8-20ec-4140-ae11-4d14fdec771e"
+              ],
+              "6c127c5d-be75-4157-b43f-ac0194ac0586": [
+                "5e9a9bfe-7a97-4835-86fd-896f40b20531"
+              ],
+              "5de0575e-094c-4234-96b2-042fc4f069ec": [
+                "9333f7ef-11ad-4bd2-967f-29288e1d254b"
+              ],
+              "219f666b-8a98-468f-b1db-5841c89827d3": [
+                "f1c5d593-3831-42e2-b8f8-5107abc380db"
+              ]
+            },
+            "positions": {
+              "92d63811-e4dd-47db-bd3b-db03c8a9bd53": {
+                "col": 7,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "6c127c5d-be75-4157-b43f-ac0194ac0586": {
+                "col": 1,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "8850cc37-1877-4963-a518-b33e21599ebd": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": "Infinity"
+              },
+              "5de0575e-094c-4234-96b2-042fc4f069ec": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              },
+              "219f666b-8a98-468f-b1db-5841c89827d3": {
+                "col": 7,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          },
+          "be9fdec2-0d46-4219-9860-b26ba839d2b4": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Log Volume by Message Size"
+              },
+              "widget": {
+                "2a5904f0-bffb-433c-9648-163cf925c878": "Selected sources",
+                "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": "Messages per Source",
+                "undefined": "Messages over time",
+                "e3016dd4-6586-400c-a214-538a29d5a641": "Messages over time by Streams",
+                "7e6a1cb8-9aac-470d-9f74-19d274703b1d": "Messages over time by Inputs",
+                "2d7970aa-0e35-4ac0-ac35-2f357c82c877": "Messages over time by Nodes"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "table",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Messages size"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "pinned_columns": []
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "2a5904f0-bffb-433c-9648-163cf925c878",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "7e6a1cb8-9aac-470d-9f74-19d274703b1d",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "pie",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "d3d3f4dc-ced0-46b0-b65d-981897c5d94b",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 0.25
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "streams"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "e3016dd4-6586-400c-a214-538a29d5a641",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "2d7970aa-0e35-4ac0-ac35-2f357c82c877",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": [
+                "0892cc6a-0f4e-4886-8835-bc1adf1dc7e9"
+              ],
+              "e3016dd4-6586-400c-a214-538a29d5a641": [
+                "85e0eb88-577c-45c1-b91d-7edd165a05d5"
+              ],
+              "2a5904f0-bffb-433c-9648-163cf925c878": [
+                "4e285e1f-5675-4005-9634-0e9d4181dd08"
+              ],
+              "7e6a1cb8-9aac-470d-9f74-19d274703b1d": [
+                "4cab9d48-a864-420d-a08a-a59ddc5b0b34"
+              ],
+              "2d7970aa-0e35-4ac0-ac35-2f357c82c877": [
+                "9a0914fa-c83c-416c-8709-78d5e8cc9657"
+              ]
+            },
+            "positions": {
+              "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": {
+                "col": 7,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "2a5904f0-bffb-433c-9648-163cf925c878": {
+                "col": 1,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "e3016dd4-6586-400c-a214-538a29d5a641": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": "Infinity"
+              },
+              "7e6a1cb8-9aac-470d-9f74-19d274703b1d": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              },
+              "2d7970aa-0e35-4ac0-ac35-2f357c82c877": {
+                "col": 7,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "Sources"
+        },
+        "type": "DASHBOARD",
+        "description": {
+          "@type": "string",
+          "@value": "This is a list of all sources that sent in messages to Graylog. You can narrow the timerange by zooming in on the message histogram, or you can increase the time range by specifying a broader one in the controls at the top. You can also specify filters to limit the results you are seeing. You can also add additional widgets to this dashboard, or adapt the appearance of existing widgets to suit your needs."
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "e2f79f63-1c5d-4627-a6f7-137d7c8f7890",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Win Events"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "gl2_source_input"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "6785f546ae36e14a4d2adccd"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": ""
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "All Windows eventlog messages"
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "1d726251-2623-44ab-b850-a1598c7513e7",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "syslog-udp"
+        },
+        "configuration": {
+          "port": {
+            "@type": "integer",
+            "@value": 5140
+          },
+          "recv_buffer_size": {
+            "@type": "integer",
+            "@value": 262144
+          },
+          "force_rdns": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "allow_override_date": {
+            "@type": "boolean",
+            "@value": true
+          },
+          "bind_address": {
+            "@type": "string",
+            "@value": "0.0.0.0"
+          },
+          "expand_structured_data": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "store_full_message": {
+            "@type": "boolean",
+            "@value": true
+          },
+          "timezone": {
+            "@type": "string",
+            "@value": "NotSet"
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          },
+          "number_worker_threads": {
+            "@type": "integer",
+            "@value": 4
+          }
+        },
+        "static_fields": {},
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog2.inputs.syslog.udp.SyslogUDPInput"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "extractors": []
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector_configuration",
+        "version": "1"
+      },
+      "id": "7967aa38-3cb3-4aa6-89a0-3bcccd32bf71",
+      "data": {
+        "collector_id": {
+          "@type": "string",
+          "@value": "6ab02948-040c-4a4d-a138-cb436c3fcf62"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "filebeat-freebsd-default"
+        },
+        "color": {
+          "@type": "string",
+          "@value": "#ffffff"
+        },
+        "template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/log\n\nfilebeat.inputs:\n\n- type: filestream\n  id: snort-filestream\n  enabled: true\n  paths:\n    - /var/log/snort/alert_json.txt\n    - /var/log/snort/appid-output.json\n  parsers:\n    - ndjson:\n        target: \"snort3\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: snort3\n\n- type: filestream\n  id: zeek-filestream\n  enabled: true\n  paths:\n    - /opt/zeek/logs/current\n  parsers:\n    - ndjson:\n        target: \"zeek\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: zeek\n- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/apache2/access.log\n  - /var/log/apache2/error.log\n  - /var/log/httpd/access_log\n  - /var/log/httpd/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/httpd-access.log\n  - /var/log/httpd-error.log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "9a1deaa7-60c4-4afd-a522-525ba8dadcf7",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Linux rsyslog"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "gl2_source_input"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "67858f5eae36e14a4d2a79b4"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": ""
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "All Linux rsyslog messages"
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "cb3014bf-95c5-494f-9b1b-d824b20924d6",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Windows-beats"
+        },
+        "configuration": {
+          "tls_key_file": {
+            "@type": "string",
+            "@value": ""
+          },
+          "port": {
+            "@type": "integer",
+            "@value": 5044
+          },
+          "tls_enable": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "recv_buffer_size": {
+            "@type": "integer",
+            "@value": 1048576
+          },
+          "tcp_keepalive": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "tls_client_auth_cert_file": {
+            "@type": "string",
+            "@value": ""
+          },
+          "bind_address": {
+            "@type": "string",
+            "@value": "0.0.0.0"
+          },
+          "no_beats_prefix": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "tls_cert_file": {
+            "@type": "string",
+            "@value": ""
+          },
+          "tls_client_auth": {
+            "@type": "string",
+            "@value": "disabled"
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          },
+          "number_worker_threads": {
+            "@type": "integer",
+            "@value": 4
+          },
+          "tls_key_password": {
+            "@type": "string",
+            "@value": ""
+          }
+        },
+        "static_fields": {},
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog.plugins.beats.Beats2Input"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "extractors": []
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector_configuration",
+        "version": "1"
+      },
+      "id": "e2584583-27b7-45a6-b641-cb4df5e8550f",
+      "data": {
+        "collector_id": {
+          "@type": "string",
+          "@value": "8d0aed73-5cc3-4ad5-a458-f24d39bbafee"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "filebeat-linux-default"
+        },
+        "color": {
+          "@type": "string",
+          "@value": "#ffffff"
+        },
+        "template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/log\n\nfilebeat.inputs:\n\n- type: filestream\n  id: snort-filestream\n  enabled: true\n  paths:\n    - /var/log/snort/alert_json.txt\n    - /var/log/snort/appid-output.json\n  parsers:\n    - ndjson:\n        target: \"snort3\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: snort3\n\n- type: filestream\n  id: zeek-filestream\n  enabled: true\n  paths:\n    - /opt/zeek/logs/current\n  parsers:\n    - ndjson:\n        target: \"zeek\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: zeek\n- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/apache2/access.log\n  - /var/log/apache2/error.log\n  - /var/log/httpd/access_log\n  - /var/log/httpd/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "669824ca-aa2f-43be-927e-3e77c341afc4",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": ""
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "b08415e6-b88a-4242-a74b-0bad11d37e46",
+              "timerange": {
+                "from": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "application_name:useradd"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 432000,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "9a1deaa7-60c4-4afd-a522-525ba8dadcf7"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Added_User",
+                      "field": "application_name"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "4f9f88c2-990a-450f-ba11-eec05755d4b9",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2025-01-15T19:18:37.798Z"
+        },
+        "created_at": "2025-01-15T18:46:04.868Z",
+        "requires": {},
+        "state": {
+          "b08415e6-b88a-4242-a74b-0bad11d37e46": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "widget": {
+                "409c696f-77b9-4f15-be44-1e530020e008": "linnewuser"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Added_User"
+                      },
+                      "function": "count(application_name)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "barmode": "group",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "application_name:useradd"
+                },
+                "timerange": {
+                  "from": 432000,
+                  "type": "relative"
+                },
+                "streams": [
+                  "9a1deaa7-60c4-4afd-a522-525ba8dadcf7"
+                ],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "409c696f-77b9-4f15-be44-1e530020e008",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "409c696f-77b9-4f15-be44-1e530020e008": [
+                "4f9f88c2-990a-450f-ba11-eec05755d4b9"
+              ]
+            },
+            "positions": {
+              "409c696f-77b9-4f15-be44-1e530020e008": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "FirstTestDash"
+        },
+        "type": "DASHBOARD",
+        "description": {
+          "@type": "string",
+          "@value": ""
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "search",
+        "version": "1"
+      },
+      "id": "01fff020-dd47-4795-abfc-564fad03f361",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": ""
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "d8fd08e5-9d56-4cf8-af76-ae14634d9a69",
+              "timerange": {
+                "from": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": "application_name:useradd"
+              },
+              "search_types": [
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": null,
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "e8b78fe1-2fe4-4add-86b2-2951f2709d7c",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": null,
+                  "timerange": null,
+                  "offset": 0,
+                  "streams": [],
+                  "filter": null,
+                  "decorators": [],
+                  "type": "messages",
+                  "stream_categories": [],
+                  "id": "23afe3e6-3cd7-4f84-9909-b2dd5a2144aa",
+                  "limit": 150,
+                  "filters": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2025-01-15T18:15:12.906Z"
+        },
+        "created_at": "2025-01-15T18:13:02.094Z",
+        "requires": {},
+        "state": {
+          "d8fd08e5-9d56-4cf8-af76-ae14634d9a69": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "widget": {
+                "615e2092-e844-4fb2-a471-fbdf7bcf922e": "Message Count",
+                "14e11127-b04f-4949-aa59-5e0427ed850a": "All Messages"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": null
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": null,
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "615e2092-e844-4fb2-a471-fbdf7bcf922e",
+                "filters": []
+              },
+              {
+                "config": {
+                  "fields": [
+                    "timestamp",
+                    "source"
+                  ],
+                  "units": {},
+                  "show_message_row": true,
+                  "show_summary": true,
+                  "decorators": [],
+                  "sort": [
+                    {
+                      "type": "pivot",
+                      "field": "timestamp",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": null,
+                "streams": [],
+                "filter": null,
+                "type": "messages",
+                "stream_categories": [],
+                "id": "14e11127-b04f-4949-aa59-5e0427ed850a",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "615e2092-e844-4fb2-a471-fbdf7bcf922e": [
+                "e8b78fe1-2fe4-4add-86b2-2951f2709d7c"
+              ],
+              "14e11127-b04f-4949-aa59-5e0427ed850a": [
+                "23afe3e6-3cd7-4f84-9909-b2dd5a2144aa"
+              ]
+            },
+            "positions": {
+              "615e2092-e844-4fb2-a471-fbdf7bcf922e": {
+                "col": 1,
+                "row": 1,
+                "height": 2,
+                "width": "Infinity"
+              },
+              "14e11127-b04f-4949-aa59-5e0427ed850a": {
+                "col": 1,
+                "row": 3,
+                "height": 6,
+                "width": "Infinity"
+              }
+            },
+            "formatting": null,
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "LinNewUser"
+        },
+        "type": "SEARCH",
+        "description": {
+          "@type": "string",
+          "@value": ""
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector_configuration",
+        "version": "1"
+      },
+      "id": "94ac68f0-7e05-4ad3-ab5b-1cbbda407dfa",
+      "data": {
+        "collector_id": {
+          "@type": "string",
+          "@value": "50736091-9072-4776-9eb5-5b451254cecb"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "filebeat-darwin-default"
+        },
+        "color": {
+          "@type": "string",
+          "@value": "#ffffff"
+        },
+        "template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/log\n\nfilebeat.inputs:\n\n- type: filestream\n  id: snort-filestream\n  enabled: true\n  paths:\n    - /var/log/snort/alert_json.txt\n    - /var/log/snort/appid-output.json\n  parsers:\n    - ndjson:\n        target: \"snort3\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: snort3\n\n- type: filestream\n  id: zeek-filestream\n  enabled: true\n  paths:\n    - /opt/zeek/logs/current\n  parsers:\n    - ndjson:\n        target: \"zeek\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: zeek\n- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/apache2/access.log\n  - /var/log/apache2/error.log\n  - /var/log/httpd/access_log\n  - /var/log/httpd/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/httpd-access.log\n  - /var/log/httpd-error.log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /etc/httpd/log/access_log\n  - /etc/httpd/log/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "eabad4e9-b110-4846-a6c1-b323b0b38d63",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "This is a list of all sources that sent in messages to Graylog."
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "a1647eb6-a064-4fe6-b459-1e4267d3f659",
+              "timerange": {
+                "range": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "478ece89-6df1-4398-907e-e13b7c98faca",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "509dc7b9-62c1-4169-9b98-9b7f3aedc77a",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 0.25
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "00de4fc5-918f-47f8-8880-b07ee681cb36",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "streams"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "7ce513a5-3899-4a64-86e1-6caca58edd64",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 10,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "041eb487-ce79-4df3-8151-62228848527d",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "be9fdec2-0d46-4219-9860-b26ba839d2b4",
+              "timerange": {
+                "range": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 0.25
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "4131825e-707b-4194-bf80-a0746d0878a8",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "streams"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 10,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "ca31b4b4-b4bb-4f56-a202-8ae91788fe7d",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "d413513e-1f2b-43f9-88ce-54193e996819",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source",
+                        "message"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "74468795-295c-4367-ad86-bcd16ccc4e27",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "pivot",
+                      "field": "message",
+                      "direction": "Ascending"
+                    }
+                  ]
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "0afdfe7f-f7aa-4ef0-8a70-3d1f898f0725",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2025-01-10T02:58:19.883Z"
+        },
+        "created_at": "2023-06-01T08:43:23.743Z",
+        "requires": {},
+        "state": {
+          "a1647eb6-a064-4fe6-b459-1e4267d3f659": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Log Volume by Message Count"
+              },
+              "widget": {
+                "6c127c5d-be75-4157-b43f-ac0194ac0586": "Selected sources",
+                "92d63811-e4dd-47db-bd3b-db03c8a9bd53": "Messages per Source",
+                "00637e63-d728-4b3e-932b-7c8696b4855d": "Messages over time",
+                "8850cc37-1877-4963-a518-b33e21599ebd": "Messages over time by Streams",
+                "5de0575e-094c-4234-96b2-042fc4f069ec": "Messages over time by Inputs",
+                "219f666b-8a98-468f-b1db-5841c89827d3": "Messages over time by Nodes"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "219f666b-8a98-468f-b1db-5841c89827d3",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "5de0575e-094c-4234-96b2-042fc4f069ec",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "pie",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "92d63811-e4dd-47db-bd3b-db03c8a9bd53",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 0.25
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "streams"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "8850cc37-1877-4963-a518-b33e21599ebd",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "table",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "6c127c5d-be75-4157-b43f-ac0194ac0586",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "219f666b-8a98-468f-b1db-5841c89827d3": [
+                "509dc7b9-62c1-4169-9b98-9b7f3aedc77a"
+              ],
+              "5de0575e-094c-4234-96b2-042fc4f069ec": [
+                "478ece89-6df1-4398-907e-e13b7c98faca"
+              ],
+              "92d63811-e4dd-47db-bd3b-db03c8a9bd53": [
+                "041eb487-ce79-4df3-8151-62228848527d"
+              ],
+              "8850cc37-1877-4963-a518-b33e21599ebd": [
+                "00de4fc5-918f-47f8-8880-b07ee681cb36"
+              ],
+              "6c127c5d-be75-4157-b43f-ac0194ac0586": [
+                "7ce513a5-3899-4a64-86e1-6caca58edd64"
+              ]
+            },
+            "positions": {
+              "92d63811-e4dd-47db-bd3b-db03c8a9bd53": {
+                "col": 7,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "6c127c5d-be75-4157-b43f-ac0194ac0586": {
+                "col": 1,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "8850cc37-1877-4963-a518-b33e21599ebd": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": "Infinity"
+              },
+              "5de0575e-094c-4234-96b2-042fc4f069ec": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              },
+              "219f666b-8a98-468f-b1db-5841c89827d3": {
+                "col": 7,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          },
+          "be9fdec2-0d46-4219-9860-b26ba839d2b4": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Log Volume by Message Size"
+              },
+              "widget": {
+                "2a5904f0-bffb-433c-9648-163cf925c878": "Selected sources",
+                "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": "Messages per Source",
+                "undefined": "Messages over time",
+                "e3016dd4-6586-400c-a214-538a29d5a641": "Messages over time by Streams",
+                "7e6a1cb8-9aac-470d-9f74-19d274703b1d": "Messages over time by Inputs",
+                "2d7970aa-0e35-4ac0-ac35-2f357c82c877": "Messages over time by Nodes"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "table",
+                  "units": {
+                    "gl2_accounted_message_size": {
+                      "unit_type": "size",
+                      "abbrev": "b"
+                    }
+                  },
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source",
+                        "message"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "series": [],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "pinned_columns": [
+                      "source"
+                    ]
+                  },
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "pivot",
+                      "field": "message",
+                      "direction": "Ascending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "2a5904f0-bffb-433c-9648-163cf925c878",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "7e6a1cb8-9aac-470d-9f74-19d274703b1d",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "pie",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "d3d3f4dc-ced0-46b0-b65d-981897c5d94b",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 0.25
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "streams"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "e3016dd4-6586-400c-a214-538a29d5a641",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "2d7970aa-0e35-4ac0-ac35-2f357c82c877",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "2a5904f0-bffb-433c-9648-163cf925c878": [
+                "74468795-295c-4367-ad86-bcd16ccc4e27"
+              ],
+              "7e6a1cb8-9aac-470d-9f74-19d274703b1d": [
+                "0afdfe7f-f7aa-4ef0-8a70-3d1f898f0725"
+              ],
+              "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": [
+                "ca31b4b4-b4bb-4f56-a202-8ae91788fe7d"
+              ],
+              "e3016dd4-6586-400c-a214-538a29d5a641": [
+                "4131825e-707b-4194-bf80-a0746d0878a8"
+              ],
+              "2d7970aa-0e35-4ac0-ac35-2f357c82c877": [
+                "d413513e-1f2b-43f9-88ce-54193e996819"
+              ]
+            },
+            "positions": {
+              "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": {
+                "col": 7,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "2a5904f0-bffb-433c-9648-163cf925c878": {
+                "col": 1,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "e3016dd4-6586-400c-a214-538a29d5a641": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": "Infinity"
+              },
+              "7e6a1cb8-9aac-470d-9f74-19d274703b1d": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              },
+              "2d7970aa-0e35-4ac0-ac35-2f357c82c877": {
+                "col": 7,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "Sources"
+        },
+        "type": "DASHBOARD",
+        "description": {
+          "@type": "string",
+          "@value": "This is a list of all sources that sent in messages to Graylog. You can narrow the timerange by zooming in on the message histogram, or you can increase the time range by specifying a broader one in the controls at the top. You can also specify filters to limit the results you are seeing. You can also add additional widgets to this dashboard, or adapt the appearance of existing widgets to suit your needs."
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector_configuration",
+        "version": "1"
+      },
+      "id": "b81b478d-0627-434f-b4e0-a2e6ca7fe71f",
+      "data": {
+        "collector_id": {
+          "@type": "string",
+          "@value": "89dc69d2-65ef-4ea8-938e-806ff2624d4b"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "winlogbeat-default"
+        },
+        "color": {
+          "@type": "string",
+          "@value": "#ffffff"
+        },
+        "template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n  data: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\\\\cache\\\\winlogbeat\"}\\data\n  logs: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\"}\\logs\ntags:\n - windows\nwinlogbeat:\n  event_logs:\n   - name: Application\n     ignore_older: 96h\n   - name: System\n     ignore_older: 96h\n   - name: Security\n     ignore_older: 96h\n   - name: Setup\n     ignore_older: 96h\n   - name: ForwardedEvents\n     forwarded: true\n     ignore_older: 96h\n   - name: Microsoft-Windows-Windows Defender/Operational\n     ignore_older: 96h\n   - name: Microsoft-Windows-Sysmon/Operational\n     ignore_older: 96h\n   - name: Microsoft-Windows-TerminalServices-LocalSessionManager/Operational\n     ignore_older: 96h\n   - name: Microsoft-Windows-PowerShell/Operational\n     ignore_older: 96h\n   - name: windows PowerShell\n     ignore_older: 96h"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "34602eb1-eec3-4620-afab-d9eb675b2d61",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "This is a list of all sources that sent in messages to Graylog."
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "a1647eb6-a064-4fe6-b459-1e4267d3f659",
+              "timerange": {
+                "range": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "5e9a9bfe-7a97-4835-86fd-896f40b20531",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 0.25
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "848773e8-20ec-4140-ae11-4d14fdec771e",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "streams"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "f1c5d593-3831-42e2-b8f8-5107abc380db",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 10,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "22249f29-f042-4bd8-b745-252b00a35891",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "9333f7ef-11ad-4bd2-967f-29288e1d254b",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                }
+              ]
+            },
+            {
+              "id": "be9fdec2-0d46-4219-9860-b26ba839d2b4",
+              "timerange": {
+                "range": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 0.25
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "85e0eb88-577c-45c1-b91d-7edd165a05d5",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "streams"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "4cab9d48-a864-420d-a08a-a59ddc5b0b34",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message count",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 10,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "0892cc6a-0f4e-4886-8835-bc1adf1dc7e9",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Message count",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "9a0914fa-c83c-416c-8709-78d5e8cc9657",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": null,
+                  "name": "chart",
+                  "timerange": {
+                    "range": 300,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "sum",
+                      "id": "Messages size",
+                      "field": "gl2_accounted_message_size"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "type": "pivot",
+                  "stream_categories": [],
+                  "id": "4e285e1f-5675-4005-9634-0e9d4181dd08",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2023-06-01T12:37:51.057Z"
+        },
+        "created_at": "2023-06-01T08:43:23.743Z",
+        "requires": {},
+        "state": {
+          "a1647eb6-a064-4fe6-b459-1e4267d3f659": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Log Volume by Message Count"
+              },
+              "widget": {
+                "6c127c5d-be75-4157-b43f-ac0194ac0586": "Selected sources",
+                "92d63811-e4dd-47db-bd3b-db03c8a9bd53": "Messages per Source",
+                "00637e63-d728-4b3e-932b-7c8696b4855d": "Messages over time",
+                "8850cc37-1877-4963-a518-b33e21599ebd": "Messages over time by Streams",
+                "5de0575e-094c-4234-96b2-042fc4f069ec": "Messages over time by Inputs",
+                "219f666b-8a98-468f-b1db-5841c89827d3": "Messages over time by Nodes"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "219f666b-8a98-468f-b1db-5841c89827d3",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "5de0575e-094c-4234-96b2-042fc4f069ec",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "pie",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "92d63811-e4dd-47db-bd3b-db03c8a9bd53",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 0.25
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "streams"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "8850cc37-1877-4963-a518-b33e21599ebd",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "table",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "6c127c5d-be75-4157-b43f-ac0194ac0586",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "92d63811-e4dd-47db-bd3b-db03c8a9bd53": [
+                "22249f29-f042-4bd8-b745-252b00a35891"
+              ],
+              "8850cc37-1877-4963-a518-b33e21599ebd": [
+                "848773e8-20ec-4140-ae11-4d14fdec771e"
+              ],
+              "6c127c5d-be75-4157-b43f-ac0194ac0586": [
+                "5e9a9bfe-7a97-4835-86fd-896f40b20531"
+              ],
+              "5de0575e-094c-4234-96b2-042fc4f069ec": [
+                "9333f7ef-11ad-4bd2-967f-29288e1d254b"
+              ],
+              "219f666b-8a98-468f-b1db-5841c89827d3": [
+                "f1c5d593-3831-42e2-b8f8-5107abc380db"
+              ]
+            },
+            "positions": {
+              "92d63811-e4dd-47db-bd3b-db03c8a9bd53": {
+                "col": 7,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "6c127c5d-be75-4157-b43f-ac0194ac0586": {
+                "col": 1,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "8850cc37-1877-4963-a518-b33e21599ebd": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": "Infinity"
+              },
+              "5de0575e-094c-4234-96b2-042fc4f069ec": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              },
+              "219f666b-8a98-468f-b1db-5841c89827d3": {
+                "col": 7,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          },
+          "be9fdec2-0d46-4219-9860-b26ba839d2b4": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Log Volume by Message Size"
+              },
+              "widget": {
+                "2a5904f0-bffb-433c-9648-163cf925c878": "Selected sources",
+                "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": "Messages per Source",
+                "undefined": "Messages over time",
+                "e3016dd4-6586-400c-a214-538a29d5a641": "Messages over time by Streams",
+                "7e6a1cb8-9aac-470d-9f74-19d274703b1d": "Messages over time by Inputs",
+                "2d7970aa-0e35-4ac0-ac35-2f357c82c877": "Messages over time by Nodes"
+              }
+            },
+            "widgets": [
+              {
+                "config": {
+                  "visualization": "table",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Messages size"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "pinned_columns": []
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "2a5904f0-bffb-433c-9648-163cf925c878",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_input"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "7e6a1cb8-9aac-470d-9f74-19d274703b1d",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "pie",
+                  "units": {},
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "d3d3f4dc-ced0-46b0-b65d-981897c5d94b",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 0.25
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "streams"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "e3016dd4-6586-400c-a214-538a29d5a641",
+                "filters": []
+              },
+              {
+                "config": {
+                  "visualization": "bar",
+                  "units": {},
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "sum(gl2_accounted_message_size)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "gl2_source_node"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "barmode": "stack",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                },
+                "query": null,
+                "timerange": {
+                  "range": 300,
+                  "type": "relative"
+                },
+                "streams": [],
+                "filter": null,
+                "type": "aggregation",
+                "stream_categories": [],
+                "id": "2d7970aa-0e35-4ac0-ac35-2f357c82c877",
+                "filters": []
+              }
+            ],
+            "widget_mapping": {
+              "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": [
+                "0892cc6a-0f4e-4886-8835-bc1adf1dc7e9"
+              ],
+              "e3016dd4-6586-400c-a214-538a29d5a641": [
+                "85e0eb88-577c-45c1-b91d-7edd165a05d5"
+              ],
+              "2a5904f0-bffb-433c-9648-163cf925c878": [
+                "4e285e1f-5675-4005-9634-0e9d4181dd08"
+              ],
+              "7e6a1cb8-9aac-470d-9f74-19d274703b1d": [
+                "4cab9d48-a864-420d-a08a-a59ddc5b0b34"
+              ],
+              "2d7970aa-0e35-4ac0-ac35-2f357c82c877": [
+                "9a0914fa-c83c-416c-8709-78d5e8cc9657"
+              ]
+            },
+            "positions": {
+              "d3d3f4dc-ced0-46b0-b65d-981897c5d94b": {
+                "col": 7,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "2a5904f0-bffb-433c-9648-163cf925c878": {
+                "col": 1,
+                "row": 9,
+                "height": 4,
+                "width": 6
+              },
+              "e3016dd4-6586-400c-a214-538a29d5a641": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": "Infinity"
+              },
+              "7e6a1cb8-9aac-470d-9f74-19d274703b1d": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              },
+              "2d7970aa-0e35-4ac0-ac35-2f357c82c877": {
+                "col": 7,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "Sources"
+        },
+        "type": "DASHBOARD",
+        "description": {
+          "@type": "string",
+          "@value": "This is a list of all sources that sent in messages to Graylog. You can narrow the timerange by zooming in on the message histogram, or you can increase the time range by specifying a broader one in the controls at the top. You can also specify filters to limit the results you are seeing. You can also add additional widgets to this dashboard, or adapt the appearance of existing widgets to suit your needs."
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector",
+        "version": "1"
+      },
+      "id": "5911de09-9036-41a1-80b7-9fe103ee37c8",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "auditbeat"
+        },
+        "service_type": {
+          "@type": "string",
+          "@value": "exec"
+        },
+        "node_operating_system": {
+          "@type": "string",
+          "@value": "linux"
+        },
+        "executable_path": {
+          "@type": "string",
+          "@value": "/usr/lib/graylog-sidecar/auditbeat"
+        },
+        "execute_parameters": {
+          "@type": "string",
+          "@value": "-c  %s"
+        },
+        "validation_parameters": {
+          "@type": "string",
+          "@value": "test config -c %s"
+        },
+        "default_template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/auditbeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/auditbeat\"}/log\nfields:\n  event_source_product: linux_auditbeat\n\n# You can find the full configuration reference here:\n# https://www.elastic.co/guide/en/beats/auditbeat/index.html\n\n# =========================== Modules configuration ============================\nauditbeat.modules:\n\n# The auditd module collects events from the audit framework in the Linux kernel.\n- module: auditd\n  resolve_ids: true\n  failure_mode: log\n  backlog_limit: 8196\n  rate_limit: 0\n  include_raw_message: true\n  include_warnings: true\n  backpressure_strategy: auto\n\n  audit_rules: |\n    ## Define audit rules here.\n    ## Create file watches (-w) or syscall audits (-a or -A).\n\n    ## If you are on a 64 bit platform, everything should be running\n    ## in 64 bit mode. This rule will detect any use of the 32 bit syscalls\n    ## because this might be a sign of someone exploiting a hole in the 32\n    ## bit API.\n    -a always,exit -F arch=b32 -S all -F key=32bit-abi\n\n    ## Executions.\n    -a always,exit -F arch=b64 -S execve,execveat -k exec\n\n    ## External access (warning: these can be expensive to audit).\n    -a always,exit -F arch=b64 -S accept,bind,connect -F key=external-access\n\n    ## Identity changes.\n    -w /etc/group -p wa -k identity\n    -w /etc/passwd -p wa -k identity\n    -w /etc/gshadow -p wa -k identity\n    -w /etc/shadow -p wa -k identity\n\n    ## Unauthorized access attempts.\n    -a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -F key=access\n    -a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -F key=access\n    -a always,exit -F arch=b64 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -F key=access\n    -a always,exit -F arch=b64 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -F key=access\n\n# The file integrity module sends events when files are changed (created, updated, deleted).\n# The events contain file metadata and hashes.\n- module: file_integrity\n  paths:\n  - /bin\n  - /usr/bin\n  - /sbin\n  - /usr/sbin\n  - /etc\n  - /etc/graylog/server\n  exclude_files:\n  - '(?i)\\.sw[nop]$'\n  - '~$'\n  - '/\\.git($|/)'\n  include_files: []\n  scan_at_start: true\n  scan_rate_per_sec: 50 MiB\n  max_file_size: 100 MiB\n  hash_types: [sha256]\n  recursive: false"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector",
+        "version": "1"
+      },
+      "id": "6ab02948-040c-4a4d-a138-cb436c3fcf62",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "filebeat"
+        },
+        "service_type": {
+          "@type": "string",
+          "@value": "exec"
+        },
+        "node_operating_system": {
+          "@type": "string",
+          "@value": "freebsd"
+        },
+        "executable_path": {
+          "@type": "string",
+          "@value": "/usr/share/filebeat/bin/filebeat"
+        },
+        "execute_parameters": {
+          "@type": "string",
+          "@value": "-c  %s"
+        },
+        "validation_parameters": {
+          "@type": "string",
+          "@value": "test config -c %s"
+        },
+        "default_template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/log\n\nfilebeat.inputs:\n\n- type: filestream\n  id: snort-filestream\n  enabled: true\n  paths:\n    - /var/log/snort/alert_json.txt\n    - /var/log/snort/appid-output.json\n  parsers:\n    - ndjson:\n        target: \"snort3\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: snort3\n\n- type: filestream\n  id: zeek-filestream\n  enabled: true\n  paths:\n    - /opt/zeek/logs/current\n  parsers:\n    - ndjson:\n        target: \"zeek\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: zeek\n- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/apache2/access.log\n  - /var/log/apache2/error.log\n  - /var/log/httpd/access_log\n  - /var/log/httpd/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/httpd-access.log\n  - /var/log/httpd-error.log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector",
+        "version": "1"
+      },
+      "id": "8d0aed73-5cc3-4ad5-a458-f24d39bbafee",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "filebeat"
+        },
+        "service_type": {
+          "@type": "string",
+          "@value": "exec"
+        },
+        "node_operating_system": {
+          "@type": "string",
+          "@value": "linux"
+        },
+        "executable_path": {
+          "@type": "string",
+          "@value": "/usr/lib/graylog-sidecar/filebeat"
+        },
+        "execute_parameters": {
+          "@type": "string",
+          "@value": "-c  %s"
+        },
+        "validation_parameters": {
+          "@type": "string",
+          "@value": "test config -c %s"
+        },
+        "default_template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/log\n\nfilebeat.inputs:\n\n- type: filestream\n  id: snort-filestream\n  enabled: true\n  paths:\n    - /var/log/snort/alert_json.txt\n    - /var/log/snort/appid-output.json\n  parsers:\n    - ndjson:\n        target: \"snort3\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: snort3\n\n- type: filestream\n  id: zeek-filestream\n  enabled: true\n  paths:\n    - /opt/zeek/logs/current\n  parsers:\n    - ndjson:\n        target: \"zeek\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: zeek\n- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/apache2/access.log\n  - /var/log/apache2/error.log\n  - /var/log/httpd/access_log\n  - /var/log/httpd/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector",
+        "version": "1"
+      },
+      "id": "50736091-9072-4776-9eb5-5b451254cecb",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "filebeat"
+        },
+        "service_type": {
+          "@type": "string",
+          "@value": "exec"
+        },
+        "node_operating_system": {
+          "@type": "string",
+          "@value": "darwin"
+        },
+        "executable_path": {
+          "@type": "string",
+          "@value": "/usr/share/filebeat/bin/filebeat"
+        },
+        "execute_parameters": {
+          "@type": "string",
+          "@value": "-c  %s"
+        },
+        "validation_parameters": {
+          "@type": "string",
+          "@value": "test config -c %s"
+        },
+        "default_template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n   data: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/data\n   logs: ${sidecar.spoolDir!\"/var/lib/graylog-sidecar/collectors/filebeat\"}/log\n\nfilebeat.inputs:\n\n- type: filestream\n  id: snort-filestream\n  enabled: true\n  paths:\n    - /var/log/snort/alert_json.txt\n    - /var/log/snort/appid-output.json\n  parsers:\n    - ndjson:\n        target: \"snort3\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: snort3\n\n- type: filestream\n  id: zeek-filestream\n  enabled: true\n  paths:\n    - /opt/zeek/logs/current\n  parsers:\n    - ndjson:\n        target: \"zeek\"\n        add_error_key: true\n        overwrite_keys: true\n  fields:\n    event_source_product: zeek\n- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/apache2/access.log\n  - /var/log/apache2/error.log\n  - /var/log/httpd/access_log\n  - /var/log/httpd/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /var/log/httpd-access.log\n  - /var/log/httpd-error.log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd- type: filestream\n  id: apache-filestream\n  enabled: true\n  paths:\n  - /etc/httpd/log/access_log\n  - /etc/httpd/log/error_log\n\n  fields_under_root: true\n  fields:\n      event_source_product: apache_httpd"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "sidecar_collector",
+        "version": "1"
+      },
+      "id": "89dc69d2-65ef-4ea8-938e-806ff2624d4b",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "winlogbeat"
+        },
+        "service_type": {
+          "@type": "string",
+          "@value": "svc"
+        },
+        "node_operating_system": {
+          "@type": "string",
+          "@value": "windows"
+        },
+        "executable_path": {
+          "@type": "string",
+          "@value": "C:\\Program Files\\Graylog\\sidecar\\winlogbeat.exe"
+        },
+        "execute_parameters": {
+          "@type": "string",
+          "@value": "-c \"%s\""
+        },
+        "validation_parameters": {
+          "@type": "string",
+          "@value": "test config -c \"%s\""
+        },
+        "default_template": {
+          "@type": "string",
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\n\noutput.logstash:\n   hosts: [\"${user.graylog_host}:5044\"]\npath:\n  data: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\\\\cache\\\\winlogbeat\"}\\data\n  logs: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\"}\\logs\ntags:\n - windows\nwinlogbeat:\n  event_logs:\n   - name: Application\n     ignore_older: 96h\n   - name: System\n     ignore_older: 96h\n   - name: Security\n     ignore_older: 96h\n   - name: Setup\n     ignore_older: 96h\n   - name: ForwardedEvents\n     forwarded: true\n     ignore_older: 96h\n   - name: Microsoft-Windows-Windows Defender/Operational\n     ignore_older: 96h\n   - name: Microsoft-Windows-Sysmon/Operational\n     ignore_older: 96h\n   - name: Microsoft-Windows-TerminalServices-LocalSessionManager/Operational\n     ignore_older: 96h\n   - name: Microsoft-Windows-PowerShell/Operational\n     ignore_older: 96h\n   - name: windows PowerShell\n     ignore_older: 96h"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=6.1.4+7528370"
+        }
+      ]
+    }
+  ]
+}
