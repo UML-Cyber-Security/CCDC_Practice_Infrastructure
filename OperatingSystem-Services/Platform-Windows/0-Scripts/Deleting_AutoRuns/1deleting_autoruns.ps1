@@ -186,7 +186,7 @@ Write-Host "Desktops have been moved to the InitialDesktop directory."
 # potentially blocking, as it asks for user input if there are more than 5 lines to remove
 $DocumentsPath = [Environment]::GetFolderPath("MyDocuments")
 $OutFile = Join-Path -Path $DocumentsPath -ChildPath "validTaskScheduler.csv"
-Invoke-WebRequest -Uri "https://github.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/blob/main/OperatingSystem-Services/Platform-Windows/0-Scripts/Deleting_AutoRuns/validTaskScheduler1.csv" -OutFile $OutFile
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UML-Cyber-Security/CCDC_Practice_Infrastructure/refs/heads/main/OperatingSystem-Services/Platform-Windows/0-Scripts/Deleting_AutoRuns/validTaskScheduler1.csv" -OutFile $OutFile
 
 $outputPath = Join-Path -Path $DocumentsPath -ChildPath "taskSchedulerOutput.csv"
 $validTaskPath = Join-Path -Path $DocumentsPath -ChildPath "validTaskScheduler.csv"
