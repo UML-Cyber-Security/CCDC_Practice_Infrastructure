@@ -2,8 +2,10 @@
 WHAT THIS IS:  
 Small list of links for helpful Graylog resources/integrations...
 
-### Graylog Configured with Load Balancer/Proxy ###
-- https://go2docs.graylog.org/5-0/setting_up_graylog/web_interface.htm#nginx
+### Graylog Proxy + NGINX ###
+- Setting up with load balancer/proxy: https://go2docs.graylog.org/5-0/setting_up_graylog/web_interface.htm#nginx
+
+- Nginx extractor + content pack: https://github.com/scriptingislife/graylog-content-pack-nginx-syslog
 
 ### Graylog Pan-OS (Palo Alto) Extractor ###
 - https://github.com/jamesfed/PANOSGraylogExtractor
