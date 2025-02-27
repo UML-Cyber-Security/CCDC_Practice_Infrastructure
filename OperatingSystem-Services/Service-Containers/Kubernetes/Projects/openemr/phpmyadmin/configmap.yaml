@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: phpmyadmin-configmap
+data:
+
+  config.user.inc.php: |
+    <?php
+    $i = 1;
+    // Use SSL for connection
+    $cfg['Servers'][$i]['ssl'] = true;
+    // Server certification authority
+    $cfg['Servers'][$i]['ssl_ca'] = '/etc/mysql/ca.pem';
+    // Enable SSL verification
+    $cfg['Servers'][$i]['ssl_verify'] = true;
+    // uncomment below if forcing mysql x509
+    // $cfg['Servers'][$i]['ssl_cert'] = '/etc/mysql/tls.crt';
+    // $cfg['Servers'][$i]['ssl_key'] = '/etc/mysql/tls.key';
+
+  000-default.conf: |
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    <VirtualHost *:80>
+    </VirtualHost>
+    <VirtualHost _default_:443>
+      SSLEngine on
+      SSLCertificateFile	  /certs/tls.crt
+      SSLCertificateKeyFile   /certs/tls.key
+      SSLCertificateChainFile /certs/ca.crt  
+    </VirtualHost>
+
+  wrapper.sh: |
+    #!/bin/bash 
+    a2enmod ssl
+    exec /docker-entrypoint.sh apache2-foreground

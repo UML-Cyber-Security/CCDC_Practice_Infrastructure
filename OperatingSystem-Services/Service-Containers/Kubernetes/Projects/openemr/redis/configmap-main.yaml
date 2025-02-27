@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+data:
+  redis.conf: |
+    # Redis High availability with Sentinel on Kubernetes(K8s) configurations
+    # -----------------------------------------------------------------------
+    
+    bind 0.0.0.0
+    
+    # remove persistence since already supported with support of failover.
+    #dbfilename dump.rdb
+    #dir /data
+    appendonly no
+    save ""
+    #appendfilename "appendonly.aof"
+    
+    # Enabled ACL based auth. 
+    protected-mode yes
+    
+    # This is used by the replics nodes to communicate with master to replicate the data.
+    # we are using a user called "replication" for this, and the a strong pwd for the same is given in masterauth
+    masterauth replicationpassword
+    masteruser replication
+    
+    # this is the second ConfigMap will be mounted to. it has the list of users needed.
+    aclfile /conf/acl/users.acl
+    
+    # port, each redis nodes will be used
+    port 6379
+    # More configurations are optional, if not provided, redis will consider default values ------
+    # ------ More details on configuration : https://redis.io/docs/manual/config/ ------

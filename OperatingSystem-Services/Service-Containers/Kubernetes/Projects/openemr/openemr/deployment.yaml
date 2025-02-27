@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:  
+  labels:
+    name: openemr
+  name: openemr
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: openemr
+  strategy:
+    type: Recreate
+  template:
+    metadata:      
+      labels:
+        name: openemr
+    spec:
+      initContainers:
+      - name: init-mysql-wait
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup mysql.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mysql; sleep 2; done"]
+      - name: init-redis-wait
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup redis.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for redis; sleep 2; done"]
+      containers:
+      - env:
+        - name: MYSQL_HOST
+          value: "mysql"
+        - name: MYSQL_PASS
+          valueFrom:
+            secretKeyRef:
+              name: openemr-credentials
+              key: mysql-pass
+        - name: MYSQL_ROOT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mysql-credentials
+              key: password
+        - name: MYSQL_USER
+          value: "openemr"
+        - name: OE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: openemr-credentials
+              key: admin-pass
+        - name: OE_USER
+          value: "admin"
+        - name: REDIS_SERVER
+          value: "redisproxy"
+        - name: REDIS_PASSWORD
+          value: "defaultpassword"
+        - name: SWARM_MODE
+          value: "yes"
+        - name: FORCE_DATABASE_SSL_CONNECT
+        # uncomment below line (and comment above line) if forcing mysql x509
+        #- name: FORCE_DATABASE_X509_CONNECT
+          value: "1"
+        image: openemr/openemr:7.0.2
+        name: openemr
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1G
+        volumeMounts:
+        - mountPath: /root/certs/mysql/server
+          name: mysql-openemr-client-certs
+        - mountPath: /var/www/localhost/htdocs/openemr/sites
+          name: websitevolume
+        - mountPath: /etc/ssl
+          name: sslvolume
+        - mountPath: /etc/letsencrypt
+          name: letsencryptvolume
+      restartPolicy: Always     
+      volumes:
+      - name: mysql-openemr-client-certs
+        secret:
+          secretName: mysql-openemr-client-certs
+          items:
+          - key: ca.crt
+            path: mysql-ca
+          # uncomment below if forcing mysql x509
+          #- key: tls.crt
+          #  path: mysql-cert
+          #- key: tls.key
+          #  path: mysql-key
+      - name: websitevolume
+        persistentVolumeClaim:
+          claimName: websitevolume
+      - name: sslvolume
+        persistentVolumeClaim:
+          claimName: sslvolume
+      - name: letsencryptvolume
+        persistentVolumeClaim:
+          claimName: letsencryptvolume
