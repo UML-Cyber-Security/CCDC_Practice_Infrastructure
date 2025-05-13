@@ -354,6 +354,32 @@ xtables-monitor --trace
 # redirect it to a file
 xtables-monitor --trace > trace-file.txt
 ```
+### Adding Logging Rules
+Sometimes it may be useful to add rules to our firewall in order to log when specific packets are received. This can be as simple as whenever a packet is accepted or dropped we generate a log. Or we can apply any of the previously discussed conditions or modules to see if we should generate a log or not. This is because rather than setting the target of the rules to `ACCEPT`, or `DROP` we would set it to `LOG`. This means when the rule is triggered we will generate a log entry in the kernel logs, and continue evaluating the IPTables rules to see if we will accept the packet or not.
+
+> [!IMPORTANT]
+> It is generally good to use the --log-prefix "PERFIX-STRING" flag as shown in the examples as it allows you to tag log entries to be more easily identifiable and it may help you with a log-ingestion platform when filtering for use in dashboards.
+
+Below are some example rules and a breakdown of what each rule does.
+
+> [!NOTE]
+> Although not shown here, I find it useful to breakdown log rules/groups into user chains, but this is a personal preference. If you do place then into chains remember to use a `RETURN` jump target at the end.
+
+```
+iptables -A INPUT -m limit --limit 4/sec -j LOG --log-prefix "IPTables-SSH-INITIAL: " --log-level 5
+```
+* `-m limit --limit 4/sec`: Limit the amount of times the rule can be triggered per second.
+* `-j LOG --log-prefix "IPTables-SSH-INITIAL: "`: This generates a log with the specified prefix in the kernel logs.
+* `--log-level 5`: Specify the kernel log level (5 is info (KERN_NOTICE))
+
+```
+iptables -A INPUT -p icmp --icmp-type 0 -m limit --limit 4/sec -j LOG --log-prefix "ICMP-ECHO: " --log-level 5
+```
+* `-m limit --limit 4/sec`: Limit the amount of times the rule can be triggered per second.
+* `-j LOG --log-prefix "ICMP-ECHO: "`: This generates a log with the specified prefix in the kernel logs.
+* `--log-level 5`: Specify the kernel log level (5 is info (KERN_NOTICE))
+
+
 
 ## Refs
 [[1] iptables(8) - Linux man page](https://linux.die.net/man/8/iptables)
