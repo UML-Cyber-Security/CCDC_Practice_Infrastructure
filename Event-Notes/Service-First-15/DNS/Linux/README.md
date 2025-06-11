@@ -16,6 +16,6 @@ The only service that this may rely on is the a proxy if we are exposing a DNS s
 ## First 30 
 * Audit the DNS Server each machine is configured to use (/etc/resolv.conf, nmtui)
   * Can Wazuh do this? What about Zabbix
-* Is DNSSec something that is good
+* Question(Need to look into): Is DNSSec something that is good?
 ## Stretch Goals
 Enable DNSSec.
